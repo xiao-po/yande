@@ -2,3 +2,4 @@ library all_widget;
 
 
 export 'progress.dart';
+export 'rich_text.dart';

@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'tag_model.dart';
 
 part 'image_model.g.dart';
 
@@ -11,6 +12,8 @@ class ImageModel extends Object {
 
   @JsonKey(name: 'tags')
   String tags;
+
+  List<TagModel> tagTagModelList;
 
   @JsonKey(name: 'created_at')
   int createdAt;
