@@ -88,7 +88,7 @@ class _ImageStatusListTile extends StatelessWidget {
 
   Text _imageStatusListText(String value) {
     return new Text(
-      this.name,
+      value,
       overflow: TextOverflow.ellipsis,
       style: new TextStyle(
         fontSize: 16,

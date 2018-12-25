@@ -18,6 +18,11 @@ class IndexService {
 //      if (item.rating == 'e') { // 自主规制 哈哈哈哈
 //        trueList.add(item);
 //      }
+      if (item.tags != null) {
+        item.tagTagModelList = item.tags.split(" ")
+            .map((str) => new TagModel(null, str, null, null, null)).toList();
+
+      }
       trueList.add(item);
     }
     print('debugger');
