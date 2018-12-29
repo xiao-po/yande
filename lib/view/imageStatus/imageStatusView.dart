@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../imageGallery/imageGalleryView.dart';
 import 'package:yande/model/all_model.dart';
 import 'components/status_dialog.dart';
 import 'components/imageStatusAppBar.dart';
@@ -31,32 +32,60 @@ class _ImageStatusView extends State<ImageStatusView> {
               },
             ),
             SliverList(
-                delegate: SliverChildListDelegate(<Widget>[
-              new ImageActionButtonFiled(
-                children: <Widget>[
-                  _buildLargeButton(
-                    "查看",
-                    onPressed: () {
-                      // TODO:
-                    },
+              delegate: SliverChildListDelegate(<Widget>[
+                  new ImageActionButtonFiled(
+                    children: <Widget>[
+                      _buildLargeButton(
+                        "查看",
+                        onPressed: () {
+                          this.viewImage();
+                        },
+                      ),
+                      _buildLargeButton(
+                        "下载",
+                        onPressed: () {
+                          // TODO:
+                        },
+                      )
+                    ],
                   ),
-                  _buildLargeButton(
-                    "下载",
-                    onPressed: () {
-                      // TODO:
-                    },
+                  new TagChipFiled(
+                    children: widget.image.tagTagModelList.map((tag) => _buildSearchChip(tag)).toList(),
                   )
-                ],
+                ]
               )
-            ]))
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTagFiled() {
-    return new Text("123");
+  Widget _buildSearchChip(TagModel tag) {
+    return new Container(
+      margin: new EdgeInsets.only(
+        left: 5,
+        right: 5
+      ),
+      child: ActionChip(
+        backgroundColor: Color(0x44eeeeee),
+        label: Text(tag.name),
+        onPressed: () {
+          // todo: serachTag
+        },
+      ),
+    );
+  }
+
+  void viewImage(){
+    Navigator.push(context,
+        MaterialPageRoute(
+            builder: (context) {
+              return ImageGalleryView(
+                image: widget.image,
+              );
+            }
+        ));
   }
 
   Widget _buildLargeButton(String name, {Function onPressed}) {
@@ -71,6 +100,39 @@ class _ImageStatusView extends State<ImageStatusView> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class TagChipFiled extends StatelessWidget {
+  final List<Widget> children;
+
+  TagChipFiled({this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return new Container(
+      margin: new EdgeInsets.only(
+        left: 40,
+        right: 40,
+      ),
+      decoration: new BoxDecoration(
+        color: Colors.white,
+        border: new Border(
+          top: BorderSide(
+            color: Color(0xffeaeaea),
+            width: 1,
+          ),
+          bottom: BorderSide(
+            color: Color(0xffeaeaea),
+            width: 1,
+          )
+        )
+      ),
+      child: new Wrap(
+        children: this.children,
       ),
     );
   }
