@@ -25,6 +25,8 @@ dependencies:
   cached_network_image: ^0.5.1
   sqflite: any
   json_annotation: ^2.0.0
+  path_provider: ^0.4.1
+  shared_preferences: ^0.4.3
 
 dependency_overrides:
   url_launcher: ^4.0.1

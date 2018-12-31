@@ -4,6 +4,8 @@ import 'API/all_api.dart';
 import 'package:dio/dio.dart';
 
 class IndexService {
+  static Dio searchTagHandler;
+
   static Future<List<ImageModel>> getIndexListByPage
       (int pages, int limit) async {
     Dio dio = new Dio();
@@ -31,9 +33,18 @@ class IndexService {
 
   static Future<List<TagModel>> getTagByNameOrderAESC(String name) async{
     Dio dio = new Dio();
-    String url = IndexAPI.postList + '?limit=40&order=count&name=$name';
+//    if (IndexService.searchTagHandler != null) {
+//      IndexService.searchTagHandler.clear();
+//    }
+//    IndexService.searchTagHandler = dio;
+    String url = IndexAPI.tagList + '?limit=40&order=count&name=$name';
 
     Response<List<dynamic>> res = await dio.get(url);
+
+    List<TagModel> tagList = res.data.map((item) =>
+        TagModel.fromJson(Map<String, dynamic>.from(item))).toList();
+
+    return tagList;
 
 
   }

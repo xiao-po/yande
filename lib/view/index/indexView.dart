@@ -4,6 +4,7 @@ import 'package:yande/view/index/components/drawer.dart';
 import 'package:yande/service/services.dart';
 import 'components/lazyloadGridview.dart';
 import 'components/imageCard.dart';
+import 'package:yande/dao/dao.dart';
 
 class IndexView extends StatefulWidget {
   static final String route = "/";
@@ -19,6 +20,7 @@ class IndexView extends StatefulWidget {
 class _IndexView extends State<IndexView> {
   ScrollController _controller;
   List<ImageModel> imageList = new List();
+  final TagSearchView _searchDelegate = new TagSearchView();
 
   bool loadingStatus = false;
   int pages = 1;
@@ -27,6 +29,7 @@ class _IndexView extends State<IndexView> {
   @override
   void initState() {
     super.initState();
+    MyDateBase.initDateBase();
     _controller = new ScrollController()..addListener(_scrollListener);
     this._reloadGallery();
   }
@@ -36,6 +39,22 @@ class _IndexView extends State<IndexView> {
     return new Scaffold(
       appBar: AppBar(
         title: new Text(IndexView.title),
+        actions: <Widget>[
+          new IconButton(
+            tooltip: 'Search',
+            icon: const Icon(Icons.search),
+            onPressed: () async {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) {
+                        return TagSearchView();
+                      }
+                  )
+              );
+            },
+          ),
+        ],
       ),
       drawer: new LeftDrawer(),
       endDrawer: new RightDrawer(),
