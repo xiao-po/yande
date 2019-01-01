@@ -4,6 +4,7 @@ import 'package:yande/view/index/components/drawer.dart';
 import 'package:yande/service/services.dart';
 import 'components/lazyloadGridview.dart';
 import 'components/imageCard.dart';
+import 'package:yande/dao/init_dao.dart';
 
 class IndexView extends StatefulWidget {
   static final String route = "/";
@@ -19,6 +20,7 @@ class IndexView extends StatefulWidget {
 class _IndexView extends State<IndexView> {
   ScrollController _controller;
   List<ImageModel> imageList = new List();
+  final TagSearchView _searchDelegate = new TagSearchView();
 
   bool loadingStatus = false;
   int pages = 1;
@@ -27,6 +29,7 @@ class _IndexView extends State<IndexView> {
   @override
   void initState() {
     super.initState();
+    MyDateBase.initDateBase();
     _controller = new ScrollController()..addListener(_scrollListener);
     this._reloadGallery();
   }
@@ -36,6 +39,10 @@ class _IndexView extends State<IndexView> {
     return new Scaffold(
       appBar: AppBar(
         title: new Text(IndexView.title),
+        actions: <Widget>[
+          _buildSearchButton(),
+          _buildReflushTagButton()
+        ],
       ),
       drawer: new LeftDrawer(),
       endDrawer: new RightDrawer(),
@@ -124,5 +131,32 @@ class _IndexView extends State<IndexView> {
   void _updateImageList(List<ImageModel> imageList) {
     this.imageList.addAll(imageList);
     setState(() {});
+  }
+
+  Widget _buildSearchButton() {
+    return new IconButton(
+      tooltip: 'Search',
+      icon: const Icon(Icons.search),
+      onPressed: () async {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) {
+                  return TagSearchView();
+                }
+            )
+        );
+      },
+    );
+  }
+
+  Widget _buildReflushTagButton() {
+    return new IconButton(
+      tooltip: 'FLUSH',
+      icon: const Icon(Icons.update),
+      onPressed: () async {
+        TagService.updateAllTag();
+      },
+    );
   }
 }
