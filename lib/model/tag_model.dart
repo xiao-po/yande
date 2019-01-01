@@ -30,3 +30,6 @@ class TagModel extends Object {
 }
 
 
+final List<String> TagType = ["","画师","会社","角色"];
+
+

@@ -61,7 +61,7 @@ class _TagSearchState extends State<TagSearchView> {
 
 
   Future<List<TagModel>> searchTag(String name) async{
-      return await IndexService.getTagByNameOrderAESC(name);
+      return await TagService.getTagByNameOrderAESC(name);
   }
 
   @override

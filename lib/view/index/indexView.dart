@@ -4,7 +4,7 @@ import 'package:yande/view/index/components/drawer.dart';
 import 'package:yande/service/services.dart';
 import 'components/lazyloadGridview.dart';
 import 'components/imageCard.dart';
-import 'package:yande/dao/dao.dart';
+import 'package:yande/dao/init_dao.dart';
 
 class IndexView extends StatefulWidget {
   static final String route = "/";
@@ -40,20 +40,8 @@ class _IndexView extends State<IndexView> {
       appBar: AppBar(
         title: new Text(IndexView.title),
         actions: <Widget>[
-          new IconButton(
-            tooltip: 'Search',
-            icon: const Icon(Icons.search),
-            onPressed: () async {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) {
-                        return TagSearchView();
-                      }
-                  )
-              );
-            },
-          ),
+          _buildSearchButton(),
+          _buildReflushTagButton()
         ],
       ),
       drawer: new LeftDrawer(),
@@ -143,5 +131,32 @@ class _IndexView extends State<IndexView> {
   void _updateImageList(List<ImageModel> imageList) {
     this.imageList.addAll(imageList);
     setState(() {});
+  }
+
+  Widget _buildSearchButton() {
+    return new IconButton(
+      tooltip: 'Search',
+      icon: const Icon(Icons.search),
+      onPressed: () async {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) {
+                  return TagSearchView();
+                }
+            )
+        );
+      },
+    );
+  }
+
+  Widget _buildReflushTagButton() {
+    return new IconButton(
+      tooltip: 'FLUSH',
+      icon: const Icon(Icons.update),
+      onPressed: () async {
+        TagService.updateAllTag();
+      },
+    );
   }
 }

@@ -2,11 +2,8 @@ import 'package:sqflite/sqflite.dart';
 
 class MyDateBase {
   static void initDateBase() async{
-    var databasesPath = await getDatabasesPath();
-
-    String path = databasesPath + 'demo.db';
-    print(databasesPath);
-    // open the database
+    String databasesPath =await getDatabasesPath();
+    String path = databasesPath + 'yande.db';
     Database database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
           // When creating the db, create the table
@@ -22,7 +19,6 @@ class MyDateBase {
           ['another name', 12345678, 3.1416]);
       print('inserted2: $id2');
     });
-//    Database database = await openDatabase(path, version: 1);
     await database.close();
   }
 }
