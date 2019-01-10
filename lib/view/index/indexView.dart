@@ -20,8 +20,8 @@ class IndexView extends StatefulWidget {
 class _IndexView extends State<IndexView> {
   ScrollController _controller;
   List<ImageModel> imageList = new List();
-  final TagSearchView _searchDelegate = new TagSearchView();
 
+  bool updateTagListLock = false;
   bool loadingStatus = false;
   int pages = 1;
   int limit = 20;
@@ -40,8 +40,7 @@ class _IndexView extends State<IndexView> {
       appBar: AppBar(
         title: new Text(IndexView.title),
         actions: <Widget>[
-          _buildSearchButton(),
-          _buildReflushTagButton()
+          _buildSearchButton()
         ],
       ),
       drawer: new LeftDrawer(),
@@ -65,10 +64,10 @@ class _IndexView extends State<IndexView> {
                   this._goImageStatus(image);
                 },
                 collectEvent: (){
-
+                    // TODO: collect
                 },
                 downloadEvent: (){
-
+                    // TODO: download
                 },
               )
           ).toList(),
@@ -150,13 +149,5 @@ class _IndexView extends State<IndexView> {
     );
   }
 
-  Widget _buildReflushTagButton() {
-    return new IconButton(
-      tooltip: 'FLUSH',
-      icon: const Icon(Icons.update),
-      onPressed: () async {
-        TagService.updateAllTag();
-      },
-    );
-  }
+
 }

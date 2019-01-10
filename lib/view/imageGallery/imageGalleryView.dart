@@ -23,7 +23,7 @@ class _ImageGalleryViewState extends State<ImageGalleryView> {
       child: new GestureDetector(
         onLongPress: (){print("123");},
         child:  new PhotoView(
-          imageProvider: NetworkImage(widget.image.jpegUrl),
+          imageProvider: NetworkImage(widget.image.sampleUrl),
         ),
       ),
     );

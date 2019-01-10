@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yande/model/all_model.dart';
 import 'package:yande/service/services.dart';
+import 'resultView.dart';
 
 class TagSearchView extends StatefulWidget {
   @override
@@ -19,7 +20,10 @@ class _TagSearchState extends State<TagSearchView> {
   Widget buildLeading(BuildContext context) {
     return new IconButton(
       tooltip: 'Back',
-      icon: const Icon(Icons.arrow_back)
+      icon: const Icon(Icons.arrow_back,color: Colors.black45,),
+      onPressed: (){
+        Navigator.pop(context);
+      },
     );
   }
 
@@ -29,20 +33,12 @@ class _TagSearchState extends State<TagSearchView> {
     this._searchQuery.addListener(this.onSearch);
   }
 
-//  Widget buildSuggestions(BuildContext context) {
-//    if (this.tagList.length > 0) {
-//      return new _SuggestionList(
-//        query: query,
-//        suggestions: this.tagList.map((tag) => tag.name).toList(),
-//        onSelected: (String suggestion) {
-//          query = suggestion;
-//          showResults(context);
-//        },
-//      );
-//    } else {
-//      return new Container();
-//    }
-//  }
+  @override
+  void dispose() {
+    super.dispose();
+    this._searchQuery.dispose();
+
+  }
 
   void onSearch() async{
     setState(() {
@@ -87,17 +83,32 @@ class _TagSearchState extends State<TagSearchView> {
       ),
       body: new ListView(
         children: this.tagList.map(
-                (tag) => _buildTagListTile(tag.name)
+                (tag) => _buildTagListTile(tag)
         ).toList(),
       ),
     );
   }
 
-  Widget _buildTagListTile(String name) {
-    return new ListTile(
-        title: new Text(name),
+  Widget _buildTagListTile(TagModel tag) {
+    List<String> chipNames = new List();
+    if (tag.type >= 0 && tag.type <= 3) {
+
+      chipNames.add(TagType[tag.type]);
+    }
+    return new MySearchListTile(
+        name: tag.name,
+        chipNameList: chipNames,
         onTap: (){
-          print("搜索tag $name");
+          Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) {
+                    return ResultView(
+                      tags: tag.name,
+                    );
+                  }
+              )
+          );
         },
     );
 
@@ -105,12 +116,17 @@ class _TagSearchState extends State<TagSearchView> {
 
   Widget _showLoadingStatus(bool loadingStatus){
     if (loadingStatus) {
-      return new Center(
-        child: new SizedBox(
-          width: 10,
-          height: 10,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
+      return new Container(
+        margin: new EdgeInsets.only(
+            right: 10
+        ),
+        child: new Center(
+          child: new SizedBox(
+            width: 15,
+            height: 15,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+            ),
           ),
         ),
       );
@@ -143,6 +159,63 @@ class _SuggestionList extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class MySearchListTile extends StatelessWidget {
+
+  final String name;
+  final List<String> chipNameList;
+  final GestureTapCallback onTap;
+  MySearchListTile({
+    this.name,
+    this.chipNameList,
+    this.onTap
+  });
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> children = new List();
+    children.add(new Text(this.name, style: new TextStyle(fontSize: 18)));
+    for (String chipName in this.chipNameList) {
+      children.add(this._buildChip(chipName));
+    }
+
+    return new Material(
+        child: new InkWell(
+          child: new Container(
+            height: 40,
+            margin: new EdgeInsets.only(top: 5, bottom: 5, left: 20),
+            child: new Row(
+              children: children,
+            ),
+          ),
+          onTap: this.onTap,
+        )
+    );
+  }
+
+  Widget _buildChip(String name) {
+    return new Container(
+      margin: new EdgeInsets.only(top: 5,left: 10),
+      padding: new EdgeInsets.only(top: 1, bottom: 1, left: 5, right: 5),
+      decoration: new BoxDecoration(
+          borderRadius: new BorderRadius.all(Radius.circular(3)),
+          color: new Color(0xffeaeaea)
+      ),
+      child: new SizedBox(
+        height: 14,
+        child: new Text(
+            name,
+            style: new TextStyle(
+              color: new Color(0xff333333),
+              fontSize: 10
+            ),
+        ),
+      ),
     );
   }
 }

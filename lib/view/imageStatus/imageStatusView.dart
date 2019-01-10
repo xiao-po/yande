@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../imageGallery/imageGalleryView.dart';
+import '../allView.dart';
 import 'package:yande/model/all_model.dart';
 import 'components/status_dialog.dart';
 import 'components/imageStatusAppBar.dart';
@@ -20,6 +20,7 @@ class _ImageStatusView extends State<ImageStatusView> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.white,
       body: new Container(
         child: new CustomScrollView(
           slivers: <Widget>[
@@ -71,7 +72,16 @@ class _ImageStatusView extends State<ImageStatusView> {
         backgroundColor: Color(0x44eeeeee),
         label: Text(tag.name),
         onPressed: () {
-          // todo: serachTag
+          Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) {
+                    return new ResultView(
+                      tags: tag.name,
+                    );
+                  }
+              )
+          );
         },
       ),
     );

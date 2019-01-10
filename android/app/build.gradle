@@ -56,8 +56,6 @@ flutter {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    debugImplementation 'io.github.skyhacker2:sqliteonweb:1.0.2'
-    releaseImplementation 'io.github.skyhacker2:sqliteonweb-no-op:1.0.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
