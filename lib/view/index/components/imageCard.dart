@@ -34,7 +34,7 @@ class MainImageCard extends StatelessWidget {
             new Row(
               children: <Widget>[
                 _CollectButton(
-                  status: false,
+                  status: this.imageModel.isCollect,
                   onTap: this.collectEvent,
                 ),
                 _DownloadButton(
@@ -116,7 +116,8 @@ class _CollectButton extends StatelessWidget {
   _buildStar(bool status) {
     if (status) {
       return Icon(
-        Icons.star_border,
+        Icons.star,
+        color: Colors.amberAccent,
       );
     } else {
       return Icon(

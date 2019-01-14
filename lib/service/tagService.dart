@@ -22,21 +22,6 @@ class TagService {
 
   }
 
-//  static Future<bool> updateAllTag() async{
-//    Dio dio = new Dio();
-//    String url = IndexAPI.allTagList;
-//
-//    Response<Map<String, dynamic>> res = await dio.get(url);
-//
-//    TagService._setTagListVersion(res.data[TagDataKey.version] as int);
-//
-//    List<TagModel> tagList =
-//      TagService._tagStringConvertToTagModelList(
-//          res.data[TagDataKey.tagList] as String
-//      );
-//    return TagDao.updateAllTagList(tagList);
-//  }
-
   static void _setTagListVersion(int version) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(TagDataKey.version, version);
@@ -63,6 +48,20 @@ class TagService {
       tagList.addAll(tempTagList);
     }
     return tagList;
+  }
+
+  static Future<bool> collectImage(ImageModel image) async{
+    bool isExist =await ImageDao.isImageExistById(image.id);
+    print(isExist);
+    if (!isExist) {
+      await ImageDao.collectImage(image);
+      return true;
+    } else {
+      await ImageDao.deleteCollectById(image.id);
+      return false;
+    }
+
+
   }
 }
 

@@ -3,27 +3,33 @@ import 'init_dao.dart';
 import 'package:yande/model/all_model.dart';
 
 class TagDao {
-    static Future<bool> updateAllTagList(List<TagModel> tagList) async{
+
+
+    static Future<bool> collectTag(TagModel tag) async {
       Database database = await MyDateBase.getDataBase();
+
+      await database.execute(_TagDaoUtils.generateCollectTagInsertRawSql(tag));
+
       database.close();
       return true;
     }
-
-
-
-
-
-
 
 }
 
 
 class _TagDaoUtils {
-  static String generateTaginsertRawSql(TagModel tag) {
-      return "insert into Tag (name, type ) VALUES( \"${tag.name}\", \"${TagType[tag.type]}\" )";
+
+  static String generateCollectTagInsertRawSql(TagModel tag) {
+      return "insert into ${MyDateBaseValue.TagCollect}(name, type) values"
+          " (${tag.name}, ${tag.type})";
   }
 
-  static String generateTagSelectRawSqlByName(TagModel tag) {
-      return "select * from tag where name = \"" + tag.name.replaceAll('"', '\"') +  "\"";
+  static String generateCollectTagSearchByNameRawSql (String name) {
+      return "select * from ${MyDateBaseValue.TagCollect} where name = $name";
+  }
+
+  static String generateCollectTagDeleteByNameRawSql (String name) {
+      return "delete from ${MyDateBaseValue.TagCollect} where name = $name";
   }
 }
+

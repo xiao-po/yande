@@ -15,6 +15,8 @@ class ImageModel extends Object {
 
   List<TagModel> tagTagModelList;
 
+  bool isCollect = false;
+
   @JsonKey(name: 'created_at')
   int createdAt;
 

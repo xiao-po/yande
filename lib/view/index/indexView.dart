@@ -64,7 +64,7 @@ class _IndexView extends State<IndexView> {
                   this._goImageStatus(image);
                 },
                 collectEvent: (){
-                    // TODO: collect
+                  this.collectAction(image);
                 },
                 downloadEvent: (){
                     // TODO: download
@@ -147,6 +147,13 @@ class _IndexView extends State<IndexView> {
         );
       },
     );
+  }
+
+  Future<void> collectAction(ImageModel image) async {
+    image.isCollect = await TagService.collectImage(image);
+    setState(() {
+
+    });
   }
 
 

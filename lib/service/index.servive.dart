@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:yande/model/all_model.dart';
+import 'package:yande/dao/all_dao.dart';
 import 'API/all_api.dart';
 import 'package:dio/dio.dart';
 
@@ -22,6 +23,7 @@ class IndexService {
             .map((str) => new TagModel(null, str, null, null, null)).toList();
 
       }
+      item.isCollect =await ImageDao.isImageExistById(item.id);
       trueList.add(item);
     }
     return trueList;
