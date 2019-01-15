@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yande/model/all_model.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:yande/widget/all_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ImageGalleryView extends StatefulWidget {
 
@@ -22,8 +23,11 @@ class _ImageGalleryViewState extends State<ImageGalleryView> {
     return new Container(
       child: new GestureDetector(
         onLongPress: (){print("123");},
-        child:  new PhotoView(
-          imageProvider: NetworkImage(widget.image.sampleUrl),
+        child:  new Hero(
+            tag: widget.image.id,
+            child: new PhotoView(
+              imageProvider: CachedNetworkImageProvider(widget.image.sampleUrl),
+            )
         ),
       ),
     );

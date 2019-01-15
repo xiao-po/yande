@@ -4,8 +4,7 @@ import 'package:yande/dao/all_dao.dart';
 import 'API/all_api.dart';
 import 'package:dio/dio.dart';
 
-class IndexService {
-  static Dio searchTagHandler;
+class ImageService {
 
   static Future<List<ImageModel>> getIndexListByPage
       (int pages, int limit) async {
@@ -50,5 +49,19 @@ class IndexService {
     return trueList;
   }
 
+
+  static Future<bool> collectImage(ImageModel image) async{
+    bool isExist =await ImageDao.isImageExistById(image.id);
+    print(isExist);
+    if (!isExist) {
+      await ImageDao.collectImage(image);
+      return true;
+    } else {
+      await ImageDao.deleteCollectById(image.id);
+      return false;
+    }
+
+
+  }
 
 }

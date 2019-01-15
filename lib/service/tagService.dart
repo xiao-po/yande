@@ -50,19 +50,7 @@ class TagService {
     return tagList;
   }
 
-  static Future<bool> collectImage(ImageModel image) async{
-    bool isExist =await ImageDao.isImageExistById(image.id);
-    print(isExist);
-    if (!isExist) {
-      await ImageDao.collectImage(image);
-      return true;
-    } else {
-      await ImageDao.deleteCollectById(image.id);
-      return false;
-    }
 
-
-  }
 }
 
 

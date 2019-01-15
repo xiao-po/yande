@@ -59,7 +59,7 @@ class _ResultViewState extends State<ResultView> {
     this.loadingStatus = true;
     print(pages);
     List<ImageModel> newImageList =
-      await IndexService.getIndexListByTags(widget.tags, pages, limit);
+      await ImageService.getIndexListByTags(widget.tags, pages, limit);
     this.loadingStatus = false;
     return newImageList;
   }
@@ -103,10 +103,10 @@ class _ResultViewState extends State<ResultView> {
                 this._goImageStatus(image);
               },
               collectEvent: (){
-                // TODO: collect
+                this.collectAction(image);
               },
               downloadEvent: (){
-                // TODO: download
+                DownloadService.downloadImage(image);
               },
             )
         ).toList(),
@@ -128,5 +128,12 @@ class _ResultViewState extends State<ResultView> {
               );
             }
         ));
+  }
+
+  Future<void> collectAction(ImageModel image) async {
+    image.isCollect = await ImageService.collectImage(image);
+    setState(() {
+
+    });
   }
 }

@@ -67,7 +67,8 @@ class _IndexView extends State<IndexView> {
                   this.collectAction(image);
                 },
                 downloadEvent: (){
-                    // TODO: download
+
+                  DownloadService.downloadImage(image);
                 },
               )
           ).toList(),
@@ -115,7 +116,7 @@ class _IndexView extends State<IndexView> {
     this.loadingStatus = true;
     print(pages);
     List<ImageModel> newImageList =
-      await IndexService.getIndexListByPage(pages, limit);
+      await ImageService.getIndexListByPage(pages, limit);
     this.loadingStatus = false;
     return newImageList;
   }
@@ -150,7 +151,7 @@ class _IndexView extends State<IndexView> {
   }
 
   Future<void> collectAction(ImageModel image) async {
-    image.isCollect = await TagService.collectImage(image);
+    image.isCollect = await ImageService.collectImage(image);
     setState(() {
 
     });
