@@ -15,7 +15,7 @@ class MyDateBase {
         await db.execute(
             'CREATE TABLE ${MyDateBaseValue.TagCollect} (name TEXT, type TEXT)');
         await db.execute(
-            'CREATE TABLE ${MyDateBaseValue.ImageCollect} ('
+            'CREATE TABLE ${MyDateBaseValue.Image} ('
                 'id INTEGER primary KEY,'
                 'tags TEXT,'
                 'author TEXT,'
@@ -33,6 +33,18 @@ class MyDateBase {
                 'jpegHeight INTEGER,'
                 'jpegFileSize INTEGER'
                 ')');
+        await db.execute(
+            'CREATE TABLE ${MyDateBaseValue.ImageCollect} ('
+                'id INTEGER primary KEY'
+                ')'
+        );
+        await db.execute(
+            'CREATE TABLE ${MyDateBaseValue.ImageDownload} ('
+                'id INTEGER primary KEY,'
+                'status INTEGER,'
+                'path TEXT'
+                ')'
+        );
 
       });
   }
@@ -41,5 +53,6 @@ class MyDateBase {
 class MyDateBaseValue {
   static final TagCollect = "tagCollect";
   static final ImageCollect = "imageCollect";
-
+  static final Image = "image";
+  static final ImageDownload = "imageDownload";
 }

@@ -22,7 +22,7 @@ class ImageService {
             .map((str) => new TagModel(null, str, null, null, null)).toList();
 
       }
-      item.isCollect =await ImageDao.isImageExistById(item.id);
+      item.isCollect =await ImageDao.isImageCollectExistById(item.id);
       trueList.add(item);
     }
     return trueList;
@@ -51,7 +51,7 @@ class ImageService {
 
 
   static Future<bool> collectImage(ImageModel image) async{
-    bool isExist =await ImageDao.isImageExistById(image.id);
+    bool isExist =await ImageDao.isImageCollectExistById(image.id);
     print(isExist);
     if (!isExist) {
       await ImageDao.collectImage(image);
@@ -62,6 +62,10 @@ class ImageService {
     }
 
 
+  }
+
+  static Future<void> getAllCollectedImage() async {
+    await ImageDao.getAllCollectedImage();
   }
 
 }

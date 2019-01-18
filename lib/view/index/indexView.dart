@@ -40,7 +40,8 @@ class _IndexView extends State<IndexView> {
       appBar: AppBar(
         title: new Text(IndexView.title),
         actions: <Widget>[
-          _buildSearchButton()
+          _buildSearchButton(),
+          _buildTestButton(),
         ],
       ),
       drawer: new LeftDrawer(),
@@ -155,6 +156,16 @@ class _IndexView extends State<IndexView> {
     setState(() {
 
     });
+  }
+
+  _buildTestButton() {
+    return new IconButton(
+      tooltip: 'Test',
+      icon: const Icon(Icons.add_box),
+      onPressed: () async {
+        await ImageService.getAllCollectedImage();
+      },
+    );
   }
 
 

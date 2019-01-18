@@ -3,11 +3,15 @@ import 'init_dao.dart';
 import 'package:yande/model/all_model.dart';
 
 class ImageDao {
-  static Future<bool> isImageExistById(int id) async {
-    Database database =await MyDateBase.getDataBase();
+  static Future<bool> isImageCollectExistById(int id, [Database database]) async {
+    bool isHasDatabase = true;
+    if (database == null) {
+      isHasDatabase = false;
+      database =await MyDateBase.getDataBase();
+    }
     try {
       List list = await database.rawQuery(
-          _ImageDaoUtils.generateSearchImageCollectByNameRawSql(id)
+          _ImageCollectDaoUtils.generateSearchCollectByIdRawSql(id)
       );
       if (list != null && list.length > 0) {
         return true;
@@ -18,18 +22,53 @@ class ImageDao {
       print(e);
       return false;
     } finally {
-      await database.close();
+      if (!isHasDatabase) {
+        await database.close();
+      }
+    }
+  }
+
+  static Future<bool> isImageDetailExistById(int id, [Database database]) async {
+    bool isHasDatabase = true;
+    if (database == null) {
+      isHasDatabase = false;
+      database =await MyDateBase.getDataBase();
+    }
+    try {
+      String rawSql = _ImageDaoUtils.generateSearchImageByIdRawSql(id);
+      List list = await database.rawQuery(
+          rawSql
+      );
+      if (list != null && list.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch(e) {
+      print(e);
+      return false;
+    } finally {
+      if (!isHasDatabase) {
+        await database.close();
+      }
     }
   }
 
   static Future<bool> collectImage(ImageModel image) async {
     Database database =await MyDateBase.getDataBase();
     try {
-      String rawSql = _ImageDaoUtils.generateCollectImageInsertRawSql(image);
-      print(rawSql);
-      await database.rawInsert(
-          rawSql
-      );
+      String insertImageSql = _ImageDaoUtils.generateImageInsertRawSql(image);
+      String collectImageSql =
+        _ImageCollectDaoUtils.generateImageCollectInsertRawSql(image);
+      bool isImageDetailExist =
+        await ImageDao.isImageDetailExistById(image.id, database);
+      await database.transaction((txn) async {
+
+        if (!isImageDetailExist) {
+          await txn.rawInsert(insertImageSql);
+        }
+        await txn.rawInsert(collectImageSql);
+      });
       return true;
     } catch(e) {
       print(e);
@@ -43,7 +82,23 @@ class ImageDao {
     Database database =await MyDateBase.getDataBase();
     try {
       await database.rawDelete(
-          _ImageDaoUtils.generateDeleteImageCollectByNameRawSql(id)
+          _ImageCollectDaoUtils.generateDeleteImageCollectByIdRawSql(id)
+      );
+      return true;
+    } catch(e) {
+      print(e);
+      return false;
+    } finally {
+      await database.close();
+    }
+  }
+
+  static Future<bool> getAllCollectedImage() async {
+
+    Database database =await MyDateBase.getDataBase();
+    try {
+      List list =await database.rawQuery(
+        _ImageCollectDaoUtils.generateGetAllCollectedImageRawSql()
       );
       return true;
     } catch(e) {
@@ -57,28 +112,57 @@ class ImageDao {
 
 
 class _ImageDaoUtils {
-  static String generateSearchImageCollectByNameRawSql(int id){
-    return "select * from ${MyDateBaseValue.ImageCollect} where id = $id";
+  static String generateSearchImageByIdRawSql(int id){
+    return "select * from ${MyDateBaseValue.Image} where id = $id";
   }
 
-  static String generateCollectImageInsertRawSql(ImageModel image) {
-    return "insert into ${MyDateBaseValue.ImageCollect}"
+  static String generateImageInsertRawSql(ImageModel image) {
+    return "insert into ${MyDateBaseValue.Image}"
         "(id, tags, author, "
         "fileUrl, source, fileSize,"
         "fileExt, previewUrl,"
-        "previewWidth, previewHeight, rating"
+        "previewWidth, previewHeight, rating,"
         "sampleUrl,jpegUrl, "
         "jpegHeight, jpegWidth, jpegFileSize) "
         "values"
         " (${image.id},'${image.tags}','${image.author}',"
         "'${image.fileUrl}','${image.source}',${image.fileSize},"
         "'${image.fileExt}','${image.previewUrl}',"
-        "'${image.previewWidth}',${image.previewHeight},${image.rating},"
+        "'${image.previewWidth}',${image.previewHeight},'${image.rating}',"
         "'${image.sampleUrl}','${image.jpegUrl}',"
         "${image.jpegHeight},${image.jpegWidth},${image.jpegFileSize})";
   }
-  static String generateDeleteImageCollectByNameRawSql(int id){
+  static String generateDeleteImageByIdRawSql(int id){
+    return "delete from ${MyDateBaseValue.Image} where id = $id";
+  }
+
+}
+
+class _ImageCollectDaoUtils {
+  static String generateSearchCollectByIdRawSql (int id) {
+    return "select * from ${MyDateBaseValue.ImageCollect} "
+        "where id = $id";
+  }
+
+  static String generateGetAllCollectedImageRawSql(){
+    return "select * from ${MyDateBaseValue.ImageCollect} a "
+        "inner join ${MyDateBaseValue.Image} b on a.id = b.id ";
+  }
+
+  static String generateImageCollectInsertRawSql(ImageModel image) {
+    return "insert into ${MyDateBaseValue.ImageCollect}"
+        "(id) "
+        "values"
+        " (${image.id})";
+  }
+  static String generateDeleteImageCollectByIdRawSql(int id){
     return "delete from ${MyDateBaseValue.ImageCollect} where id = $id";
   }
 
+}
+
+enum ImageDownloadStatus {
+  pending,
+  success,
+  error,
 }
