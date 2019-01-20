@@ -93,17 +93,18 @@ class ImageDao {
     }
   }
 
-  static Future<bool> getAllCollectedImage() async {
+  static Future<List> getAllCollectedImage() async {
 
     Database database =await MyDateBase.getDataBase();
     try {
       List list =await database.rawQuery(
         _ImageCollectDaoUtils.generateGetAllCollectedImageRawSql()
       );
-      return true;
+
+      return list;
     } catch(e) {
       print(e);
-      return false;
+      return null;
     } finally {
       await database.close();
     }
@@ -119,11 +120,11 @@ class _ImageDaoUtils {
   static String generateImageInsertRawSql(ImageModel image) {
     return "insert into ${MyDateBaseValue.Image}"
         "(id, tags, author, "
-        "fileUrl, source, fileSize,"
-        "fileExt, previewUrl,"
-        "previewWidth, previewHeight, rating,"
-        "sampleUrl,jpegUrl, "
-        "jpegHeight, jpegWidth, jpegFileSize) "
+        "file_url, source, file_size,"
+        "file_ext, preview_url,"
+        "preview_width, preview_height, rating,"
+        "sample_url,jpeg_url, "
+        "jpeg_height, jpeg_width, jpeg_file_size) "
         "values"
         " (${image.id},'${image.tags}','${image.author}',"
         "'${image.fileUrl}','${image.source}',${image.fileSize},"

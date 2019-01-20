@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yande/view/allView.dart';
 
 
 class LeftDrawer extends StatelessWidget{
@@ -14,7 +15,15 @@ class LeftDrawer extends StatelessWidget{
           MediaQuery.removePadding(
             context: context,
             child: ListTile(
-              title: const Text('123'),
+              title: const Text('收藏'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(
+                        builder: (context) {
+                          return CollectImageView();
+                        }
+                    ));
+              },
             ),
           )
         ],

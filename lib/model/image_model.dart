@@ -143,6 +143,8 @@ class ImageModel extends Object {
 
   Map<String, dynamic> toJson() => _$ImageModelToJson(this);
 
+  static ImageModel fromDatabase(Map item) {}
+
 }
 
   

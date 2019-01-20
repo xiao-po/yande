@@ -64,8 +64,15 @@ class ImageService {
 
   }
 
-  static Future<void> getAllCollectedImage() async {
-    await ImageDao.getAllCollectedImage();
+  static Future<List<ImageModel>> getAllCollectedImage() async {
+
+    List result = await ImageDao.getAllCollectedImage();
+    List<ImageModel> imageList = new List();
+    for (Map item in result) {
+      Map map = Map<String, dynamic>.from(item);
+      imageList.add(ImageModel.fromJson(map));
+    }
+    return imageList;
   }
 
 }

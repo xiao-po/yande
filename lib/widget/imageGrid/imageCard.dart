@@ -165,3 +165,53 @@ class _CardMaterialButton extends StatelessWidget {
   }
 
 }
+
+
+class ImageGalleryCard extends StatelessWidget {
+
+  final ImageModel image;
+  final ImageTapCallBack imageTap;
+  final GestureLongPressCallback onLongPress;
+
+  ImageGalleryCard(this.image, {
+    this.onLongPress,
+    this.imageTap
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return new SizedBox(
+      child: new Card(
+        child: buildImageBlockWidget(this.image),
+      ),
+    );;
+  }
+
+  buildImageBlockWidget(ImageModel image) {
+    return new SizedBox(
+      height: 140,
+      width: 200,
+      child: new Container(
+          decoration: new BoxDecoration(
+//          color: Color(0x10000000),
+              borderRadius: new BorderRadius.vertical(
+                  top: Radius.circular(5)
+              )
+          ),
+          child: new GestureDetector(
+            onTap: (){
+              this.imageTap(image);
+            },
+            child: Hero(
+              tag: image.id,
+              child: new CachedNetworkImage(
+                  placeholder: new ImageCardCircularProgressIndicator(),
+                  imageUrl: image.previewUrl
+              ),
+            ),
+          )
+      ),
+    );
+  }
+
+}

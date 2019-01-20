@@ -6,4 +6,4 @@ export 'imageGallery/imageGalleryView.dart';
 export 'search/resultView.dart';
 export 'search/searchDelegate.dart';
 export 'download/downloadView.dart';
-export 'collectList/collectListView.dart';
+export 'collectView/collectImageView.dart';

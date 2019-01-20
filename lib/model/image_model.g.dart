@@ -97,3 +97,4 @@ Map<String, dynamic> _$ImageModelToJson(ImageModel instance) =>
       'last_noted_at': instance.lastNotedAt,
       'last_commented_at': instance.lastCommentedAt
     };
+

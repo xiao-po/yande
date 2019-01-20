@@ -6,18 +6,15 @@ import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/service/services.dart';
 
-class ResultView extends StatefulWidget {
-  final String tags;
+class CollectImageView extends StatefulWidget {
 
-  ResultView({
-    this.tags
-  });
+  CollectImageView();
 
   @override
-  State<StatefulWidget> createState() => _ResultViewState();
+  State<StatefulWidget> createState() => _CollectImageViewState();
 }
 
-class _ResultViewState extends State<ResultView> {
+class _CollectImageViewState extends State<CollectImageView> {
   ScrollController _controller;
   List<ImageModel> imageList = new List();
 
@@ -58,8 +55,7 @@ class _ResultViewState extends State<ResultView> {
   Future<List<ImageModel>> _getImageListByPagesAndLimit(int pages,int limit) async {
     this.loadingStatus = true;
     print(pages);
-    List<ImageModel> newImageList =
-      await ImageService.getIndexListByTags(widget.tags, pages, limit);
+    List<ImageModel> newImageList =await ImageService.getAllCollectedImage();
     this.loadingStatus = false;
     return newImageList;
   }
@@ -78,7 +74,7 @@ class _ResultViewState extends State<ResultView> {
     return new Scaffold(
       appBar: new AppBar(
         leading: new BackButton(),
-        title: new Text("搜索： ${widget.tags}"),
+        title: const Text("收藏"),
       ),
       body: new Container(
         child: _buildImageContent(this.imageList),

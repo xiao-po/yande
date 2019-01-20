@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../allView.dart';
 import 'package:yande/view/index/components/drawer.dart';
 import 'package:yande/service/services.dart';
-import 'components/lazyloadGridview.dart';
-import 'components/imageCard.dart';
+import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
+import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/dao/init_dao.dart';
 
 class IndexView extends StatefulWidget {
