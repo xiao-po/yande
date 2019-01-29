@@ -5,6 +5,7 @@ import 'package:yande/service/services.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/dao/init_dao.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class IndexView extends StatefulWidget {
   static final String route = "/";
@@ -68,7 +69,7 @@ class _IndexView extends State<IndexView> {
                   this.collectAction(image);
                 },
                 downloadEvent: (){
-
+                  Fluttertoast.showToast(msg: "开始下载");
                   DownloadService.downloadImage(image);
                 },
               )
@@ -152,7 +153,12 @@ class _IndexView extends State<IndexView> {
   }
 
   Future<void> collectAction(ImageModel image) async {
-    image.isCollect = await ImageService.collectImage(image);
+    if (image.collectStatus == ImageCollectStatus.unStar)  {
+      Fluttertoast.showToast(msg: "收藏图片 ");
+    } else {
+      Fluttertoast.showToast(msg: "取消收藏");
+    }
+    image = await ImageService.collectImage(image);
     setState(() {
 
     });
@@ -163,7 +169,7 @@ class _IndexView extends State<IndexView> {
       tooltip: 'Test',
       icon: const Icon(Icons.add_box),
       onPressed: () async {
-        await ImageService.getAllCollectedImage();
+        await TagService.errorTestHttpRequest();
       },
     );
   }

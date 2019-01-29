@@ -20,9 +20,16 @@ class ImageService {
       if (item.tags != null) {
         item.tagTagModelList = item.tags.split(" ")
             .map((str) => new TagModel(null, str, null, null, null)).toList();
-
       }
-      item.isCollect =await ImageDao.isImageCollectExistById(item.id);
+      ImageModel dto =await ImageDao.isImageCollectExistById(item.id);
+      if(dto != null) {
+        item.collectStatus = dto.collectStatus;
+        if (dto.downloadStatus == ImageDownloadStatus.success) {
+          item.downloadPath = dto.downloadPath;
+        } else {
+          item.downloadStatus = ImageDownloadStatus.error;
+        }
+      }
       trueList.add(item);
     }
     return trueList;
@@ -50,21 +57,15 @@ class ImageService {
   }
 
 
-  static Future<bool> collectImage(ImageModel image) async{
-    bool isExist =await ImageDao.isImageCollectExistById(image.id);
-    print(isExist);
-    if (!isExist) {
-      await ImageDao.collectImage(image);
-      return true;
-    } else {
-      await ImageDao.deleteCollectById(image.id);
-      return false;
-    }
-
-
+  static Future<ImageModel> collectImage(ImageModel image) async{
+    image.collectStatus =
+      (image.collectStatus == ImageCollectStatus.unStar)
+          ? ImageCollectStatus.star : ImageCollectStatus.unStar;
+    await ImageDao.collectImage(image);
+    return image;
   }
 
-  static Future<List<ImageModel>> getAllCollectedImage() async {
+  static Future<List<ImageModel>> getAllCollectedImage(int page, int limit) async {
 
     List result = await ImageDao.getAllCollectedImage();
     List<ImageModel> imageList = new List();

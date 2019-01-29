@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yande/model/all_model.dart';
-import 'package:yande/widget/all_widget.dart';
+import 'package:yande/widget/allWidget.dart';
 import 'icons.dart';
 
 

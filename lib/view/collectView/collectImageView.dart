@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../allView.dart';
-import 'package:yande/widget/all_widget.dart';
+import 'package:yande/widget/allWidget.dart';
 import 'package:yande/model/all_model.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
@@ -54,8 +54,7 @@ class _CollectImageViewState extends State<CollectImageView> {
   /// @Param limit 每页显示条数
   Future<List<ImageModel>> _getImageListByPagesAndLimit(int pages,int limit) async {
     this.loadingStatus = true;
-    print(pages);
-    List<ImageModel> newImageList =await ImageService.getAllCollectedImage();
+    List<ImageModel> newImageList =await ImageService.getAllCollectedImage(pages, limit);
     this.loadingStatus = false;
     return newImageList;
   }
@@ -127,7 +126,7 @@ class _CollectImageViewState extends State<CollectImageView> {
   }
 
   Future<void> collectAction(ImageModel image) async {
-    image.isCollect = await ImageService.collectImage(image);
+    image = await ImageService.collectImage(image);
     setState(() {
 
     });

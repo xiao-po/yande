@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:yande/dao/all_dao.dart';
 import 'tag_model.dart';
 
 part 'image_model.g.dart';
@@ -15,7 +16,14 @@ class ImageModel extends Object {
 
   List<TagModel> tagTagModelList;
 
-  bool isCollect = false;
+  @JsonKey(name: 'collect_status')
+  ImageCollectStatus collectStatus = ImageCollectStatus.star;
+
+  @JsonKey(name: 'download_status')
+  ImageDownloadStatus downloadStatus  = ImageDownloadStatus.none;
+
+  @JsonKey(name: 'download_path')
+  String downloadPath = "";
 
   @JsonKey(name: 'created_at')
   int createdAt;
@@ -143,8 +151,36 @@ class ImageModel extends Object {
 
   Map<String, dynamic> toJson() => _$ImageModelToJson(this);
 
-  static ImageModel fromDatabase(Map item) {}
+  bool isCollect() {
+    if (this.collectStatus == ImageCollectStatus.star) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool isDownload() {
+    if (this.downloadStatus == ImageDownloadStatus.success
+        && this.downloadPath != "" && this.downloadPath != null) {
+
+    } else {
+      return false;
+    }
+  }
+
 
 }
 
-  
+
+
+enum ImageDownloadStatus {
+  none,
+  pending,
+  success,
+  error,
+}
+
+enum ImageCollectStatus {
+  star,
+  unStar
+}

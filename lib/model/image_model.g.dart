@@ -49,13 +49,26 @@ ImageModel _$ImageModelFromJson(Map<String, dynamic> json) {
       json['frames'] as List,
       json['is_note_locked'] as bool,
       json['last_noted_at'] as int,
-      json['last_commented_at'] as int);
+      json['last_commented_at'] as int)
+    ..tagTagModelList = (json['tagTagModelList'] as List)
+        ?.map((e) =>
+            e == null ? null : TagModel.fromJson(e as Map<String, dynamic>))
+        ?.toList()
+    ..collectStatus = _$enumDecodeNullable(
+        _$ImageCollectStatusEnumMap, json['collect_status'])
+    ..downloadStatus = _$enumDecodeNullable(
+        _$ImageDownloadStatusEnumMap, json['download_status'])
+    ..downloadPath = json['download_path'] as String;
 }
 
 Map<String, dynamic> _$ImageModelToJson(ImageModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'tags': instance.tags,
+      'tagTagModelList': instance.tagTagModelList,
+      'collect_status': _$ImageCollectStatusEnumMap[instance.collectStatus],
+      'download_status': _$ImageDownloadStatusEnumMap[instance.downloadStatus],
+      'download_path': instance.downloadPath,
       'created_at': instance.createdAt,
       'updated_at': instance.updatedAt,
       'creator_id': instance.creatorId,
@@ -98,3 +111,34 @@ Map<String, dynamic> _$ImageModelToJson(ImageModel instance) =>
       'last_commented_at': instance.lastCommentedAt
     };
 
+T _$enumDecode<T>(Map<T, dynamic> enumValues, dynamic source) {
+  if (source == null) {
+    throw ArgumentError('A value must be provided. Supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return enumValues.entries
+      .singleWhere((e) => e.value == source,
+          orElse: () => throw ArgumentError(
+              '`$source` is not one of the supported values: '
+              '${enumValues.values.join(', ')}'))
+      .key;
+}
+
+T _$enumDecodeNullable<T>(Map<T, dynamic> enumValues, dynamic source) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source);
+}
+
+const _$ImageCollectStatusEnumMap = <ImageCollectStatus, dynamic>{
+  ImageCollectStatus.star: 0,
+  ImageCollectStatus.unStar: 1
+};
+
+const _$ImageDownloadStatusEnumMap = <ImageDownloadStatus, dynamic>{
+  ImageDownloadStatus.none: 0,
+  ImageDownloadStatus.pending: 1,
+  ImageDownloadStatus.success: 2,
+  ImageDownloadStatus.error: 3
+};

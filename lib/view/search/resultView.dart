@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../allView.dart';
-import 'package:yande/widget/all_widget.dart';
+import 'package:yande/widget/allWidget.dart';
 import 'package:yande/model/all_model.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
@@ -131,7 +131,7 @@ class _ResultViewState extends State<ResultView> {
   }
 
   Future<void> collectAction(ImageModel image) async {
-    image.isCollect = await ImageService.collectImage(image);
+    image = await ImageService.collectImage(image);
     setState(() {
 
     });

@@ -50,6 +50,20 @@ class TagService {
     return tagList;
   }
 
+  static Future<void> errorTestHttpRequest() async{
+    Dio dio = new Dio();
+    String url = 'https://yande.re/post32131.json?limit=1';
+
+    try {
+      Response<List<dynamic>> res = await dio.get(url);
+    }catch(e) {
+      print(e);
+    }
+
+
+
+  }
+
 
 }
 

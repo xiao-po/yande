@@ -1,4 +1,4 @@
-import 'package:yande/widget/all_widget.dart';
+import 'package:yande/widget/allWidget.dart';
 import 'package:flutter/material.dart';
 
 class LazyLoadGridView extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yande/model/all_model.dart';
-import 'package:yande/widget/all_widget.dart';
+import 'package:yande/widget/allWidget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 typedef ImageTapCallBack = void Function(ImageModel);
@@ -34,7 +34,7 @@ class MainImageCard extends StatelessWidget {
             new Row(
               children: <Widget>[
                 _CollectButton(
-                  status: this.imageModel.isCollect,
+                  status: this.imageModel.isCollect(),
                   onTap: this.collectEvent,
                 ),
                 _DownloadButton(
