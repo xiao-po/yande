@@ -20,6 +20,7 @@ class DownloadService {
       await dio.download(image.fileUrl, filePath);
 
       image.downloadStatus = ImageDownloadStatus.success;
+      image.downloadPath = filePath;
       await ImageDao.updateDownloadImageStatus(image);
     }catch(e) {
 

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import '../allView.dart';
 import 'package:yande/model/all_model.dart';
 import 'components/status_dialog.dart';
+import 'package:yande/service/services.dart';
 import 'components/imageStatusAppBar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ImageStatusView extends StatefulWidget {
   static final String route = "/status";
@@ -21,6 +23,7 @@ class _ImageStatusView extends State<ImageStatusView> {
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Colors.white,
+      floatingActionButton: _buildMaterialButton(),
       body: new Container(
         child: new CustomScrollView(
           slivers: <Widget>[
@@ -38,15 +41,11 @@ class _ImageStatusView extends State<ImageStatusView> {
                     children: <Widget>[
                       _buildLargeButton(
                         "查看",
-                        onPressed: () {
-                          this.viewImage();
-                        },
+                        onPressed: () => this.viewImage(),
                       ),
-                      _buildLargeButton(
-                        "下载",
-                        onPressed: () {
-                          // TODO:
-                        },
+                      _buildDownloadButton(
+                        widget.image,
+                        onPressed: () => this.downloadAction(widget.image),
                       )
                     ],
                   ),
@@ -59,6 +58,32 @@ class _ImageStatusView extends State<ImageStatusView> {
           ],
         ),
       ),
+    );
+  }
+
+  FloatingActionButton _buildMaterialButton() {
+    Icon icon = null;
+    if (widget.image.collectStatus == ImageCollectStatus.star) {
+      icon = new Icon(
+        Icons.star,
+        size: 30,
+        color: Colors.amberAccent,
+      );
+    } else {
+      icon = new Icon(
+        Icons.star_border,
+        size: 30,
+      );
+    }
+    return new FloatingActionButton(
+      child: icon,
+      onPressed: () async{
+        ImageModel image = await ImageService.collectImage(widget.image);
+        widget.image.collectStatus = image.collectStatus;
+        setState(() {
+
+        });
+      },
     );
   }
 
@@ -112,6 +137,38 @@ class _ImageStatusView extends State<ImageStatusView> {
         ),
       ),
     );
+  }
+
+  void downloadAction(ImageModel image) async{
+    if (image.downloadStatus == ImageDownloadStatus.pending) {
+      Fluttertoast.showToast(msg: "正在下载");
+    } else if (image.downloadStatus == ImageDownloadStatus.success) {
+      Fluttertoast.showToast(msg: "已经下载");
+    } else {
+      Fluttertoast.showToast(msg: "开始下载");
+      setState(() {
+
+      });
+      await DownloadService.downloadImage(image);
+      setState(() {
+
+      });
+    }
+  }
+
+  Widget _buildDownloadButton(ImageModel image, {void Function() onPressed}) {
+    if (image.downloadStatus == ImageDownloadStatus.pending) {
+      return _buildLargeButton("正在下载");
+    } else if (image.downloadStatus == ImageDownloadStatus.success) {
+      return _buildLargeButton("已经下载");
+    } else {
+      return _buildLargeButton(
+        "下载",
+        onPressed: () => this.viewImage(),
+      );
+
+    }
+
   }
 }
 

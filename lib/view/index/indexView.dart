@@ -69,8 +69,7 @@ class _IndexView extends State<IndexView> {
                   this.collectAction(image);
                 },
                 downloadEvent: (){
-                  Fluttertoast.showToast(msg: "开始下载");
-                  DownloadService.downloadImage(image);
+                  this.downloadAction(image);
                 },
               )
           ).toList(),
@@ -153,11 +152,7 @@ class _IndexView extends State<IndexView> {
   }
 
   Future<void> collectAction(ImageModel image) async {
-    if (image.collectStatus == ImageCollectStatus.unStar)  {
-      Fluttertoast.showToast(msg: "收藏图片 ");
-    } else {
-      Fluttertoast.showToast(msg: "取消收藏");
-    }
+
     image = await ImageService.collectImage(image);
     setState(() {
 
@@ -172,6 +167,23 @@ class _IndexView extends State<IndexView> {
         await TagService.errorTestHttpRequest();
       },
     );
+  }
+
+  void downloadAction(ImageModel image) async{
+    if (image.downloadStatus == ImageDownloadStatus.pending) {
+      Fluttertoast.showToast(msg: "正在下载");
+    } else if (image.downloadStatus == ImageDownloadStatus.success) {
+      Fluttertoast.showToast(msg: "已经下载");
+    } else {
+      Fluttertoast.showToast(msg: "开始下载");
+      setState(() {
+
+      });
+      await DownloadService.downloadImage(image);
+      setState(() {
+
+      });
+    }
   }
 
 

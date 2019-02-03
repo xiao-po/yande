@@ -17,6 +17,8 @@ class LeftDrawer extends StatelessWidget{
             child: ListTile(
               title: const Text('收藏'),
               onTap: () {
+                Navigator.pop(context);
+
                 Navigator.push(context,
                     MaterialPageRoute(
                         builder: (context) {

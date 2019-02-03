@@ -170,14 +170,14 @@ class ImageDao {
 
 class _ImageDownloadDaoUtils {
   static String generateImageDownloadPathUpdateRawSql(ImageModel image) {
-    return "UPDATE ${MyDateBaseValue.Image} SET"
+    return "UPDATE ${MyDateBaseValue.Image} SET "
         "${ImageTableColumn.downloadPath} = '${image.downloadPath}' "
         "where "
         "id = ${image.id}";
   }
 
   static String generateImageDownloadStatusUpdateRawSql(ImageModel image) {
-    return "UPDATE ${MyDateBaseValue.Image} SET"
+    return "UPDATE ${MyDateBaseValue.Image} SET "
         "${ImageTableColumn.downloadStatus} = ${image.downloadStatus?.index} "
         "where "
         "id = ${image.id}";
@@ -230,7 +230,7 @@ class _ImageCollectDaoUtils {
 
   static String generateSearchCollectByIdRawSql(int id) {
     return "select * from ${MyDateBaseValue.Image} where "
-        "collect_status = ${ImageCollectStatus.star?.index} & id = $id";
+        "collect_status = ${ImageCollectStatus.star?.index} and id = $id";
   }
 
 }

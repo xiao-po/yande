@@ -3,6 +3,7 @@ import 'package:yande/model/all_model.dart';
 import 'package:yande/dao/all_dao.dart';
 import 'API/all_api.dart';
 import 'package:dio/dio.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ImageService {
 
@@ -24,9 +25,10 @@ class ImageService {
       ImageModel dto =await ImageDao.isImageCollectExistById(item.id);
       if(dto != null) {
         item.collectStatus = dto.collectStatus;
+        item.downloadStatus = dto.downloadStatus;
         if (dto.downloadStatus == ImageDownloadStatus.success) {
           item.downloadPath = dto.downloadPath;
-        } else {
+        } else if (dto.downloadStatus != null){
           item.downloadStatus = ImageDownloadStatus.error;
         }
       }
@@ -58,8 +60,14 @@ class ImageService {
 
 
   static Future<ImageModel> collectImage(ImageModel image) async{
+    if (image.collectStatus == ImageCollectStatus.unStar
+        || image.collectStatus == null)  {
+      Fluttertoast.showToast(msg: "收藏图片 ");
+    } else {
+      Fluttertoast.showToast(msg: "取消收藏");
+    }
     image.collectStatus =
-      (image.collectStatus == ImageCollectStatus.unStar)
+      (image.collectStatus == ImageCollectStatus.unStar || image.collectStatus == null)
           ? ImageCollectStatus.star : ImageCollectStatus.unStar;
     await ImageDao.collectImage(image);
     return image;

@@ -7,9 +7,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 class ImageGalleryView extends StatefulWidget {
 
   final ImageModel image;
+  final String heroPrefix;
 
   ImageGalleryView({
-    this.image
+    this.image,
+    this.heroPrefix
   });
 
   @override
@@ -24,7 +26,7 @@ class _ImageGalleryViewState extends State<ImageGalleryView> {
       child: new GestureDetector(
         onLongPress: (){print("123");},
         child:  new Hero(
-            tag: widget.image.id,
+            tag: '${widget.heroPrefix}${widget.image.id}',
             child: new PhotoView(
               imageProvider: CachedNetworkImageProvider(widget.image.sampleUrl),
             )

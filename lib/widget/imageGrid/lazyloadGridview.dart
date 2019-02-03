@@ -6,11 +6,12 @@ class LazyLoadGridView extends StatelessWidget {
   final List<Widget> children;
   final int crossAxisCount;
   final Widget footer;
-
+  final String heroPrefix;
   LazyLoadGridView({
     this.crossAxisCount = 2,
     this.controller,
     this.children,
+    this.heroPrefix,
     this.footer = const FootProgress(),
   }):assert(children != null && children.length > 0);
 

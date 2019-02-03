@@ -12,11 +12,13 @@ class MainImageCard extends StatelessWidget {
   final GestureTapCallback downloadEvent;
   final ImageTapCallBack imageTap;
   final GestureLongPressCallback onLongPress;
+  final String heroPrefix;
   MainImageCard(this.imageModel, {
     this.collectEvent,
     this.downloadEvent,
     this.onLongPress,
-    this.imageTap
+    this.imageTap,
+    this.heroPrefix,
   }):assert(imageModel != null);
 
   @override
@@ -38,6 +40,7 @@ class MainImageCard extends StatelessWidget {
                   onTap: this.collectEvent,
                 ),
                 _DownloadButton(
+                  status: this.imageModel.downloadStatus,
                   onTap: this.downloadEvent,
                 )
               ],
@@ -85,7 +88,7 @@ class MainImageCard extends StatelessWidget {
             this.imageTap(imageModel);
           },
           child: Hero(
-            tag: imageModel.id,
+            tag: '$heroPrefix${imageModel.id}',
             child: new CachedNetworkImage(
                 placeholder: new ImageCardCircularProgressIndicator(),
                 imageUrl: imageModel.previewUrl
@@ -129,17 +132,32 @@ class _CollectButton extends StatelessWidget {
 
 class _DownloadButton extends StatelessWidget {
   final GestureTapCallback onTap;
-  const _DownloadButton({@required this.onTap})
+  final ImageDownloadStatus status;
+  const _DownloadButton({@required this.onTap, this.status})
       :assert(onTap != null);
 
   @override
   Widget build(BuildContext context) {
+    Color color = this.getColor();
     return _CardMaterialButton(
       onTap: this.onTap,
       child: Icon(
         Icons.file_download,
+        color: color,
       ),
     );
+  }
+
+
+  Color getColor(){
+    switch(this.status) {
+      case ImageDownloadStatus.none: return Colors.black;
+      case ImageDownloadStatus.success: return Colors.amberAccent;
+      case ImageDownloadStatus.pending: return Colors.blueGrey;
+      case ImageDownloadStatus.error: return Colors.redAccent;
+      default: return Colors.black;
+
+    }
   }
 
 }
@@ -172,10 +190,12 @@ class ImageGalleryCard extends StatelessWidget {
   final ImageModel image;
   final ImageTapCallBack imageTap;
   final GestureLongPressCallback onLongPress;
+  final String heroPrefix;
 
   ImageGalleryCard(this.image, {
     this.onLongPress,
-    this.imageTap
+    this.imageTap,
+    this.heroPrefix,
   });
 
   @override
@@ -193,7 +213,6 @@ class ImageGalleryCard extends StatelessWidget {
       width: 200,
       child: new Container(
           decoration: new BoxDecoration(
-//          color: Color(0x10000000),
               borderRadius: new BorderRadius.vertical(
                   top: Radius.circular(5)
               )
@@ -203,7 +222,7 @@ class ImageGalleryCard extends StatelessWidget {
               this.imageTap(image);
             },
             child: Hero(
-              tag: image.id,
+              tag: '$heroPrefix${image.id}',
               child: new CachedNetworkImage(
                   placeholder: new ImageCardCircularProgressIndicator(),
                   imageUrl: image.previewUrl

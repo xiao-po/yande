@@ -1,4 +1,6 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:yande/utils/utils.dart';
+import 'dart:async';
 
 class MyDateBase {
 
@@ -8,8 +10,9 @@ class MyDateBase {
   }
 
   static Future<Database> getDataBase() async{
-    String databasesPath =await getDatabasesPath();
+    String databasesPath =(await FileUitls.getExternalDatabaseDir()).path;
     String path = databasesPath + '/yande.db';
+    print(path);
     return await openDatabase(path, version: 1,
       onCreate: (Database db, int version) async {
         await db.execute(

@@ -11,10 +11,7 @@ class MyImageViewer extends StatefulWidget {
   MyImageViewer(this.image);
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return null;
-  }
+  State<StatefulWidget> createState() => _MyImageViewerState();
 
 
 
@@ -50,6 +47,10 @@ class _MyImageViewerState extends State<MyImageViewer> {
 
   Future<void> getImageFile(String path) async{
     this.imageFile =await new File(path);
+    this.isAssetsLoadingOver = true;
+    setState(() {
+
+    });
   }
 
 }

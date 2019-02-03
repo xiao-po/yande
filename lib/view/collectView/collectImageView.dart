@@ -103,6 +103,7 @@ class _CollectImageViewState extends State<CollectImageView> {
               downloadEvent: (){
                 DownloadService.downloadImage(image);
               },
+              heroPrefix: 'collect',
             )
         ).toList(),
         footer: footer,

@@ -7,8 +7,9 @@ import 'icons.dart';
 class ImageStatusSliverAppBar extends StatelessWidget {
   final ImageModel image;
   final Function showDialog;
+  final String heroPrefix;
 
-  ImageStatusSliverAppBar({this.image, this.showDialog});
+  ImageStatusSliverAppBar({this.image, this.showDialog, this.heroPrefix});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class ImageStatusSliverAppBar extends StatelessWidget {
         background: new Container(
           decoration: new BoxDecoration(color: Colors.white),
           child: Hero(
-            tag: this.image.id,
+            tag: '$heroPrefix${this.image.id}',
             child: new MyCachedImage(
               url: this.image.sampleUrl,
             ),
