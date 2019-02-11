@@ -21,14 +21,29 @@ class TagModel extends Object {
   @JsonKey(name: 'ambiguous')
   bool ambiguous;
 
+  @JsonKey(name: 'collect_status')
+  TagCollectStatus collectStatus;
+
   TagModel(this.id,this.name,this.count,this.type,this.ambiguous,);
 
   factory TagModel.fromJson(Map<String, dynamic> srcJson) => _$TagModelFromJson(srcJson);
 
   Map<String, dynamic> toJson() => _$TagModelToJson(this);
 
+  bool isCollect() {
+    if (this.collectStatus == TagCollectStatus.collected) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }
 
+enum TagCollectStatus {
+  none,
+  collected,
+}
 
 final List<String> TagType = ["普通","画师","会社","角色",null,];
 

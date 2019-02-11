@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../allView.dart';
+import 'dart:async';
 import 'package:yande/view/index/components/drawer.dart';
 import 'package:yande/service/services.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
@@ -42,10 +43,9 @@ class _IndexView extends State<IndexView> {
         title: new Text(IndexView.title),
         actions: <Widget>[
           _buildSearchButton(),
-          _buildTestButton(),
         ],
       ),
-      drawer: new LeftDrawer(),
+//      drawer: new LeftDrawer(),
       endDrawer: new RightDrawer(),
       body: new Container(
         child: _buildImageContent(this.imageList),
@@ -159,16 +159,6 @@ class _IndexView extends State<IndexView> {
     });
   }
 
-  _buildTestButton() {
-    return new IconButton(
-      tooltip: 'Test',
-      icon: const Icon(Icons.add_box),
-      onPressed: () async {
-        await TagService.errorTestHttpRequest();
-      },
-    );
-  }
-
   void downloadAction(ImageModel image) async{
     if (image.downloadStatus == ImageDownloadStatus.pending) {
       Fluttertoast.showToast(msg: "正在下载");
@@ -179,7 +169,9 @@ class _IndexView extends State<IndexView> {
       setState(() {
 
       });
-      await DownloadService.downloadImage(image);
+      await DownloadService.downloadImage(
+          image
+      );
       setState(() {
 
       });

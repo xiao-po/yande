@@ -204,7 +204,7 @@ class ImageGalleryCard extends StatelessWidget {
       child: new Card(
         child: buildImageBlockWidget(this.image),
       ),
-    );;
+    );
   }
 
   buildImageBlockWidget(ImageModel image) {

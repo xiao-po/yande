@@ -108,6 +108,7 @@ class _ImageStatusView extends State<ImageStatusView> {
               )
           );
         },
+
       ),
     );
   }
@@ -149,7 +150,10 @@ class _ImageStatusView extends State<ImageStatusView> {
       setState(() {
 
       });
-      await DownloadService.downloadImage(image);
+      await DownloadService.downloadImage(
+          image,
+
+      );
       setState(() {
 
       });
@@ -164,7 +168,9 @@ class _ImageStatusView extends State<ImageStatusView> {
     } else {
       return _buildLargeButton(
         "下载",
-        onPressed: () => this.viewImage(),
+        onPressed: () => this.downloadAction(
+            image
+        ),
       );
 
     }

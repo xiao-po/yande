@@ -5,6 +5,7 @@ import 'package:yande/model/all_model.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/service/services.dart';
+import 'dart:async';
 
 class ResultView extends StatefulWidget {
   final String tags;
@@ -20,6 +21,7 @@ class ResultView extends StatefulWidget {
 class _ResultViewState extends State<ResultView> {
   ScrollController _controller;
   List<ImageModel> imageList = new List();
+  bool isShortcut = true;
 
   bool updateTagListLock = false;
   bool loadingStatus = false;
@@ -30,6 +32,7 @@ class _ResultViewState extends State<ResultView> {
   @override
   void initState() {
     super.initState();
+    this.getShortcutStatus();
     _controller = new ScrollController()..addListener(_scrollListener);
     this._loadPage(this.pages, this.limit);
   }
@@ -83,6 +86,7 @@ class _ResultViewState extends State<ResultView> {
       body: new Container(
         child: _buildImageContent(this.imageList),
       ),
+      floatingActionButton: _buildFloatingButton(),
     );
   }
 
@@ -132,6 +136,44 @@ class _ResultViewState extends State<ResultView> {
 
   Future<void> collectAction(ImageModel image) async {
     image = await ImageService.collectImage(image);
+    setState(() {
+
+    });
+  }
+
+  _buildFloatingButton() {
+
+    if (!this.isShortcut) {
+      Icon icon = new Icon(
+        Icons.add,
+      );
+      return new FloatingActionButton(
+          child: icon,
+          onPressed: () {
+            this._addShortcut(widget.tags);
+          }
+      );
+    } else {
+      return new Container();
+    }
+  }
+
+  void _addShortcut(String tags) async{
+    if (this.isShortcut) {
+        ShortCutService.deleteShortCutWord(tags);
+        this.isShortcut = false;
+    } else {
+        ShortCutService.addShortCutWord(tags);
+        this.isShortcut = true;
+    }
+    setState(() {
+
+    });
+
+  }
+
+  void getShortcutStatus () async{
+    this.isShortcut = await ShortCutService.isShortcutExist(widget.tags);
     setState(() {
 
     });

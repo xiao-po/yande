@@ -45,8 +45,8 @@ class _MyImageViewerState extends State<MyImageViewer> {
     }
   }
 
-  Future<void> getImageFile(String path) async{
-    this.imageFile =await new File(path);
+  void getImageFile(String path) async{
+    this.imageFile = new File(path);
     this.isAssetsLoadingOver = true;
     setState(() {
 

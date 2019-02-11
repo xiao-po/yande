@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'init_dao.dart';
+import 'dart:async';
 import 'package:yande/model/all_model.dart';
 
 class ImageDao {
@@ -131,7 +132,7 @@ class ImageDao {
 
 
 
-  static Future<List> getAllCollectedImage() async {
+  static Future<List<ImageModel>> getAllCollectedImage() async {
 
     Database database =await MyDateBase.getDataBase();
     try {
@@ -139,7 +140,12 @@ class ImageDao {
         _ImageCollectDaoUtils.generateGetAllCollectedImageRawSql()
       );
 
-      return list;
+      List<ImageModel> imageList = new List();
+      for (Map item in list) {
+        Map map = Map<String, dynamic>.from(item);
+        imageList.add(ImageModel.fromJson(map));
+      }
+      return imageList;
     } catch(e) {
       print(e);
       return null;

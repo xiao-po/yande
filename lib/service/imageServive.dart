@@ -11,7 +11,6 @@ class ImageService {
       (int pages, int limit) async {
     Dio dio = new Dio();
     String url = IndexAPI.postList + '?page=$pages&limit=$limit';
-
     Response<List<dynamic>> res = await dio.get(url);
 
     List<ImageModel> list = res.data.map((item) =>
@@ -75,13 +74,6 @@ class ImageService {
 
   static Future<List<ImageModel>> getAllCollectedImage(int page, int limit) async {
 
-    List result = await ImageDao.getAllCollectedImage();
-    List<ImageModel> imageList = new List();
-    for (Map item in result) {
-      Map map = Map<String, dynamic>.from(item);
-      imageList.add(ImageModel.fromJson(map));
-    }
-    return imageList;
   }
 
 }

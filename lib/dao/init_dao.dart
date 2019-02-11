@@ -16,8 +16,6 @@ class MyDateBase {
     return await openDatabase(path, version: 1,
       onCreate: (Database db, int version) async {
         await db.execute(
-            'CREATE TABLE ${MyDateBaseValue.TagCollect} (name TEXT, type TEXT)');
-        await db.execute(
             'CREATE TABLE ${MyDateBaseValue.Image} ('
                 'id INTEGER primary KEY,'
                 'tags TEXT,'

@@ -46,7 +46,6 @@ class TagChip extends StatelessWidget {
         ),
       ),
     );
-    return new ActionChip(label: Text(this.text), onPressed: (){}           );
   }
 
 }

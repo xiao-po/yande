@@ -6,4 +6,5 @@ export 'rich_text.dart';
 export 'images.dart';
 export 'imageGrid/lazyloadGridview.dart';
 export 'imageGrid/imageCard.dart';
+export 'tagDialog/tagDialog.dart';
 //export 'button.dart';
