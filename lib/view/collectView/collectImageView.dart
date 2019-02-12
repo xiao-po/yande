@@ -16,6 +16,7 @@ class CollectImageView extends StatefulWidget {
 }
 
 class _CollectImageViewState extends State<CollectImageView> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   ScrollController _controller;
   List<ImageModel> imageList = new List();
 
@@ -72,6 +73,7 @@ class _CollectImageViewState extends State<CollectImageView> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: _scaffoldKey,
       appBar: new AppBar(
         leading: new BackButton(),
         title: const Text("收藏"),

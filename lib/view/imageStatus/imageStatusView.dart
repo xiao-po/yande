@@ -4,7 +4,6 @@ import 'package:yande/model/all_model.dart';
 import 'components/status_dialog.dart';
 import 'package:yande/service/services.dart';
 import 'components/imageStatusAppBar.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class ImageStatusView extends StatefulWidget {
   static final String route = "/status";
@@ -19,9 +18,12 @@ class ImageStatusView extends StatefulWidget {
 }
 
 class _ImageStatusView extends State<ImageStatusView> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       floatingActionButton: _buildMaterialButton(),
       body: new Container(
@@ -141,18 +143,15 @@ class _ImageStatusView extends State<ImageStatusView> {
   }
 
   void downloadAction(ImageModel image) async{
-    if (image.downloadStatus == ImageDownloadStatus.pending) {
-      Fluttertoast.showToast(msg: "正在下载");
-    } else if (image.downloadStatus == ImageDownloadStatus.success) {
-      Fluttertoast.showToast(msg: "已经下载");
-    } else {
-      Fluttertoast.showToast(msg: "开始下载");
+    if (image.downloadStatus != ImageDownloadStatus.pending
+        && image.downloadStatus != ImageDownloadStatus.success
+    ) {
+      this._showMessageBySnackbar("开始下载");
       setState(() {
 
       });
       await DownloadService.downloadImage(
-          image,
-
+          image
       );
       setState(() {
 
@@ -175,6 +174,12 @@ class _ImageStatusView extends State<ImageStatusView> {
 
     }
 
+  }
+
+  _showMessageBySnackbar(String text) {
+    _scaffoldKey.currentState.showSnackBar(
+      new SnackBar(content: Text(text)),
+    );
   }
 }
 

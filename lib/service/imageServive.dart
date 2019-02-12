@@ -3,7 +3,7 @@ import 'package:yande/model/all_model.dart';
 import 'package:yande/dao/all_dao.dart';
 import 'API/all_api.dart';
 import 'package:dio/dio.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/material.dart';
 
 class ImageService {
 
@@ -52,6 +52,7 @@ class ImageService {
             .map((str) => new TagModel(null, str, null, null, null)).toList();
 
       }
+      item.pages = pages;
       trueList.add(item);
     }
     return trueList;
@@ -59,12 +60,6 @@ class ImageService {
 
 
   static Future<ImageModel> collectImage(ImageModel image) async{
-    if (image.collectStatus == ImageCollectStatus.unStar
-        || image.collectStatus == null)  {
-      Fluttertoast.showToast(msg: "收藏图片 ");
-    } else {
-      Fluttertoast.showToast(msg: "取消收藏");
-    }
     image.collectStatus =
       (image.collectStatus == ImageCollectStatus.unStar || image.collectStatus == null)
           ? ImageCollectStatus.star : ImageCollectStatus.unStar;

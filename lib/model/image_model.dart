@@ -16,6 +16,8 @@ class ImageModel extends Object {
 
   List<TagModel> tagTagModelList;
 
+  int pages; // 用于确定来自第几个页面的，防止数据重复造成 hero key 冲突的问题。
+
   @JsonKey(name: 'collect_status')
   ImageCollectStatus collectStatus = ImageCollectStatus.star;
 

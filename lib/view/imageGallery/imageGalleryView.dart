@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yande/model/all_model.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:yande/widget/allWidget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ImageGalleryView extends StatefulWidget {

@@ -6,7 +6,6 @@ import 'package:yande/service/services.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/dao/init_dao.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class IndexView extends StatefulWidget {
   static final String route = "/";
@@ -20,6 +19,9 @@ class IndexView extends StatefulWidget {
 }
 
 class _IndexView extends State<IndexView> {
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   ScrollController _controller;
   List<ImageModel> imageList = new List();
 
@@ -39,6 +41,7 @@ class _IndexView extends State<IndexView> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: new Text(IndexView.title),
         actions: <Widget>[
@@ -160,12 +163,10 @@ class _IndexView extends State<IndexView> {
   }
 
   void downloadAction(ImageModel image) async{
-    if (image.downloadStatus == ImageDownloadStatus.pending) {
-      Fluttertoast.showToast(msg: "正在下载");
-    } else if (image.downloadStatus == ImageDownloadStatus.success) {
-      Fluttertoast.showToast(msg: "已经下载");
-    } else {
-      Fluttertoast.showToast(msg: "开始下载");
+    if (image.downloadStatus != ImageDownloadStatus.pending
+        && image.downloadStatus != ImageDownloadStatus.success
+    ) {
+      this._showMessageBySnackbar("开始下载");
       setState(() {
 
       });
@@ -179,4 +180,9 @@ class _IndexView extends State<IndexView> {
   }
 
 
+  _showMessageBySnackbar(String text) {
+    _scaffoldKey.currentState.showSnackBar(
+      new SnackBar(content: Text(text)),
+    );
+  }
 }
