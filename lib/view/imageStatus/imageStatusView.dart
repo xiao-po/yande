@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../allView.dart';
+import 'dart:async';
 import 'package:yande/model/all_model.dart';
 import 'components/status_dialog.dart';
 import 'package:yande/service/services.dart';
 import 'components/imageStatusAppBar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ImageStatusView extends StatefulWidget {
   static final String route = "/status";
@@ -171,7 +173,6 @@ class _ImageStatusView extends State<ImageStatusView> {
             image
         ),
       );
-
     }
 
   }
@@ -180,6 +181,23 @@ class _ImageStatusView extends State<ImageStatusView> {
     _scaffoldKey.currentState.showSnackBar(
       new SnackBar(content: Text(text)),
     );
+  }
+
+  Future<ImageInfo> _getImage(url) {
+    ImageProvider imageProvider = new CachedNetworkImageProvider(url);
+    final Completer completer = Completer<ImageInfo>();
+    final ImageStream stream =
+    imageProvider.resolve(const ImageConfiguration());
+    final listener = (ImageInfo info, bool synchronousCall) {
+      if (!completer.isCompleted) {
+        completer.complete(info);
+      }
+    };
+    stream.addListener(listener);
+    completer.future.then((_) {
+      stream.removeListener(listener);
+    });
+    return completer.future;
   }
 }
 

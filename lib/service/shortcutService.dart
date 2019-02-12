@@ -5,8 +5,10 @@ final String SEARCH_SHORTCUT = 'search_shortcut';
 
 class ShortCutService {
 
+
+
   static Future<bool> isShortcutExist(String word) async {
-    List<String> shortcutList =await ShortCutService._getShortCutList();
+    List<String> shortcutList =await ShortCutService.getShortCutList();
     if (shortcutList != null) {
       int index = shortcutList.indexOf(word);
       if (index > -1 ) {
@@ -20,7 +22,7 @@ class ShortCutService {
   }
 
   static void addShortCutWord(String word) async {
-    List<String> shortcutList =await ShortCutService._getShortCutList();
+    List<String> shortcutList =await ShortCutService.getShortCutList();
     if (shortcutList == null) {
       shortcutList = new List();
     }
@@ -29,7 +31,7 @@ class ShortCutService {
   }
 
   static void deleteShortCutWord(String word) async {
-    List<String> shortcutList =await ShortCutService._getShortCutList();
+    List<String> shortcutList =await ShortCutService.getShortCutList();
     int index = shortcutList.indexOf(word);
     shortcutList.removeAt(index);
     ShortCutService._setShortCutList(shortcutList);
@@ -40,7 +42,7 @@ class ShortCutService {
     await prefs.setStringList(SEARCH_SHORTCUT, shortcutList);
   }
 
-  static Future<List<String>> _getShortCutList() async{
+  static Future<List<String>> getShortCutList() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getStringList(SEARCH_SHORTCUT);
   }
