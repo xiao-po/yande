@@ -16,19 +16,33 @@ class LeftDrawer extends StatelessWidget{
           ),
           MediaQuery.removePadding(
             context: context,
-            child: ListTile(
-              title: const Text('收藏'),
-              onTap: () {
-                Navigator.pop(context);
+            child: new Expanded(
+              child: new ListView(
+                children: <Widget>[
+                  new ListTile(
+                    title: const Text('收藏'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (context) {
+                                return CollectImageView();
+                              }
+                          )
+                      );
+                    },
+                  ),
+                  new ListTile(
+                    title: const Text('设置'),
+                    onTap: (){
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/setting');
+                    },
+                  )
+                ],
+              ),
+            )
 
-                Navigator.push(context,
-                    MaterialPageRoute(
-                        builder: (context) {
-                          return CollectImageView();
-                        }
-                    ));
-              },
-            ),
           )
         ],
       ),

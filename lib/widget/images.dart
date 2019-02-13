@@ -15,7 +15,7 @@ class MyCachedImage extends StatelessWidget {
   Widget build(BuildContext context) {
     // sql查询
 
-    ImageModel image = null;
+    ImageModel image;
 
     if (image != null) {
       return Image.asset(image.fileUrl);

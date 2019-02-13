@@ -37,3 +37,26 @@ class FootProgress extends StatelessWidget {
   }
 
 }
+
+class CenterProgress extends StatelessWidget {
+
+  const CenterProgress();
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      width: 40,
+      height: 40,
+      child: new Center(
+        child: SizedBox(
+          child: CircularProgressIndicator(
+            strokeWidth: 3,
+          ),
+          height: 20.0,
+          width: 20.0,
+        ),
+      ),
+    );
+  }
+
+}

@@ -10,7 +10,7 @@ class MyDateBase {
   }
 
   static Future<Database> getDataBase() async{
-    String databasesPath =(await FileUitls.getExternalDatabaseDir()).path;
+    String databasesPath =(await FileUtils.getExternalDatabaseDir()).path;
     String path = databasesPath + '/yande.db';
     return await openDatabase(path, version: 1,
       onCreate: (Database db, int version) async {

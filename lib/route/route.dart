@@ -39,6 +39,11 @@ List<ViewRoute> _allViewRoutes() {
       routeName: ImageStatusView.route,
       buildRoute: (BuildContext context) => ImageStatusView(),
     ),
+    ViewRoute(
+      title: '设置',
+      routeName: '/setting',
+      buildRoute: (BuildContext context) => SettingView(),
+    ),
   ];
 }
 

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import '../allView.dart';
-import 'dart:async';
+import 'package:path_provider/path_provider.dart';
 import 'package:yande/view/index/components/drawer.dart';
 import 'package:yande/service/services.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/dao/init_dao.dart';
+
+import 'dart:async';
+import 'dart:io';
 
 class IndexView extends StatefulWidget {
   static final String route = "/";
@@ -34,6 +37,8 @@ class _IndexView extends State<IndexView> {
   void initState() {
     super.initState();
     MyDateBase.initDateBase();
+    SettingService.initSetting();
+    this.test();
     _controller = new ScrollController()..addListener(_scrollListener);
     this._reloadGallery();
   }
@@ -48,7 +53,7 @@ class _IndexView extends State<IndexView> {
           _buildSearchButton(),
         ],
       ),
-//      drawer: new LeftDrawer(),
+      drawer: new LeftDrawer(),
       endDrawer: new RightDrawer(),
       body: new Container(
         child: _buildImageContent(this.imageList),
@@ -184,5 +189,14 @@ class _IndexView extends State<IndexView> {
     _scaffoldKey.currentState.showSnackBar(
       new SnackBar(content: Text(text)),
     );
+  }
+
+  Future<void> test() async{
+    Directory appDocDir = await getExternalStorageDirectory();
+    List<FileSystemEntity> dirList =await appDocDir.list().toList();
+    for(FileSystemEntity dir in dirList) {
+      FileStat stat = dir.statSync();
+      print('${dir.path}: ${stat.type}');
+    }
   }
 }

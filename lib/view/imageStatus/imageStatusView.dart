@@ -21,7 +21,7 @@ class ImageStatusView extends StatefulWidget {
 
 class _ImageStatusView extends State<ImageStatusView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
+  Key get fabKey => new ValueKey<String>('imageStatusFabkey');
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -66,29 +66,39 @@ class _ImageStatusView extends State<ImageStatusView> {
   }
 
   FloatingActionButton _buildMaterialButton() {
-    Icon icon = null;
     if (widget.image.collectStatus == ImageCollectStatus.star) {
-      icon = new Icon(
-        Icons.star,
-        size: 30,
-        color: Colors.amberAccent,
+      return new FloatingActionButton(
+        key: new ValueKey(this.fabKey),
+        child: new Icon(
+          Icons.star,
+          size: 30,
+          color: Colors.amberAccent,
+        ),
+        onPressed: () async{
+          ImageModel image = await ImageService.collectImage(widget.image);
+          widget.image.collectStatus = image.collectStatus;
+          setState(() {
+
+          });
+        },
       );
     } else {
-      icon = new Icon(
-        Icons.star_border,
-        size: 30,
+      return new FloatingActionButton(
+        key: this.fabKey,
+        child: new Icon(
+          Icons.star_border,
+          size: 30,
+        ),
+        onPressed: () async{
+          ImageModel image = await ImageService.collectImage(widget.image);
+          widget.image.collectStatus = image.collectStatus;
+          setState(() {
+
+          });
+        },
       );
     }
-    return new FloatingActionButton(
-      child: icon,
-      onPressed: () async{
-        ImageModel image = await ImageService.collectImage(widget.image);
-        widget.image.collectStatus = image.collectStatus;
-        setState(() {
 
-        });
-      },
-    );
   }
 
   Widget _buildSearchChip(TagModel tag) {

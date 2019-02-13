@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 
-class FileUitls {
+class FileUtils {
 
   static Future<Directory> getDirAndCreate(String path) async {
     Directory dir = new Directory(path);
@@ -24,7 +24,16 @@ class FileUitls {
     return await getDirAndCreate('${dir.path}/databases');
   }
 
+  static Future<List<Directory>> getAllDirectoryChildren(Directory dir) async{
+    List<Directory> list = new List();
+    List dirChildren =await dir.list().toList();
+    for (FileSystemEntity entity in dirChildren) {
+      FileStat stat =await entity.stat();
+      if (stat.type == FileSystemEntityType.directory) {
+        list.add(new Directory(entity.path));
+      }
+    }
 
-
+    return list;
+  }
 }
-

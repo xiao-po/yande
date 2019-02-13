@@ -20,7 +20,7 @@ class MyImageViewer extends StatefulWidget {
 class _MyImageViewerState extends State<MyImageViewer> {
 
   bool isAssetsLoadingOver;
-  File imageFile = null;
+  File imageFile;
   
   @override
   initState(){

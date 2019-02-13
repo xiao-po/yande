@@ -20,7 +20,7 @@ class _ResultViewState extends State<ResultView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   ScrollController _controller;
   List<ImageModel> imageList = new List();
-  bool isShortcut = null;
+  bool isShortcut;
 
   bool updateTagListLock = false;
   bool loadingStatus = false;

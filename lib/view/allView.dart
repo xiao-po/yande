@@ -7,3 +7,4 @@ export 'search/resultView.dart';
 export 'search/searchDelegate.dart';
 export 'download/downloadView.dart';
 export 'collectView/collectImageView.dart';
+export 'setting/settingView.dart';

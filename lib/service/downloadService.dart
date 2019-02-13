@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:yande/model/all_model.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:yande/dao/all_dao.dart';
+import 'settingService.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
 
@@ -14,8 +14,8 @@ class DownloadService {
     await ImageDao.updateDownloadImageStatus(image);
 
     try {
-      Directory yandeImageDir = await DownloadService.getImageDir();
-      String yandeImageDirPath = yandeImageDir.path;
+      String yandeImageDirPath =
+          (await SettingService.getSetting(SETTING_TYPE.IMAGE_DOWNLOAD_PATH)).value ;
       String filePath = '$yandeImageDirPath/${image.id}.${image.fileExt}';
       await dio.download(
           image.fileUrl,
@@ -34,14 +34,6 @@ class DownloadService {
   }
 
   static Future<Directory> getImageDir() async {
-    Directory appDocDir = await getExternalStorageDirectory();
-    Directory yandeImageDir = new Directory("${appDocDir.path}/DCIM/yandeImage");
-    bool isExist = await yandeImageDir.exists();
-    if (isExist) {
-      return yandeImageDir;
-    } else {
-      return await yandeImageDir.create();
-    }
   }
 
 }
