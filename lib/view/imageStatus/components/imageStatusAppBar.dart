@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yande/model/all_model.dart';
 import 'package:yande/widget/allWidget.dart';
+import 'package:yande/service/services.dart';
 import 'icons.dart';
 
 
@@ -18,6 +19,11 @@ class ImageStatusSliverAppBar extends StatelessWidget {
       actions: <Widget>[
         new ImageStatusButton(
           showStatus: this.showDialog,
+        ),
+        ImageShareButton(
+          onTap: () {
+            ShareService.shareImage(image.sampleUrl);
+          },
         )
       ],
       backgroundColor: Theme.of(context).accentColor,

@@ -19,3 +19,21 @@ class ImageStatusButton extends StatelessWidget {
   }
 
 }
+class ImageShareButton extends StatelessWidget {
+
+  final Function onTap;
+
+  ImageShareButton({
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.share),
+      tooltip: '分享',
+      onPressed: this.onTap,
+    );
+  }
+
+}
