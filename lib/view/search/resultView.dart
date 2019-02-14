@@ -60,7 +60,7 @@ class _ResultViewState extends State<ResultView> {
   Future<List<ImageModel>> _getImageListByPagesAndLimit(
       int pages, int limit, [List<ImageModel> oldList]) async {
     this.loadingStatus = true;
-    List<ImageModel> newImageList =
+    List<ImageModel> imageList =
         await ImageService.getIndexListByTags(widget.tags, pages, limit);
     SettingItem filterRankItem =await SettingService.getSetting(SETTING_TYPE.FILTER_RANK);
     imageList.removeWhere((image) {
