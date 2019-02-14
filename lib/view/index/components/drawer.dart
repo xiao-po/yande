@@ -82,18 +82,33 @@ class _RightDrawerState extends State<RightDrawer> {
       ).toList(),
     );
     return Drawer(
-      child: new Column(
-        children: <Widget>[
-          new Expanded(
-              child: shortcutListView
-          )
-        ],
+      child: new Container(
+        margin: new EdgeInsets.only(top: 15),
+        child: new Column(
+          children: <Widget>[
+            new Container(
+              color: new Color(0xffeff0f1),
+              child: new ListTile(
+                title: const Text('快速搜索'),
+                trailing: new MaterialButton(
+                  child: new Icon(Icons.settings),
+                  onPressed: () {
+                    print('config');
+                  },
+                ),
+              ),
+            ),
+            new Expanded(
+                child: shortcutListView
+            )
+          ],
+        ),
       )
     );
   }
 
   Future<void> getShortcutList() async{
-    this.shortcutList =await ShortCutService.getShortCutList();
+    this.shortcutList = (await ShortCutService.getShortCutList())??new List();
     setState(() {
 
     });

@@ -68,7 +68,7 @@ class ImageService {
   }
 
   static Future<List<ImageModel>> getAllCollectedImage(int page, int limit) async {
-
+    return await ImageDao.getAllCollectedImage();
   }
 
 }

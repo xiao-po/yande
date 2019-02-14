@@ -11,6 +11,10 @@ class SettingService {
       name: SETTING_TYPE.IMAGE_DOWNLOAD_PATH,
       value: '',
     ),
+    new SettingItem(
+      name: SETTING_TYPE.FILTER_RANK,
+      value: FILTER_RANK.RESTRICTED,
+    )
   ];
 
   static Future<void> initSetting([bool force]) async {
@@ -27,6 +31,8 @@ class SettingService {
             await yandeImageDir.create();
           }
           item.value = yandeImageDir.path;
+          SettingService.saveSetting(item);
+        } else if (item.name == SETTING_TYPE.FILTER_RANK) {
           SettingService.saveSetting(item);
         }
       }
@@ -63,6 +69,14 @@ class SettingService {
 
 class SETTING_TYPE {
   static final String IMAGE_DOWNLOAD_PATH = '图片下载路径';
+  static final String FILTER_RANK = "过滤等级";
+}
+
+class FILTER_RANK {
+  static final String NORMAL = 's';
+  static final String NOT_RESTRICTED = 'q';
+  static final String RESTRICTED = 'e';
+
 }
 
 class SettingItem {

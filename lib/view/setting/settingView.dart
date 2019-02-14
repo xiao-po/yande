@@ -16,6 +16,12 @@ class _SettingViewState extends State<SettingView> {
   bool initSuccess = false;
   List<SettingItem> settingList;
 
+  List<_DropButtonData> dropButtonDataList = [
+      new _DropButtonData(name: '正常向', value: 's'),
+      new _DropButtonData(name: '擦边', value: 'q'),
+      new _DropButtonData(name: '限制', value: 'e')
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -60,6 +66,7 @@ class _SettingViewState extends State<SettingView> {
       return new ListTile(
         title: new Text(v.name),
         subtitle: new Text(v.value),
+        trailing: new Icon(Icons.arrow_forward_ios),
         onTap: () async{
           String path =await Navigator.push(context, new MaterialPageRoute(builder: (c) {
             return new DirectoryPickerView(v.value);
@@ -69,7 +76,36 @@ class _SettingViewState extends State<SettingView> {
           }
         },
       );
+    } else if (v.name == SETTING_TYPE.FILTER_RANK) {
+      return new ListTile(
+        title: new Text(v.name),
+        subtitle: new Text(this.getRankNameByValue(v.value)),
+        trailing: new DropdownButton<String>(
+          value: v.value,
+          onChanged: (String newValue) {
+            v.value = newValue;
+            SettingService.saveSetting(v);
+            setState(() {
+            });
+          },
+          items: this.dropButtonDataList.map((_DropButtonData data) {
+            return new DropdownMenuItem<String>(
+              value: data.value,
+              child: new Text(data.name),
+            );
+          }).toList(),
+        ),
+      );
     }
+  }
+
+  String getRankNameByValue(String val) {
+    for(_DropButtonData data in this.dropButtonDataList) {
+      if (data.value == val) {
+        return data.name;
+      }
+    }
+    throw Error();
   }
 
   FutureOr _handlePickedName(SettingItem item, String path) async{
@@ -81,4 +117,10 @@ class _SettingViewState extends State<SettingView> {
   }
 }
 
+class _DropButtonData{
+  String name;
+  String value;
+
+  _DropButtonData({this.name, this.value});
+}
 

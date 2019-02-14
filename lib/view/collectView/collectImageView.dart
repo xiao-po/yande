@@ -23,6 +23,7 @@ class _CollectImageViewState extends State<CollectImageView> {
   bool updateTagListLock = false;
   bool loadingStatus = false;
   bool noImageLoad = false;
+  bool isInit = true;
   int pages = 1;
   int limit = 20;
 
@@ -56,9 +57,10 @@ class _CollectImageViewState extends State<CollectImageView> {
   /// @Param limit 每页显示条数
   Future<List<ImageModel>> _getImageListByPagesAndLimit(int pages,int limit) async {
     this.loadingStatus = true;
-    List<ImageModel> newImageList =await ImageService.getAllCollectedImage(pages, limit);
+    List<ImageModel> imageList =await ImageService.getAllCollectedImage(pages, limit);
     this.loadingStatus = false;
-    return newImageList;
+    this.isInit = false;
+    return imageList;
   }
 
   /// @Param imageList 新的图片
@@ -112,9 +114,22 @@ class _CollectImageViewState extends State<CollectImageView> {
         footer: footer,
       );
     } else {
-      return new Center(
-        child: new CircularProgressIndicator(),
-      );
+      if (this.isInit) {
+        return new Center(
+          child: new CircularProgressIndicator(),
+        );
+      } else {
+        return new Container(
+          child: new Center(
+            child: const Text(
+                '你没有收藏任何图片',
+                style: TextStyle(
+                    color: Color(0xffcccccc)
+                ),
+            ),
+          ),
+        );
+      }
     }
   }
 

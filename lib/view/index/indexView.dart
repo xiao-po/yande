@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../allView.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:yande/view/index/components/drawer.dart';
 import 'package:yande/service/services.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
@@ -8,7 +7,6 @@ import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/dao/init_dao.dart';
 
 import 'dart:async';
-import 'dart:io';
 
 class IndexView extends StatefulWidget {
   static final String route = "/";
@@ -70,6 +68,7 @@ class _IndexView extends State<IndexView> {
           children: imageList.map((image) =>
               MainImageCard(
                 image,
+                heroPrefix: 'index',
                 imageTap: (ImageModel image) {
                   this._goImageStatus(image);
                 },
@@ -121,18 +120,39 @@ class _IndexView extends State<IndexView> {
 
   /// @Param pages 页码
   /// @Param limit 每页显示条数
-  Future<List<ImageModel>> _getImageListByPagesAndLimit(int pages,int limit) async {
+  Future<List<ImageModel>> _getImageListByPagesAndLimit(int pages,int limit, [List<ImageModel> oldList]) async {
     this.loadingStatus = true;
-    print(pages);
-    List<ImageModel> newImageList =
+    List<ImageModel> imageList =
       await ImageService.getIndexListByPage(pages, limit);
+    SettingItem filterRankItem =await SettingService.getSetting(SETTING_TYPE.FILTER_RANK);
+    imageList.removeWhere((image) {
+      if (filterRankItem.value == FILTER_RANK.RESTRICTED) {
+        return false;
+      } else if (filterRankItem.value == FILTER_RANK.NOT_RESTRICTED) {
+        return image.rating == FILTER_RANK.RESTRICTED ? true : false;
+      } else {
+        return image.rating == FILTER_RANK.RESTRICTED
+            || image.rating == FILTER_RANK.NOT_RESTRICTED ? true : false;
+      }
+    });
     this.loadingStatus = false;
-    return newImageList;
+    if (oldList != null && oldList.length > 0) {
+
+      imageList.addAll(oldList);
+    }
+    if (imageList.length > 10) {
+      return imageList;
+    } else {
+      print('not enough 10');
+      this.pages++;
+      return await this._getImageListByPagesAndLimit(this.pages, this.limit, imageList);
+    }
   }
 
 
   Future<void> _loadPage(int pages,int limit) async {
-    this._updateImageList(await _getImageListByPagesAndLimit(pages, limit));
+    List<ImageModel> imageList = await _getImageListByPagesAndLimit(pages, limit);
+    this._updateImageList(imageList);
   }
 
 
@@ -190,12 +210,4 @@ class _IndexView extends State<IndexView> {
       new SnackBar(content: Text(text)),
     );
   }
-
-//  Future<void> test() async{
-//    Directory appDocDir = await getExternalStorageDirectory();
-//    List<FileSystemEntity> dirList =await appDocDir.list().toList();
-//    for(FileSystemEntity dir in dirList) {
-//      FileStat stat = dir.statSync();
-//    }
-//  }
 }
