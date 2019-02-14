@@ -68,14 +68,14 @@ class SettingService {
 }
 
 class SETTING_TYPE {
-  static final String IMAGE_DOWNLOAD_PATH = '图片下载路径';
-  static final String FILTER_RANK = "过滤等级";
+  static const String IMAGE_DOWNLOAD_PATH = '图片下载路径';
+  static const String FILTER_RANK = "过滤等级";
 }
 
 class FILTER_RANK {
-  static final String NORMAL = 's';
-  static final String NOT_RESTRICTED = 'q';
-  static final String RESTRICTED = 'e';
+  static const String NORMAL = 's';
+  static const String NOT_RESTRICTED = 'q';
+  static const String RESTRICTED = 'e';
 
 }
 
