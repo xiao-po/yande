@@ -38,7 +38,7 @@ class _IndexView extends State<IndexView> {
     super.initState();
     MyDateBase.initDateBase();
     SettingService.initSetting();
-    this.test();
+//    this.test();
     _controller = new ScrollController()..addListener(_scrollListener);
     this._reloadGallery();
   }
@@ -191,12 +191,11 @@ class _IndexView extends State<IndexView> {
     );
   }
 
-  Future<void> test() async{
-    Directory appDocDir = await getExternalStorageDirectory();
-    List<FileSystemEntity> dirList =await appDocDir.list().toList();
-    for(FileSystemEntity dir in dirList) {
-      FileStat stat = dir.statSync();
-      print('${dir.path}: ${stat.type}');
-    }
-  }
+//  Future<void> test() async{
+//    Directory appDocDir = await getExternalStorageDirectory();
+//    List<FileSystemEntity> dirList =await appDocDir.list().toList();
+//    for(FileSystemEntity dir in dirList) {
+//      FileStat stat = dir.statSync();
+//    }
+//  }
 }

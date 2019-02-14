@@ -21,7 +21,7 @@ class ImageService {
         item.tagTagModelList = item.tags.split(" ")
             .map((str) => new TagModel(null, str, null, null, null)).toList();
       }
-      ImageModel dto =await ImageDao.isImageCollectExistById(item.id);
+      ImageModel dto =await ImageDao.isImageExistById(item.id);
       if(dto != null) {
         item.collectStatus = dto.collectStatus;
         item.downloadStatus = dto.downloadStatus;

@@ -29,6 +29,31 @@ class ImageDao {
     }
   }
 
+  static Future<ImageModel> isImageExistById(int id, [Database database]) async {
+    bool isHasDatabase = true;
+    if (database == null) {
+      isHasDatabase = false;
+      database =await MyDateBase.getDataBase();
+    }
+    try {
+      List list = await database.rawQuery(
+          _ImageCollectDaoUtils.generateSearchImageByIdRawSql(id)
+      );
+      if (list != null && list.length > 0) {
+        return ImageModel.fromJson(Map.from(list[0]));
+      } else {
+        return null;
+      }
+    } catch(e) {
+      print(e);
+      return null;
+    } finally {
+      if (!isHasDatabase) {
+        await database.close();
+      }
+    }
+  }
+
 
   static Future<bool> isImageDetailExistById(int id, [Database database]) async {
     bool isHasDatabase = true;
@@ -237,6 +262,11 @@ class _ImageCollectDaoUtils {
   static String generateSearchCollectByIdRawSql(int id) {
     return "select * from ${MyDateBaseValue.Image} where "
         "collect_status = ${ImageCollectStatus.star?.index} and id = $id";
+  }
+
+  static String generateSearchImageByIdRawSql(int id) {
+    return "select * from ${MyDateBaseValue.Image} where "
+        "id = $id";
   }
 
 }

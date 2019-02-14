@@ -3,6 +3,7 @@ import 'package:yande/model/all_model.dart';
 import 'package:yande/dao/all_dao.dart';
 import 'settingService.dart';
 import 'dart:io';
+import 'package:yande/utils/utils.dart';
 import 'package:dio/dio.dart';
 
 
@@ -25,6 +26,7 @@ class DownloadService {
 
       image.downloadStatus = ImageDownloadStatus.success;
       image.downloadPath = filePath;
+      ScanImagePlugins.broadcast(filePath);
       await ImageDao.updateDownloadImageStatus(image);
     }catch(e) {
 

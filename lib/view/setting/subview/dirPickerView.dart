@@ -20,7 +20,7 @@ class DirectoryPickerView extends StatefulWidget {
 class _DirectoryPickerView extends State<DirectoryPickerView>{
 
   bool isLoading = true;
-  List<Directory> dirList;
+  List<MyDirectoryStat> dirList;
   Directory currentDir;
   String rootPath;
 
@@ -87,7 +87,7 @@ class _DirectoryPickerView extends State<DirectoryPickerView>{
     });
   }
 
-  List<Widget> _buildDirListTile(List<Directory> dirList) {
+  List<Widget> _buildDirListTile(List<MyDirectoryStat> dirList) {
     List<Widget> listTiles = new List();
     if (this.currentDir.path != this.rootPath) {
       listTiles.add(new ListTile(
