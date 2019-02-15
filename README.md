@@ -5,6 +5,8 @@
 ## 预览
 
 ![](https://raw.githubusercontent.com/xiao-po/readme_image/master/image/yandeIndexPage.jpg)
+![](https://raw.githubusercontent.com/xiao-po/readme_image/master/image/yandeRightDrawer.jpg)
+![](https://raw.githubusercontent.com/xiao-po/readme_image/master/image/yandeSettingView.jpg)
 
 ## 目录结构
 

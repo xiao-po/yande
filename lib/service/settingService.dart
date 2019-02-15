@@ -13,7 +13,7 @@ class SettingService {
     ),
     new SettingItem(
       name: SETTING_TYPE.FILTER_RANK,
-      value: FILTER_RANK.RESTRICTED,
+      value: FILTER_RANK.NORMAL,
     )
   ];
 

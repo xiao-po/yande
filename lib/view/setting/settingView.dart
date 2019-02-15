@@ -13,6 +13,7 @@ class SettingView extends StatefulWidget {
 
 class _SettingViewState extends State<SettingView> {
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool initSuccess = false;
   List<SettingItem> settingList;
 
@@ -31,6 +32,7 @@ class _SettingViewState extends State<SettingView> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: _scaffoldKey,
       appBar: new AppBar(
         leading: new BackButton(),
         title: const Text('设置'),
@@ -85,6 +87,7 @@ class _SettingViewState extends State<SettingView> {
           onChanged: (String newValue) {
             v.value = newValue;
             SettingService.saveSetting(v);
+            this._showMessageBySnackbar("过滤等级更新成功，刷新之后生效");
             setState(() {
             });
           },
@@ -114,6 +117,15 @@ class _SettingViewState extends State<SettingView> {
     setState(() {
 
     });
+  }
+
+  _showMessageBySnackbar(String text) {
+    _scaffoldKey.currentState.showSnackBar(
+      new SnackBar(
+          content: Text(text),
+          duration: new Duration(seconds: 1),
+      ),
+    );
   }
 }
 
