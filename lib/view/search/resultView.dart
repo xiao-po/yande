@@ -141,7 +141,7 @@ class _ResultViewState extends State<ResultView> {
       );
     }
     if (imageList.length > 0) {
-      new RefreshIndicator(
+      return new RefreshIndicator(
         child: new LazyLoadGridView(
           controller: _controller,
           children: imageList
@@ -158,12 +158,15 @@ class _ResultViewState extends State<ResultView> {
     }
   }
 
-  MainImageCard _buildImageCard(image) => MainImageCard(
-              image,
-              imageTap: (ImageModel image) => this._goImageStatus(image),
-              collectEvent: () => this.collectAction(image),
-              downloadEvent: () => this.downloadAction(image),
-            );
+  MainImageCard _buildImageCard(ImageModel image) {
+    return MainImageCard(
+      image,
+      imageTap: (ImageModel image) => this._goImageStatus(image),
+      collectEvent: () => this.collectAction(image),
+      downloadEvent: () => this.downloadAction(image),
+      heroPrefix: "${image.pages}result",
+    );
+  }
 
   _goImageStatus(ImageModel image) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {

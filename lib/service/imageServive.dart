@@ -31,6 +31,7 @@ class ImageService {
           item.downloadStatus = ImageDownloadStatus.error;
         }
       }
+      item.pages = pages;
       trueList.add(item);
     }
     return trueList;
@@ -51,6 +52,16 @@ class ImageService {
         item.tagTagModelList = item.tags.split(" ")
             .map((str) => new TagModel(null, str, null, null, null)).toList();
 
+      }
+      ImageModel dto =await ImageDao.isImageExistById(item.id);
+      if(dto != null) {
+        item.collectStatus = dto.collectStatus;
+        item.downloadStatus = dto.downloadStatus;
+        if (dto.downloadStatus == ImageDownloadStatus.success) {
+          item.downloadPath = dto.downloadPath;
+        } else if (dto.downloadStatus != null){
+          item.downloadStatus = ImageDownloadStatus.error;
+        }
       }
       item.pages = pages;
       trueList.add(item);
