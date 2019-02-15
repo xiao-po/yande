@@ -229,7 +229,7 @@ class _ImageDaoUtils {
         "preview_width, preview_height, rating,"
         "sample_url,jpeg_url, "
         "jpeg_height, jpeg_width, jpeg_file_size, "
-        "download_status, download_path, collect_status ) "
+        "download_status, download_path, collect_status, width, height ) "
         "values"
         " (${image.id},'${image.tags}','${image.author}',"
         "'${image.fileUrl}','${image.source}',${image.fileSize},"
@@ -237,7 +237,8 @@ class _ImageDaoUtils {
         "'${image.previewWidth}',${image.previewHeight},'${image.rating}',"
         "'${image.sampleUrl}','${image.jpegUrl}',"
         "${image.jpegHeight},${image.jpegWidth},${image.jpegFileSize},"
-        "${image.downloadStatus?.index},${image.downloadPath},${image.collectStatus?.index})";
+        "${image.downloadStatus?.index},${image.downloadPath},${image.collectStatus?.index},"
+        "${image.width}, ${image.height})";
   }
   static String generateDeleteImageByIdRawSql(int id){
     return "delete from ${MyDateBaseValue.Image} where id = $id";

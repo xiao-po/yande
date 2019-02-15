@@ -4,7 +4,7 @@ import 'package:yande/widget/allWidget.dart';
 import 'package:yande/model/all_model.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
-import 'package:yande/service/services.dart';
+import 'package:yande/service/allServices.dart';
 import 'dart:async';
 
 class ResultView extends StatefulWidget {
@@ -130,6 +130,7 @@ class _ResultViewState extends State<ResultView> {
                   collectEvent: () {
                     this.collectAction(image);
                   },
+                  heroPrefix: '${image.pages}result',
                   downloadEvent: () {
                     DownloadService.downloadImage(image);
                   },

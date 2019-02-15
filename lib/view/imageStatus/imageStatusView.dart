@@ -3,7 +3,7 @@ import '../allView.dart';
 import 'dart:async';
 import 'package:yande/model/all_model.dart';
 import 'components/status_dialog.dart';
-import 'package:yande/service/services.dart';
+import 'package:yande/service/allServices.dart';
 import 'components/imageStatusAppBar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 

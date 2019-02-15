@@ -68,7 +68,15 @@ class ImageService {
   }
 
   static Future<List<ImageModel>> getAllCollectedImage(int page, int limit) async {
-    return await ImageDao.getAllCollectedImage();
+    List imageList = await ImageDao.getAllCollectedImage();
+    if (imageList != null && imageList.length > 0) {
+      for (ImageModel imageModel in imageList) {
+        imageModel.pages = page;
+        imageModel.tagTagModelList = imageModel.tags.split(" ")
+            .map((str) => new TagModel(null, str, null, null, null)).toList();
+      }
+    }
+    return imageList;
   }
 
 }

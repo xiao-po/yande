@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:yande/dao/all_dao.dart';
 import 'tag_model.dart';
 
 part 'image_model.g.dart';

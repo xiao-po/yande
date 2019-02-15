@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../allView.dart';
 import 'package:yande/view/index/components/drawer.dart';
-import 'package:yande/service/services.dart';
+import 'package:yande/service/allServices.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/dao/init_dao.dart';
@@ -36,7 +36,6 @@ class _IndexView extends State<IndexView> {
     super.initState();
     MyDateBase.initDateBase();
     SettingService.initSetting();
-//    this.test();
     _controller = new ScrollController()..addListener(_scrollListener);
     this._reloadGallery();
   }
@@ -68,7 +67,7 @@ class _IndexView extends State<IndexView> {
           children: imageList.map((image) =>
               MainImageCard(
                 image,
-                heroPrefix: 'index',
+                heroPrefix: '${image.pages}index',
                 imageTap: (ImageModel image) {
                   this._goImageStatus(image);
                 },
@@ -209,5 +208,16 @@ class _IndexView extends State<IndexView> {
     _scaffoldKey.currentState.showSnackBar(
       new SnackBar(content: Text(text)),
     );
+  }
+
+  DateTime currentBackPressTime = DateTime.now();
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      this._showMessageBySnackbar('再按一次退出程序');
+      return Future.value(false);
+    }
+    return Future.value(true);
   }
 }

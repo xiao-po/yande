@@ -1,4 +1,4 @@
-# yande
+# ![](https://github.com/dart-lang/logos/blob/master/flutter/icon/64.png?raw=true)yande
 
 一个 [yande](http://yande.re) 的第三方 app .可以下载和查看 图片，并且收藏图片和将 tag 加入快捷搜索栏。
 
@@ -21,6 +21,29 @@
 |   `-- widget // 公共组件
 `-- test
 ```
+
+## build 
+1. 运行 `flutter packages pub run build_runner build ` , 生成 model 的 json factory。如果想直接打包请忽略 1，2 两个步骤。
+2. 修改 `lib/model/` 中， `*.g.dart` 中 enum 对象的值. （由于枚举类型不好映射出值，直接修改，也可以通过一个 function 来处理枚举类型的 value， 解决这个问题，我认为修改为 index 的值是最简单的 ）
+    
+   example:
+   
+   ```dart
+   const _$ImageCollectStatusEnumMap = <ImageCollectStatus, dynamic>{
+        ImageCollectStatus.star: 'star',
+        ImageCollectStatus.unStar: 'unStar'
+      };
+   ```
+   
+   修改为 
+   
+   ```dart
+   const _$ImageCollectStatusEnumMap = <ImageCollectStatus, dynamic>{
+     ImageCollectStatus.star: 0,
+     ImageCollectStatus.unStar: 1
+   };
+   ```
+3. `flutter build apk`，在 `build/app/outputs/apk/release/` 下找到生成的 apk.
 
 ## 第三方依赖
 

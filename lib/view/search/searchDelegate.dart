@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yande/model/all_model.dart';
-import 'package:yande/service/services.dart';
+import 'package:yande/service/allServices.dart';
 import 'resultView.dart';
 import 'dart:async';
 

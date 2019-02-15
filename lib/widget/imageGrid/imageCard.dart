@@ -88,7 +88,7 @@ class MainImageCard extends StatelessWidget {
             this.imageTap(imageModel);
           },
           child: Hero(
-            tag: '${imageModel.pages}$heroPrefix${imageModel.id}',
+            tag: '$heroPrefix${imageModel.id}',
             child: new CachedNetworkImage(
                 placeholder: new ImageCardCircularProgressIndicator(),
                 imageUrl: imageModel.previewUrl

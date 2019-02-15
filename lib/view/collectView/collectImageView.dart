@@ -5,7 +5,7 @@ import 'package:yande/widget/allWidget.dart';
 import 'package:yande/model/all_model.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
-import 'package:yande/service/services.dart';
+import 'package:yande/service/allServices.dart';
 
 class CollectImageView extends StatefulWidget {
 
@@ -108,7 +108,7 @@ class _CollectImageViewState extends State<CollectImageView> {
               downloadEvent: (){
                 DownloadService.downloadImage(image);
               },
-              heroPrefix: 'collect',
+              heroPrefix: '${image.pages}collect',
             )
         ).toList(),
         footer: footer,

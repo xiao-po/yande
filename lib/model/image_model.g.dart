@@ -54,6 +54,7 @@ ImageModel _$ImageModelFromJson(Map<String, dynamic> json) {
         ?.map((e) =>
             e == null ? null : TagModel.fromJson(e as Map<String, dynamic>))
         ?.toList()
+    ..pages = json['pages'] as int
     ..collectStatus = _$enumDecodeNullable(
         _$ImageCollectStatusEnumMap, json['collect_status'])
     ..downloadStatus = _$enumDecodeNullable(
@@ -66,6 +67,7 @@ Map<String, dynamic> _$ImageModelToJson(ImageModel instance) =>
       'id': instance.id,
       'tags': instance.tags,
       'tagTagModelList': instance.tagTagModelList,
+      'pages': instance.pages,
       'collect_status': _$ImageCollectStatusEnumMap[instance.collectStatus],
       'download_status': _$ImageDownloadStatusEnumMap[instance.downloadStatus],
       'download_path': instance.downloadPath,
