@@ -78,7 +78,6 @@ class MainImageCard extends StatelessWidget {
       width: 200,
       child: new Container(
         decoration: new BoxDecoration(
-//          color: Color(0x10000000),
           borderRadius: new BorderRadius.vertical(
               top: Radius.circular(5)
           )

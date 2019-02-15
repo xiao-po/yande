@@ -6,6 +6,8 @@ import 'package:yande/widget/allWidget.dart';
 import 'subview/dirPickerView.dart';
 
 class SettingView extends StatefulWidget {
+  static const title = '设置';
+  static const route = '/setting';
   @override
   State<StatefulWidget> createState() => _SettingViewState();
 

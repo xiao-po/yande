@@ -23,26 +23,19 @@ class LeftDrawer extends StatelessWidget{
                     title: const Text('收藏'),
                     onTap: () {
                       Navigator.pop(context);
-                      Navigator.push(context,
-                          MaterialPageRoute(
-                              builder: (context) {
-                                return CollectImageView();
-                              }
-                          )
-                      );
+                      Navigator.pushNamed(context, CollectImageView.route);
                     },
                   ),
                   new ListTile(
                     title: const Text('设置'),
                     onTap: (){
                       Navigator.pop(context);
-                      Navigator.pushNamed(context, '/setting');
+                      Navigator.pushNamed(context, SettingView.route);
                     },
                   )
                 ],
               ),
             )
-
           )
         ],
       ),
@@ -52,11 +45,8 @@ class LeftDrawer extends StatelessWidget{
 }
 
 class RightDrawer extends StatefulWidget {
-
-
   @override
   State<RightDrawer> createState() => new _RightDrawerState();
-
 }
 
 class _RightDrawerState extends State<RightDrawer> {
@@ -65,41 +55,19 @@ class _RightDrawerState extends State<RightDrawer> {
   @override
   void initState() {
     super.initState();
-//    this.shortcutList.add('test');
     this.getShortcutList();
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget shortcutListView = new ListView(
-      children: this.shortcutList.map(
-              (word) => new ListTile(
-              title: new Text(word),
-              onTap: () {
-                this._goResultView(word);
-              }
-          )
-      ).toList(),
-    );
     return Drawer(
       child: new Container(
         margin: new EdgeInsets.only(top: 15),
         child: new Column(
           children: <Widget>[
-            new Container(
-              color: new Color(0xffeff0f1),
-              child: new ListTile(
-                title: const Text('快速搜索'),
-                trailing: new MaterialButton(
-                  child: new Icon(Icons.settings),
-                  onPressed: () {
-                    print('config');
-                  },
-                ),
-              ),
-            ),
+            _buildShortcutDrawerHeader(),
             new Expanded(
-                child: shortcutListView
+                child: _buildShortcutList()
             )
           ],
         ),
@@ -107,11 +75,38 @@ class _RightDrawerState extends State<RightDrawer> {
     );
   }
 
+  Widget _buildShortcutList() {
+    Widget shortcutListView = new ListView(
+      children: this.shortcutList.map(
+          (word) => new ListTile(
+              title: new Text(word),
+              onTap: () {
+                this._goResultView(word);
+              }
+          )
+      ).toList(),
+    );
+    return shortcutListView;
+  }
+
   Future<void> getShortcutList() async{
     this.shortcutList = (await ShortCutService.getShortCutList())??new List();
     setState(() {
 
     });
+  }
+
+  _buildShortcutDrawerHeader({GestureTapCallback onPressed}) {
+    return new Container(
+      color: new Color(0xffeff0f1),
+      child: new ListTile(
+        title: const Text('快速搜索'),
+        trailing: new MaterialButton(
+          child: new Icon(Icons.settings),
+          onPressed: onPressed
+        ),
+      ),
+    );
   }
 
   _goResultView(String word) {

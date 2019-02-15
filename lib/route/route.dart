@@ -35,14 +35,19 @@ List<ViewRoute> _allViewRoutes() {
       buildRoute: (BuildContext context) => IndexView(),
     ),
     ViewRoute(
-      title: ImageStatusView.title,
-      routeName: ImageStatusView.route,
-      buildRoute: (BuildContext context) => ImageStatusView(),
+      title: CollectImageView.title,
+      routeName: CollectImageView.route,
+      buildRoute: (BuildContext context) => CollectImageView(),
     ),
     ViewRoute(
-      title: '设置',
-      routeName: '/setting',
+      title: SettingView.title,
+      routeName: SettingView.route,
       buildRoute: (BuildContext context) => SettingView(),
+    ),
+    ViewRoute(
+      title: TagSearchView.title,
+      routeName: TagSearchView.route,
+      buildRoute: (BuildContext context) => TagSearchView(),
     ),
   ];
 }

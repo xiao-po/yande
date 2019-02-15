@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import '../allView.dart';
-import 'dart:async';
 import 'package:yande/model/all_model.dart';
 import 'components/status_dialog.dart';
 import 'package:yande/service/allServices.dart';
 import 'components/imageStatusAppBar.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class ImageStatusView extends StatefulWidget {
   static final String route = "/status";
@@ -33,14 +31,10 @@ class _ImageStatusView extends State<ImageStatusView> {
           slivers: <Widget>[
             new ImageStatusSliverAppBar(
               image: widget.image,
-              showDialog: () {
-                showDialog(
-                    context: context,
-                    builder: (context) => ImageStatusDialog(widget.image));
-              },
+              showDialog: () => this._showImageStatus(),
             ),
             SliverList(
-              delegate: SliverChildListDelegate(<Widget>[
+                delegate: SliverChildListDelegate(<Widget>[
                   new ImageActionButtonFiled(
                     children: <Widget>[
                       _buildLargeButton(
@@ -57,7 +51,7 @@ class _ImageStatusView extends State<ImageStatusView> {
                     children: widget.image.tagTagModelList.map((tag) => _buildSearchChip(tag)).toList(),
                   )
                 ]
-              )
+                )
             )
           ],
         ),
@@ -67,63 +61,64 @@ class _ImageStatusView extends State<ImageStatusView> {
 
   FloatingActionButton _buildMaterialButton() {
     if (widget.image.collectStatus == ImageCollectStatus.star) {
-      return new FloatingActionButton(
-        key: new ValueKey(this.fabKey),
-        child: new Icon(
-          Icons.star,
-          size: 30,
-          color: Colors.amberAccent,
-        ),
-        onPressed: () async{
-          ImageModel image = await ImageService.collectImage(widget.image);
-          widget.image.collectStatus = image.collectStatus;
-          setState(() {
-
-          });
-        },
-      );
+      return _buildAddCollectFloatingButton();
     } else {
-      return new FloatingActionButton(
-        key: this.fabKey,
-        child: new Icon(
-          Icons.star_border,
-          size: 30,
-        ),
-        onPressed: () async{
-          ImageModel image = await ImageService.collectImage(widget.image);
-          widget.image.collectStatus = image.collectStatus;
-          setState(() {
-
-          });
-        },
-      );
+      return _buildDeleteCollectFloatingButton();
     }
 
+  }
+
+  FloatingActionButton _buildDeleteCollectFloatingButton() {
+    return new FloatingActionButton(
+      key: this.fabKey,
+      child: new Icon(
+        Icons.star_border,
+        size: 30,
+      ),
+      onPressed: () => this.collectEvent(),
+    );
+  }
+
+  void collectEvent() async{
+
+    ImageModel image = await ImageService.collectImage(widget.image);
+    widget.image.collectStatus = image.collectStatus;
+    setState(() {
+
+    });
+  }
+
+  FloatingActionButton _buildAddCollectFloatingButton() {
+    return new FloatingActionButton(
+      key: new ValueKey(this.fabKey),
+      child: new Icon(
+        Icons.star,
+        size: 30,
+        color: Colors.amberAccent,
+      ),
+      onPressed: () => this.collectEvent(),
+    );
   }
 
   Widget _buildSearchChip(TagModel tag) {
     return new Container(
       margin: new EdgeInsets.only(
-        left: 5,
-        right: 5
+          left: 5,
+          right: 5
       ),
-      child: ActionChip(
+      child: _tagChip(tag),
+    );
+  }
+
+  ActionChip _tagChip(TagModel tag) {
+    return ActionChip(
         backgroundColor: Color(0x44eeeeee),
         label: Text(tag.name),
-        onPressed: () {
-          Navigator.push(
-              context,
-              new MaterialPageRoute(
-                  builder: (context) {
-                    return new ResultView(
-                      tags: tag.name,
-                    );
-                  }
-              )
-          );
-        },
+        onPressed: () => Navigator.push(
+            context,
+            new MaterialPageRoute(builder: (context) => new ResultView(tags: tag.name))
+        )
 
-      ),
     );
   }
 
@@ -162,9 +157,7 @@ class _ImageStatusView extends State<ImageStatusView> {
       setState(() {
 
       });
-      await DownloadService.downloadImage(
-          image
-      );
+      await DownloadService.downloadImage(image);
       setState(() {
 
       });
@@ -193,21 +186,11 @@ class _ImageStatusView extends State<ImageStatusView> {
     );
   }
 
-  Future<ImageInfo> _getImage(url) {
-    ImageProvider imageProvider = new CachedNetworkImageProvider(url);
-    final Completer completer = Completer<ImageInfo>();
-    final ImageStream stream =
-    imageProvider.resolve(const ImageConfiguration());
-    final listener = (ImageInfo info, bool synchronousCall) {
-      if (!completer.isCompleted) {
-        completer.complete(info);
-      }
-    };
-    stream.addListener(listener);
-    completer.future.then((_) {
-      stream.removeListener(listener);
-    });
-    return completer.future;
+  _showImageStatus() {
+    showDialog(
+        context: context,
+        builder: (context) => ImageStatusDialog(widget.image)
+    );
   }
 }
 

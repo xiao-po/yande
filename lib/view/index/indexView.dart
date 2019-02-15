@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../allView.dart';
+import 'package:yande/value.dart';
 import 'package:yande/view/index/components/drawer.dart';
 import 'package:yande/service/allServices.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
@@ -27,9 +28,12 @@ class _IndexView extends State<IndexView> {
   List<ImageModel> imageList = new List();
 
   bool updateTagListLock = false;
-  bool loadingStatus = false;
+  GridViewLoadingStatus loadingStatus = GridViewLoadingStatus.pending;
+  bool isInitError = false;
   int pages = 1;
   int limit = 20;
+
+  String filterRank;
 
   @override
   void initState() {
@@ -64,23 +68,26 @@ class _IndexView extends State<IndexView> {
       return new RefreshIndicator(
         child: new LazyLoadGridView(
           controller: _controller,
-          children: imageList.map((image) =>
-              MainImageCard(
-                image,
-                heroPrefix: '${image.pages}index',
-                imageTap: (ImageModel image) {
-                  this._goImageStatus(image);
-                },
-                collectEvent: (){
-                  this.collectAction(image);
-                },
-                downloadEvent: (){
-                  this.downloadAction(image);
-                },
-              )
-          ).toList(),
+          children: imageList.map(_buildImageCard).toList(),
         ),
-        onRefresh: _reloadGallery,
+        onRefresh: this._reloadGallery,
+      );
+    } else if (this.isInitError == true) {
+      return new GestureDetector(
+        child: new Container(
+          height: double.infinity,
+          width: double.infinity,
+          child: new Center(
+            child: const Text(
+                '加载失败了呢~\n点击重试',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: const Color(0xffcccccc)
+                ),
+            ),
+          ),
+        ),
+        onTap: () => this._reloadGallery(),
       );
     } else {
       return new Center(
@@ -89,20 +96,27 @@ class _IndexView extends State<IndexView> {
     }
   }
 
+  MainImageCard _buildImageCard(image) =>
+          MainImageCard(
+            image,
+            heroPrefix: '${image.pages}index',
+            imageTap: (ImageModel image) => this._goImageStatus(image),
+            collectEvent: () => this.collectAction(image),
+            downloadEvent: () => this.downloadAction(image),
+          );
+
   _goImageStatus(ImageModel image){
-    Navigator.push(context,
+    Navigator.push(
+        context,
         MaterialPageRoute(
-          builder: (context) {
-            return ImageStatusView(
-              image: image,
-            );
-          }
-        ));
+          builder: (context) => ImageStatusView(image: image)
+        )
+    );
   }
 
 
   void _scrollListener() {
-    if (_controller.position.extentAfter < 50 && !loadingStatus ) {
+    if (_controller.position.extentAfter < 50 && this.loadingStatus != GridViewLoadingStatus.pending ) {
       this.pages++;
       this._loadPage(this.pages, this.limit);
     }
@@ -112,46 +126,59 @@ class _IndexView extends State<IndexView> {
   /// 事件方法，允许修改数据
   Future<void> _reloadGallery() async {
     this.pages = 1;
-    this.imageList =await _getImageListByPagesAndLimit(pages, this.limit);
+    this.isInitError = false;
+    try{
+      this._updateImageList(await _getImageListByPagesAndLimit(pages, this.limit));
+    }catch(e) {
+      if (this.loadingStatus == GridViewLoadingStatus.error) {
+        this.isInitError = true;
+      }
+    }
     setState(() {
     });
   }
 
   /// @Param pages 页码
   /// @Param limit 每页显示条数
-  Future<List<ImageModel>> _getImageListByPagesAndLimit(int pages,int limit, [List<ImageModel> oldList]) async {
-    this.loadingStatus = true;
-    List<ImageModel> imageList =
-      await ImageService.getIndexListByPage(pages, limit);
-    SettingItem filterRankItem =await SettingService.getSetting(SETTING_TYPE.FILTER_RANK);
-    imageList.removeWhere((image) {
-      if (filterRankItem.value == FILTER_RANK.RESTRICTED) {
-        return false;
-      } else if (filterRankItem.value == FILTER_RANK.NOT_RESTRICTED) {
-        return image.rating == FILTER_RANK.RESTRICTED ? true : false;
-      } else {
-        return image.rating == FILTER_RANK.RESTRICTED
-            || image.rating == FILTER_RANK.NOT_RESTRICTED ? true : false;
-      }
-    });
-    this.loadingStatus = false;
-    if (oldList != null && oldList.length > 0) {
+  Future<List<ImageModel>> _getImageListByPagesAndLimit
+      (int pages,int limit, [List<ImageModel> oldList]) async {
 
-      imageList.addAll(oldList);
+    this.loadingStatus = GridViewLoadingStatus.pending;
+
+    try{
+      List<ImageModel> imageList =
+        await ImageService.getIndexListByPage(pages, limit);
+
+      SettingItem filterRankItem =await SettingService.getSetting(SETTING_TYPE.FILTER_RANK);
+      this.filterRank = filterRankItem.value;
+      imageList.removeWhere(_imageFilter);
+
+      this.loadingStatus = GridViewLoadingStatus.success;
+      if (oldList != null && oldList.length > 0) {
+
+        imageList.addAll(oldList);
+      }
+      if (imageList.length > 10) {
+        return imageList;
+      } else {
+        this.pages++;
+        return await this._getImageListByPagesAndLimit(this.pages, this.limit, imageList);
+      }
+    }catch(e){
+      this.loadingStatus = GridViewLoadingStatus.error;
+      throw e;
     }
-    if (imageList.length > 10) {
-      return imageList;
-    } else {
-      print('not enough 10');
-      this.pages++;
-      return await this._getImageListByPagesAndLimit(this.pages, this.limit, imageList);
-    }
+
   }
 
 
   Future<void> _loadPage(int pages,int limit) async {
-    List<ImageModel> imageList = await _getImageListByPagesAndLimit(pages, limit);
-    this._updateImageList(imageList);
+    try{
+      List<ImageModel> imageList = await _getImageListByPagesAndLimit(pages, limit);
+      this._updateImageList(imageList);
+    }catch(e) {
+      print(e);
+    }
   }
 
 
@@ -166,14 +193,7 @@ class _IndexView extends State<IndexView> {
       tooltip: 'Search',
       icon: const Icon(Icons.search),
       onPressed: () async {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) {
-                  return TagSearchView();
-                }
-            )
-        );
+        Navigator.pushNamed(context, TagSearchView.route );
       },
     );
   }
@@ -188,18 +208,11 @@ class _IndexView extends State<IndexView> {
 
   void downloadAction(ImageModel image) async{
     if (image.downloadStatus != ImageDownloadStatus.pending
-        && image.downloadStatus != ImageDownloadStatus.success
-    ) {
+        && image.downloadStatus != ImageDownloadStatus.success) {
       this._showMessageBySnackbar("开始下载");
-      setState(() {
-
-      });
-      await DownloadService.downloadImage(
-          image
-      );
-      setState(() {
-
-      });
+      setState(() {});
+      await DownloadService.downloadImage(image);
+      setState(() {});
     }
   }
 
@@ -210,14 +223,14 @@ class _IndexView extends State<IndexView> {
     );
   }
 
-  DateTime currentBackPressTime = DateTime.now();
-  Future<bool> onWillPop() {
-    DateTime now = DateTime.now();
-    if (now.difference(currentBackPressTime) > Duration(seconds: 2)) {
-      currentBackPressTime = now;
-      this._showMessageBySnackbar('再按一次退出程序');
-      return Future.value(false);
+  bool _imageFilter(ImageModel image) {
+    if (this.filterRank == FILTER_RANK.RESTRICTED) {
+      return false;
+    } else if (this.filterRank == FILTER_RANK.NOT_RESTRICTED) {
+      return image.rating == FILTER_RANK.RESTRICTED ? true : false;
+    } else {
+      return image.rating == FILTER_RANK.RESTRICTED
+          || image.rating == FILTER_RANK.NOT_RESTRICTED ? true : false;
     }
-    return Future.value(true);
   }
 }

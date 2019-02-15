@@ -5,6 +5,8 @@ import 'resultView.dart';
 import 'dart:async';
 
 class TagSearchView extends StatefulWidget {
+  static const title = 'Tag搜索';
+  static const route = '/search';
   @override
   State<StatefulWidget> createState() => _TagSearchState();
 
@@ -16,7 +18,6 @@ class _TagSearchState extends State<TagSearchView> {
   final TextEditingController _searchQuery = new TextEditingController();
   bool isLoading = false;
   String lastSearchWord = "";
-
 
   Widget buildLeading(BuildContext context) {
     return new IconButton(
@@ -45,7 +46,6 @@ class _TagSearchState extends State<TagSearchView> {
     setState(() {
       this.isLoading = true;
     });
-    print("search ${this._searchQuery.text}");
     List<TagModel> result =await this.searchTag(this._searchQuery.text);
     this.lastSearchWord = this._searchQuery.text;
     setState(() {

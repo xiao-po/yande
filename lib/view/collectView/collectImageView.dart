@@ -8,7 +8,8 @@ import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/service/allServices.dart';
 
 class CollectImageView extends StatefulWidget {
-
+  static const title = '收藏';
+  static const route = '/collect';
   CollectImageView();
 
   @override
@@ -99,15 +100,9 @@ class _CollectImageViewState extends State<CollectImageView> {
         children: imageList.map((image) =>
             MainImageCard(
               image,
-              imageTap: (ImageModel image) {
-                this._goImageStatus(image);
-              },
-              collectEvent: (){
-                this.collectAction(image);
-              },
-              downloadEvent: (){
-                DownloadService.downloadImage(image);
-              },
+              imageTap: (ImageModel image) => this._goImageStatus(image),
+              collectEvent: () => this.collectAction(image),
+              downloadEvent: () => this.downloadAction(image),
               heroPrefix: '${image.pages}collect',
             )
         ).toList(),
@@ -149,5 +144,21 @@ class _CollectImageViewState extends State<CollectImageView> {
     setState(() {
 
     });
+  }
+
+  void downloadAction(ImageModel image) async{
+    if (image.downloadStatus != ImageDownloadStatus.pending
+        && image.downloadStatus != ImageDownloadStatus.success) {
+      this._showMessageBySnackbar("开始下载");
+      setState(() {});
+      await DownloadService.downloadImage(image);
+      setState(() {});
+    }
+  }
+
+  _showMessageBySnackbar(String text) {
+    _scaffoldKey.currentState.showSnackBar(
+      new SnackBar(content: Text(text)),
+    );
   }
 }

@@ -23,10 +23,13 @@ class _ResultViewState extends State<ResultView> {
   bool isShortcut;
 
   bool updateTagListLock = false;
-  bool loadingStatus = false;
+  GridViewLoadingStatus loadingStatus = GridViewLoadingStatus.pending;
+  bool isInitError = false;
   bool noImageLoad = false;
   int pages = 1;
   int limit = 20;
+
+  String filterRank;
 
   Key get fabKey => new ValueKey<String>('resultViewFabkey');
 
@@ -35,11 +38,11 @@ class _ResultViewState extends State<ResultView> {
     super.initState();
     this.getShortcutStatus();
     _controller = new ScrollController()..addListener(_scrollListener);
-    this._loadPage(this.pages, this.limit);
+    this._reloadGallery();
   }
 
   void _scrollListener() {
-    if (_controller.position.extentAfter < 50 && !loadingStatus) {
+    if (_controller.position.extentAfter < 50 && this.loadingStatus != GridViewLoadingStatus.pending) {
       this.pages++;
       this._loadPage(this.pages, this.limit);
     }
@@ -51,39 +54,58 @@ class _ResultViewState extends State<ResultView> {
     this._controller.dispose();
   }
 
+  /// 事件方法，允许修改数据
+  Future<void> _reloadGallery() async {
+    this.pages = 1;
+    try{
+      this._updateImageList(await _getImageListByPagesAndLimit(pages, this.limit));
+    }catch(e) {
+      if (this.loadingStatus == GridViewLoadingStatus.error) {
+        this.isInitError = true;
+      }
+    }
+    setState(() {
+    });
+  }
+
   Future<void> _loadPage(int pages, int limit) async {
-    this._updateImageList(await _getImageListByPagesAndLimit(pages, limit));
+    try{
+      this._updateImageList(await _getImageListByPagesAndLimit(pages, limit));
+    }catch(e) {
+      print(e);
+    }
   }
 
   /// @Param pages 页码
   /// @Param limit 每页显示条数
   Future<List<ImageModel>> _getImageListByPagesAndLimit(
       int pages, int limit, [List<ImageModel> oldList]) async {
-    this.loadingStatus = true;
-    List<ImageModel> imageList =
-        await ImageService.getIndexListByTags(widget.tags, pages, limit);
-    SettingItem filterRankItem =await SettingService.getSetting(SETTING_TYPE.FILTER_RANK);
-    imageList.removeWhere((image) {
-      if (filterRankItem.value != FILTER_RANK.RESTRICTED) {
-        return false;
-      } else if (filterRankItem.value == FILTER_RANK.NOT_RESTRICTED) {
-        return image.rating == FILTER_RANK.RESTRICTED ? true : false;
-      } else {
-        return image.rating == FILTER_RANK.RESTRICTED
-            || image.rating == FILTER_RANK.NOT_RESTRICTED ? true : false;
-      }
-    });
-    this.loadingStatus = false;
-    if (oldList != null && oldList.length > 0) {
+    this.loadingStatus = GridViewLoadingStatus.pending;
 
-      imageList.addAll(oldList);
-    }
-    if (imageList.length > 10) {
-      return imageList;
-    } else {
-      print('not enough 10');
-      this.pages++;
-      return await this._getImageListByPagesAndLimit(this.pages, this.limit, imageList);
+    try{
+
+      List<ImageModel> imageList =
+      await ImageService.getIndexListByTags(widget.tags, pages, limit);
+
+
+      SettingItem filterRankItem =await SettingService.getSetting(SETTING_TYPE.FILTER_RANK);
+      this.filterRank = filterRankItem.value;
+      imageList.removeWhere(_imageFilter);
+
+      this.loadingStatus = GridViewLoadingStatus.success;
+      if (oldList != null && oldList.length > 0) {
+
+        imageList.addAll(oldList);
+      }
+      if (imageList.length > 10) {
+        return imageList;
+      } else {
+        this.pages++;
+        return await this._getImageListByPagesAndLimit(this.pages, this.limit, imageList);
+      }
+    }catch(e) {
+      this.loadingStatus = GridViewLoadingStatus.success;
+      throw e;
     }
   }
 
@@ -119,24 +141,15 @@ class _ResultViewState extends State<ResultView> {
       );
     }
     if (imageList.length > 0) {
-      return new LazyLoadGridView(
-        controller: _controller,
-        children: imageList
-            .map((image) => MainImageCard(
-                  image,
-                  imageTap: (ImageModel image) {
-                    this._goImageStatus(image);
-                  },
-                  collectEvent: () {
-                    this.collectAction(image);
-                  },
-                  heroPrefix: '${image.pages}result',
-                  downloadEvent: () {
-                    DownloadService.downloadImage(image);
-                  },
-                ))
-            .toList(),
-        footer: footer,
+      new RefreshIndicator(
+        child: new LazyLoadGridView(
+          controller: _controller,
+          children: imageList
+              .map(_buildImageCard)
+              .toList(),
+          footer: footer,
+        ),
+        onRefresh: this._reloadGallery,
       );
     } else {
       return new Center(
@@ -144,6 +157,13 @@ class _ResultViewState extends State<ResultView> {
       );
     }
   }
+
+  MainImageCard _buildImageCard(image) => MainImageCard(
+              image,
+              imageTap: (ImageModel image) => this._goImageStatus(image),
+              collectEvent: () => this.collectAction(image),
+              downloadEvent: () => this.downloadAction(image),
+            );
 
   _goImageStatus(ImageModel image) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -160,42 +180,79 @@ class _ResultViewState extends State<ResultView> {
 
   _buildFloatingButton() {
     if (this.isShortcut == false) {
-      return new FloatingActionButton(
-          key: this.fabKey,
-          child: new Icon(
-            Icons.add,
-          ),
-          onPressed: () {
-            this._addShortcut(widget.tags);
-          });
+      return _buildAddShortcutFloatingButton();
     } else if (this.isShortcut == true) {
-      return new FloatingActionButton(
-          key: new ValueKey(this.fabKey),
-          child: new Icon(
-            Icons.delete,
-          ),
-          backgroundColor: Colors.red,
-          onPressed: () {
-            this._addShortcut(widget.tags);
-          });
+      return _buildDeleteShortcutFloatingButton();
     } else {
       return new Container();
     }
   }
 
+  FloatingActionButton _buildDeleteShortcutFloatingButton() {
+      return new FloatingActionButton(
+        key: new ValueKey(this.fabKey),
+        child: new Icon(
+          Icons.delete,
+        ),
+        backgroundColor: Colors.red,
+        onPressed: () {
+          this._deleteShortcut(widget.tags);
+        });
+  }
+
+  FloatingActionButton _buildAddShortcutFloatingButton() {
+    return new FloatingActionButton(
+        key: this.fabKey,
+        child: new Icon(
+          Icons.add,
+        ),
+        onPressed: () {
+          this._addShortcut(widget.tags);
+        });
+  }
+
+  void _deleteShortcut(String tags) async{
+
+    ShortCutService.deleteShortCutWord(tags);
+    this.isShortcut = false;
+    setState(() {});
+  }
+
   void _addShortcut(String tags) async {
-    if (this.isShortcut) {
-      ShortCutService.deleteShortCutWord(tags);
-      this.isShortcut = false;
-    } else {
-      ShortCutService.addShortCutWord(tags);
-      this.isShortcut = true;
-    }
+    ShortCutService.addShortCutWord(tags);
+    this.isShortcut = true;
     setState(() {});
   }
 
   void getShortcutStatus() async {
     this.isShortcut = await ShortCutService.isShortcutExist(widget.tags);
     setState(() {});
+  }
+
+  void downloadAction(ImageModel image) async{
+    if (image.downloadStatus != ImageDownloadStatus.pending
+        && image.downloadStatus != ImageDownloadStatus.success) {
+      this._showMessageBySnackbar("开始下载");
+      setState(() {});
+      await DownloadService.downloadImage(image);
+      setState(() {});
+    }
+  }
+
+  _showMessageBySnackbar(String text) {
+    _scaffoldKey.currentState.showSnackBar(
+      new SnackBar(content: Text(text)),
+    );
+  }
+
+  bool _imageFilter(ImageModel image) {
+    if (this.filterRank == FILTER_RANK.RESTRICTED) {
+      return false;
+    } else if (this.filterRank == FILTER_RANK.NOT_RESTRICTED) {
+      return image.rating == FILTER_RANK.RESTRICTED ? true : false;
+    } else {
+      return image.rating == FILTER_RANK.RESTRICTED
+          || image.rating == FILTER_RANK.NOT_RESTRICTED ? true : false;
+    }
   }
 }
