@@ -10,8 +10,9 @@ class ImageStatusView extends StatefulWidget {
   static final String title = "imageStatus";
 
   final ImageModel image;
+  final String heroPrefix;
 
-  ImageStatusView({this.image});
+  ImageStatusView({this.image, this.heroPrefix});
 
   @override
   State<StatefulWidget> createState() => _ImageStatusView();
@@ -31,6 +32,7 @@ class _ImageStatusView extends State<ImageStatusView> {
           slivers: <Widget>[
             new ImageStatusSliverAppBar(
               image: widget.image,
+              heroPrefix: widget.heroPrefix,
               showDialog: () => this._showImageStatus(),
             ),
             SliverList(
@@ -128,6 +130,7 @@ class _ImageStatusView extends State<ImageStatusView> {
             builder: (context) {
               return ImageGalleryView(
                 image: widget.image,
+                heroPrefix: widget.heroPrefix,
               );
             }
         ));

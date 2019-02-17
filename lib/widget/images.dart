@@ -13,7 +13,6 @@ class MyCachedImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // sql查询
 
     ImageModel image;
 

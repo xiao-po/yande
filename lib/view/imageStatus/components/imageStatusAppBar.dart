@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:yande/model/all_model.dart';
 import 'package:yande/widget/allWidget.dart';
 import 'package:yande/service/allServices.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'icons.dart';
 
+class ImageStatusSliverAppBar extends StatefulWidget {
 
-class ImageStatusSliverAppBar extends StatelessWidget {
   final ImageModel image;
   final Function showDialog;
   final String heroPrefix;
@@ -13,34 +14,114 @@ class ImageStatusSliverAppBar extends StatelessWidget {
   ImageStatusSliverAppBar({this.image, this.showDialog, this.heroPrefix});
 
   @override
+  State<StatefulWidget> createState() => _ImageStatusSliverAppBarState();
+
+
+}
+
+
+class _ImageStatusSliverAppBarState extends State<ImageStatusSliverAppBar> {
+  bool imageLoadOver = false;
+
+  @override
+  void initState() {
+    super.initState();
+    this.listenImageLoadOver();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return SliverAppBar(
       automaticallyImplyLeading: false,
-      actions: <Widget>[
-        new ImageStatusButton(
-          showStatus: this.showDialog,
-        ),
-        ImageShareButton(
-          onTap: () {
-            ShareService.shareImage(image.sampleUrl);
-          },
-        )
-      ],
+      actions: _buildAppBarActionButton(),
       backgroundColor: Theme.of(context).accentColor,
       expandedHeight: 400.0,
       flexibleSpace: FlexibleSpaceBar(
         background: new Container(
           decoration: new BoxDecoration(color: Colors.white),
           child: Hero(
-            tag: '$heroPrefix${this.image.id}',
-            child: new MyCachedImage(
-              url: this.image.sampleUrl,
-            ),
+            tag: '${widget.heroPrefix}${widget.image.id}',
+            child: _buildCacheImage(),
           ),
         ),
       ),
       pinned: true,
     );
+  }
+
+  List<Widget> _buildAppBarActionButton() {
+    if (this.imageLoadOver) {
+      return <Widget>[
+        new ImageStatusButton(
+          showStatus: widget.showDialog,
+        ),
+        new ImageShareButton(
+          onTap: () {
+            ShareService.shareImage(widget.image.sampleUrl);
+          },
+        )
+      ];
+    } else {
+      return <Widget>[
+        new ImageStatusButton(
+          showStatus: widget.showDialog,
+        )
+      ];
+    }
+
+  }
+
+  Widget _buildCacheImage() {
+    if (!this.imageLoadOver) {
+      return new Stack(
+        children: <Widget>[
+          new Container(
+            height: double.infinity,
+            width: double.infinity,
+            child: CachedNetworkImage(
+              placeholder: new ImageCardCircularProgressIndicator(),
+              imageUrl: widget.image.previewUrl,
+              fit: BoxFit.cover,
+            ),
+          ),
+          new Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              new Container(
+                height: 30,
+                width: double.infinity,
+                alignment: Alignment.bottomRight,
+                color: Color(0x5a000000),
+                child: new Container(
+                  width: 20,
+                  height: 30,
+                  margin: new EdgeInsets.all(5),
+                  child: new CircularProgressIndicator(
+                    strokeWidth: 3,
+                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ],
+      );
+    } else {
+      return new CachedNetworkImage(
+        placeholder: new ImageCardCircularProgressIndicator(),
+        imageUrl: widget.image.sampleUrl,
+        fit: BoxFit.cover,
+      );
+    }
+  }
+
+  void listenImageLoadOver() async{
+    await CacheService.getFile(widget.image.sampleUrl);
+    this.imageLoadOver = true;
+    print('over');
+    setState(() {});
   }
 }
 

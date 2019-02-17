@@ -100,16 +100,16 @@ class _IndexView extends State<IndexView> {
           MainImageCard(
             image,
             heroPrefix: '${image.pages}index',
-            imageTap: (ImageModel image) => this._goImageStatus(image),
+            imageTap: (ImageModel image) => this._goImageStatus(image, '${image.pages}index'),
             collectEvent: () => this.collectAction(image),
             downloadEvent: () => this.downloadAction(image),
           );
 
-  _goImageStatus(ImageModel image){
+  _goImageStatus(ImageModel image, String heroPrefix){
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ImageStatusView(image: image)
+          builder: (context) => ImageStatusView(image: image, heroPrefix: heroPrefix)
         )
     );
   }
@@ -146,8 +146,7 @@ class _IndexView extends State<IndexView> {
     this.loadingStatus = GridViewLoadingStatus.pending;
 
     try{
-      List<ImageModel> imageList =
-        await ImageService.getIndexListByPage(pages, limit);
+      List<ImageModel> imageList =await ImageService.getIndexListByPage(pages, limit);
 
       SettingItem filterRankItem =await SettingService.getSetting(SETTING_TYPE.FILTER_RANK);
       this.filterRank = filterRankItem.value;
