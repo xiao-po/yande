@@ -57,6 +57,7 @@ class _ResultViewState extends State<ResultView> {
   /// 事件方法，允许修改数据
   Future<void> _reloadGallery() async {
     this.pages = 1;
+    this.imageList = new List();
     try{
       this._updateImageList(await _getImageListByPagesAndLimit(pages, this.limit));
     }catch(e) {

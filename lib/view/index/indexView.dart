@@ -127,6 +127,7 @@ class _IndexView extends State<IndexView> {
   Future<void> _reloadGallery() async {
     this.pages = 1;
     this.isInitError = false;
+    this.imageList = new List();
     try{
       this._updateImageList(await _getImageListByPagesAndLimit(pages, this.limit));
     }catch(e) {
