@@ -55,6 +55,7 @@ class _ImageStatusSliverAppBarState extends State<ImageStatusSliverAppBar> {
       return <Widget>[
         new ImageStatusButton(
           showStatus: widget.showDialog,
+
         ),
         new ImageShareButton(
           onTap: () {

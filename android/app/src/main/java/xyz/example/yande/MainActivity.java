@@ -1,19 +1,16 @@
-package com.example.yande;
+package xyz.example.yande;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
-import com.example.yande.plugins.ScanImageFileBroadCastPlugin;
+import xyz.example.yande.plugins.ScanImageFileBroadCastPlugin;
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 
@@ -27,7 +24,7 @@ public class MainActivity extends FlutterActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     GeneratedPluginRegistrant.registerWith(this);
-    ScanImageFileBroadCastPlugin.registerWith(this.registrarFor("com.example.yande.plugins.ScanImageFileBroadCastPlugin"));
+    ScanImageFileBroadCastPlugin.registerWith(this.registrarFor("ScanImageFileBroadCastPlugin"));
 
 
     // 版本判断。当手机系统大于 23 时，才有必要去判断权限是否获取

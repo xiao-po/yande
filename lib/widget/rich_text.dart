@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/gestures.dart';
 
 class LinkTextSpan extends TextSpan {
@@ -21,7 +20,6 @@ class LinkTextSpan extends TextSpan {
       style: style,
       text: text ?? url,
       recognizer: TapGestureRecognizer()..onTap = () {
-        launch(url, forceWebView: true);
       }
   );
 }
