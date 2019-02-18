@@ -86,5 +86,5 @@ class SettingItem {
   SettingItem({
     this.name,
     this.value
-  }):assert(name != null), assert(value != null);
+  }):assert(name != null);
 }

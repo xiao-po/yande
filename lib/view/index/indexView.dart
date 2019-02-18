@@ -6,6 +6,7 @@ import 'package:yande/service/allServices.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/dao/init_dao.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'dart:async';
 
@@ -40,6 +41,9 @@ class _IndexView extends State<IndexView> {
     super.initState();
     MyDateBase.initDateBase();
     SettingService.initSetting();
+
+    UpdateService.ignoreUpdateVersion('');
+    this.checkUpdate();
     _controller = new ScrollController()..addListener(_scrollListener);
     this._reloadGallery();
   }
@@ -197,6 +201,21 @@ class _IndexView extends State<IndexView> {
     );
   }
 
+  void checkUpdate() {
+    UpdateService.getVersion(
+      shouldUpdate: (githubRelease){
+        showDialog(
+            context: context,
+            builder: (context) => UpdateDialog(
+              version: githubRelease.tagName,
+              text: githubRelease.body,
+              url: githubRelease.htmlUrl
+            )
+        );
+      },
+    );
+  }
+
   Future<void> collectAction(ImageModel image) async {
 
     image = await ImageService.collectImage(image);
@@ -231,5 +250,50 @@ class _IndexView extends State<IndexView> {
       return image.rating == FILTER_RANK.RESTRICTED
           || image.rating == FILTER_RANK.NOT_RESTRICTED ? true : false;
     }
+  }
+
+}
+
+class UpdateDialog extends StatelessWidget {
+
+  final String version;
+  final String text;
+  final String url;
+
+  UpdateDialog({
+    this.version,
+    this.text,
+    this.url,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+        title: const Text('新版本已经发布'),
+        content: new Text(this.text),
+        actions: <Widget>[
+          new FlatButton(
+              child: const Text('忽略此版本'),
+              onPressed: () {
+                UpdateService.ignoreUpdateVersion(version);
+                Navigator.pop(context);
+              }
+          ),
+          new FlatButton(
+              child: const Text('暂时不'),
+              onPressed: () {
+                Navigator.pop(context);
+              }
+          ),
+          new FlatButton(
+              child: const Text('更新'),
+              onPressed: () async{
+                if (await canLaunch(this.url)) {
+                  await launch(url);
+                }
+              }
+          )
+        ],
+    );
   }
 }
