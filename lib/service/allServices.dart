@@ -9,3 +9,4 @@ export 'shortcutService.dart';
 export 'shareService.dart';
 export 'settingService.dart';
 export 'cacheService.dart';
+export 'updateService.dart';

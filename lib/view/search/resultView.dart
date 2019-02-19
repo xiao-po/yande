@@ -59,7 +59,7 @@ class _ResultViewState extends State<ResultView> {
     this.pages = 1;
     this.imageList = new List();
     try{
-      this._updateImageList(await _getImageListByPagesAndLimit(pages, this.limit));
+      this.imageList = await _getImageListByPagesAndLimit(pages, this.limit);
     }catch(e) {
       if (this.loadingStatus == GridViewLoadingStatus.error) {
         this.isInitError = true;

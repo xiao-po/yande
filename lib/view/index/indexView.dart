@@ -3,6 +3,7 @@ import '../allView.dart';
 import 'package:yande/value.dart';
 import 'package:yande/view/index/components/drawer.dart';
 import 'package:yande/service/allServices.dart';
+import 'package:yande/widget/allWidget.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/dao/init_dao.dart';
@@ -40,6 +41,9 @@ class _IndexView extends State<IndexView> {
     super.initState();
     MyDateBase.initDateBase();
     SettingService.initSetting();
+
+    UpdateService.ignoreUpdateVersion('');
+    this.checkUpdate();
     _controller = new ScrollController()..addListener(_scrollListener);
     this._reloadGallery();
   }
@@ -129,7 +133,7 @@ class _IndexView extends State<IndexView> {
     this.isInitError = false;
     this.imageList = new List();
     try{
-      this._updateImageList(await _getImageListByPagesAndLimit(pages, this.limit));
+      this.imageList = await _getImageListByPagesAndLimit(pages, this.limit);
     }catch(e) {
       if (this.loadingStatus == GridViewLoadingStatus.error) {
         this.isInitError = true;
@@ -198,6 +202,21 @@ class _IndexView extends State<IndexView> {
     );
   }
 
+  void checkUpdate() {
+    UpdateService.getVersion(
+      shouldUpdate: (githubRelease){
+        showDialog(
+            context: context,
+            builder: (context) => UpdateDialog(
+              version: githubRelease.tagName,
+              text: githubRelease.body,
+              url: githubRelease.htmlUrl
+            )
+        );
+      },
+    );
+  }
+
   Future<void> collectAction(ImageModel image) async {
 
     image = await ImageService.collectImage(image);
@@ -233,4 +252,6 @@ class _IndexView extends State<IndexView> {
           || image.rating == FILTER_RANK.NOT_RESTRICTED ? true : false;
     }
   }
+
 }
+
