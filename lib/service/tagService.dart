@@ -3,7 +3,7 @@ import 'package:yande/model/all_model.dart';
 import 'API/all_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
-
+import 'package:yande/dao/all_dao.dart';
 
 class TagService {
 
@@ -36,12 +36,7 @@ class TagService {
   }
 
   static void addShortCutWord(String word) async {
-    List<String> shortcutList =await TagService._getBlockList();
-    if (shortcutList == null) {
-      shortcutList = new List();
-    }
-    shortcutList.add(word);
-    TagService._setBlockList(shortcutList);
+    TagDao.collectTag(new TagModel(null, word, null, null, null));
   }
 
   static void deleteShortCutWord(String word) async {

@@ -15,9 +15,14 @@ class MyDateBase {
     return await openDatabase(path, version: 1,
       onCreate: (Database db, int version) async {
         await db.execute(
-            'CREATE TABLE ${MyDateBaseValue.Shortcut} ('
-                'keyword TEXT,'
-                'nickname TEXT'
+            'CREATE TABLE ${MyDateBaseValue.Tag} ('
+                'id INTEGER,'
+                'name TEXT,'
+                'nick_name TEXT,'
+                'count INTEGER,'
+                'type INTERGER,'
+                'ambigous BOOL,'
+                'collect_status INTERGER'
                 ')'
         );
         await db.execute(
@@ -50,9 +55,8 @@ class MyDateBase {
 }
 
 class MyDateBaseValue {
-  static const TagCollect = "tagCollect";
+  static const Tag = "tag";
   static const Image = "image";
-  static const Shortcut = 'shortcut';
 }
 
 class ImageTableColumn {
@@ -78,4 +82,14 @@ class ImageTableColumn {
   static const downloadStatus = "download_status";
   static const downloadPath = "download_path";
 
+}
+
+class TagTableColumn {
+  static const id = 'id';
+  static const name = 'name';
+  static const nickName = 'nick_name';
+  static const count = 'count';
+  static const type = 'type';
+  static const ambiguous = 'ambiguous';
+  static const collectStatus = 'collect_status';
 }

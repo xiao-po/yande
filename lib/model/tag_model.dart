@@ -12,8 +12,14 @@ class TagModel extends Object {
   @JsonKey(name: 'name')
   String name;
 
+  @JsonKey(name: 'nick_name')
+  String nickName;
+
   @JsonKey(name: 'count')
   int count;
+
+  @JsonKey(name: 'order')
+  int order;
 
   @JsonKey(name: 'type')
   int type;
@@ -43,6 +49,7 @@ class TagModel extends Object {
 enum TagCollectStatus {
   none,
   collected,
+  block,
 }
 
 final List<String> TagType = ["普通","画师","会社","角色",null,];
