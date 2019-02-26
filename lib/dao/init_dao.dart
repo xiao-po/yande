@@ -45,7 +45,7 @@ class MyDateBase {
                 'jpeg_width INTEGER,'
                 'jpeg_height INTEGER,'
                 'jpeg_file_size INTEGER,'
-                'collect_status INTEGER,'
+                'collect_status String,'
                 'download_status String,'
                 'download_path INTEGER'
                 ')');

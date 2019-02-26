@@ -134,13 +134,13 @@ T _$enumDecodeNullable<T>(Map<T, dynamic> enumValues, dynamic source) {
 }
 
 const _$ImageCollectStatusEnumMap = <ImageCollectStatus, dynamic>{
-  ImageCollectStatus.star: 0,
-  ImageCollectStatus.unStar: 1
+  ImageCollectStatus.star: 'star',
+  ImageCollectStatus.unStar: 'unStar'
 };
 
 const _$ImageDownloadStatusEnumMap = <ImageDownloadStatus, dynamic>{
-  ImageDownloadStatus.none: 0,
-  ImageDownloadStatus.pending: 1,
-  ImageDownloadStatus.success: 2,
-  ImageDownloadStatus.error: 3
+  ImageDownloadStatus.none: 'none',
+  ImageDownloadStatus.pending: 'pending',
+  ImageDownloadStatus.success: 'success',
+  ImageDownloadStatus.error: 'error'
 };

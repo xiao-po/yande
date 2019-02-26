@@ -170,6 +170,16 @@ class ImageModel extends Object {
   }
 
 
+  String getDownloadStatus() {
+    return MappingImageDownloadStatus(this.downloadStatus);
+  }
+
+  String getCollectStatus() {
+    return MappingImageCollectStatus(this.collectStatus);
+  }
+
+
+
 }
 
 
@@ -181,7 +191,33 @@ enum ImageDownloadStatus {
   error,
 }
 
+MappingImageDownloadStatus(ImageDownloadStatus imageDownloadStatus) {
+  const map = <ImageDownloadStatus, dynamic>{
+    ImageDownloadStatus.none: 'none',
+    ImageDownloadStatus.pending: 'pending',
+    ImageDownloadStatus.success: 'success',
+    ImageDownloadStatus.error: 'error'
+  };
+  for(ImageDownloadStatus status in map.keys) {
+    if (imageDownloadStatus == status) {
+      return map[status];
+    }
+  }
+}
+
 enum ImageCollectStatus {
   star,
   unStar
+}
+
+MappingImageCollectStatus(ImageCollectStatus imageDownloadStatus) {
+  const map = <ImageCollectStatus, dynamic>{
+    ImageCollectStatus.star: 'star',
+    ImageCollectStatus.unStar: 'unStar'
+  };
+  for(ImageCollectStatus status in map.keys) {
+    if (imageDownloadStatus == status) {
+      return map[status];
+    }
+  }
 }

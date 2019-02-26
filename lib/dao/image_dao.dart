@@ -209,7 +209,7 @@ class _ImageDownloadDaoUtils {
 
   static String generateImageDownloadStatusUpdateRawSql(ImageModel image) {
     return "UPDATE ${MyDateBaseValue.Image} SET "
-        "${ImageTableColumn.downloadStatus} = ${image.downloadStatus?.index} "
+        "${ImageTableColumn.downloadStatus} = '${image.getDownloadStatus()}' "
         "where "
         "id = ${image.id}";
   }
@@ -237,7 +237,7 @@ class _ImageDaoUtils {
         "'${image.previewWidth}',${image.previewHeight},'${image.rating}',"
         "'${image.sampleUrl}','${image.jpegUrl}',"
         "${image.jpegHeight},${image.jpegWidth},${image.jpegFileSize},"
-        "${image.downloadStatus?.index},${image.downloadPath},${image.collectStatus?.index},"
+        "'${image.getDownloadStatus()}',${image.downloadPath},'${image.getCollectStatus()}'"
         "${image.width}, ${image.height})";
   }
   static String generateDeleteImageByIdRawSql(int id){
@@ -249,12 +249,12 @@ class _ImageDaoUtils {
 class _ImageCollectDaoUtils {
   static String generateGetAllCollectedImageRawSql(){
     return "select * from ${MyDateBaseValue.Image} where "
-        "collect_status = ${ImageCollectStatus.star?.index} ";
+        "collect_status = '${MappingImageCollectStatus(ImageCollectStatus.star)}' ";
   }
 
   static String generateImageCollectUpdateRawSql(ImageModel image) {
     return "UPDATE ${MyDateBaseValue.Image} SET "
-        "${ImageTableColumn.collectStatus} = ${image.collectStatus?.index} "
+        "${ImageTableColumn.collectStatus} = '${image.getCollectStatus()}' "
         "where "
         "id = ${image.id}";
 
@@ -262,7 +262,7 @@ class _ImageCollectDaoUtils {
 
   static String generateSearchCollectByIdRawSql(int id) {
     return "select * from ${MyDateBaseValue.Image} where "
-        "collect_status = ${ImageCollectStatus.star?.index} and id = $id";
+        "collect_status = '${MappingImageCollectStatus(ImageCollectStatus.star)}' and id = $id";
   }
 
   static String generateSearchImageByIdRawSql(int id) {
