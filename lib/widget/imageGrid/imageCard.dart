@@ -5,6 +5,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 typedef ImageTapCallBack = void Function(ImageModel);
 
+const cardTopBorderDecoration = const BoxDecoration(
+    borderRadius: const BorderRadius.vertical(
+        top: const Radius.circular(5),
+    )
+);
+
+const cardBottomBorderDecoration = const BoxDecoration(
+    borderRadius: const BorderRadius.vertical(
+      bottom: const Radius.circular(5),
+    )
+);
+
 class MainImageCard extends StatelessWidget {
 
   final ImageModel imageModel;
@@ -27,24 +39,34 @@ class MainImageCard extends StatelessWidget {
       child: new Card(
         child: new Column(
           children: <Widget>[
-            new Stack(
-              children: <Widget>[
-                _buildImageBlockWidget(this.imageModel),
-                _buildImageSizeText(this.imageModel),
-              ],
-            ),
-            new Row(
-              children: <Widget>[
-                _CollectButton(
-                  status: this.imageModel.isCollect(),
-                  onTap: this.collectEvent,
-                ),
-                _DownloadButton(
-                  status: this.imageModel.downloadStatus,
-                  onTap: this.downloadEvent,
+            new Expanded(
+                child: new Stack(
+                  children: <Widget>[
+                    _buildImageBlockWidget(this.imageModel),
+                    _buildImageSizeText(this.imageModel),
+                  ],
                 )
-              ],
             ),
+            new Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                borderRadius: const BorderRadius.vertical(
+                  bottom: const Radius.circular(5),
+                ),
+              ),
+              child: new Row(
+                children: <Widget>[
+                  _CollectButton(
+                    status: this.imageModel.isCollect(),
+                    onTap: this.collectEvent,
+                  ),
+                  _DownloadButton(
+                    status: this.imageModel.downloadStatus,
+                    onTap: this.downloadEvent,
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -73,27 +95,21 @@ class MainImageCard extends StatelessWidget {
   }
 
   Widget _buildImageBlockWidget(ImageModel imageModel) {
-    return new SizedBox(
-      height: 140,
-      width: 200,
+    return new Center(
       child: new Container(
-        decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.vertical(
-              top: Radius.circular(5)
-          )
-        ),
-        child: new GestureDetector(
-          onTap: (){
-            this.imageTap(imageModel);
-          },
-          child: Hero(
-            tag: '$heroPrefix${imageModel.id}',
-            child: new CachedNetworkImage(
-                placeholder: new ImageCardCircularProgressIndicator(),
-                imageUrl: imageModel.previewUrl
+          decoration: cardTopBorderDecoration,
+          child: new GestureDetector(
+            onTap: (){
+              this.imageTap(imageModel);
+            },
+            child: Hero(
+              tag: '$heroPrefix${imageModel.id}',
+              child: new CachedNetworkImage(
+                  placeholder: new ImageCardCircularProgressIndicator(),
+                  imageUrl: imageModel.previewUrl
+              ),
             ),
-          ),
-        )
+          )
       ),
     );
   }
@@ -169,14 +185,16 @@ class _CardMaterialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  new Material(
-      child: new InkWell(
-        child: new Container(
+    return  new Expanded(
+      child: new Material(
+        child: new InkWell(
+          child: new Container(
             width: 85,
             height: 30,
             child: child,
+          ),
+          onTap: this.onTap,
         ),
-        onTap: this.onTap,
       ),
     );
   }
