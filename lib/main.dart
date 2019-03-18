@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:yande/route/route.dart';
+import 'package:yande/store/store.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+
+  MyApp() {
+    TagStore.init();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

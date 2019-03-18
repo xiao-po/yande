@@ -5,6 +5,7 @@ import 'package:yande/model/all_model.dart';
 import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/service/allServices.dart';
+import 'package:yande/store/store.dart';
 import 'dart:async';
 
 class ResultView extends StatefulWidget {
@@ -215,22 +216,21 @@ class _ResultViewState extends State<ResultView> {
         });
   }
 
-  void _deleteShortcut(String tags) async{
+  void _deleteShortcut(String tag) async{
 
-    ShortCutService.deleteShortCutWord(tags);
+    TagStore.unCollectTag(new TagModel(null, tag, null, null, null));
     this.isShortcut = false;
     setState(() {});
   }
 
-  void _addShortcut(String tags) async {
-    ShortCutService.addShortCutWord(tags);
+  void _addShortcut(String tag) async {
+    TagStore.collectTag(new TagModel(null, tag, null, null, null));
     this.isShortcut = true;
     setState(() {});
   }
 
-  void getShortcutStatus() async {
-    this.isShortcut = await ShortCutService.isShortcutExist(widget.tags);
-    setState(() {});
+  void getShortcutStatus() {
+    this.isShortcut = TagStore.isCollectByName(widget.tags);
   }
 
   void downloadAction(ImageModel image) async{

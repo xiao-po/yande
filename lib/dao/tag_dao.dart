@@ -33,7 +33,7 @@ class TagDao {
     }
   }
 
-  static Future<bool> collectTag(TagModel tag) async {
+  static Future<bool> saveTag(TagModel tag) async {
     Database database =await MyDateBase.getDataBase();
     try {
       bool isTagExist =
@@ -86,6 +86,27 @@ class TagDao {
     try {
       List list = await database.query(
           MyDateBaseValue.Tag
+      );
+      if (list != null && list.length > 0) {
+        return list.map((val) => TagModel.fromJson(Map.from(val)));
+      } else {
+        return null;
+      }
+    } catch(e) {
+      print(e);
+      return null;
+    } finally {
+      await database.close();
+    }
+  }
+
+  static Future<List<TagModel>> getAllBlockTag() async {
+    Database database =await MyDateBase.getDataBase();
+    try {
+      List list = await database.query(
+          MyDateBaseValue.Tag,
+          where: '${TagTableColumn.collectStatus} = ?',
+          whereArgs: [TagCollectStatus.block]
       );
       if (list != null && list.length > 0) {
         return list.map((val) => TagModel.fromJson(Map.from(val)));

@@ -18,44 +18,28 @@ class TagService {
         TagModel.fromJson(Map<String, dynamic>.from(item))).toList();
 
     return tagList;
-
   }
 
-  static Future<bool> isTagBlockByName(String word) async {
-    List<String> shortcutList =await TagService._getBlockList();
-    if (shortcutList != null) {
-      int index = shortcutList.indexOf(word);
-      if (index > -1 ) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
+
+  static Future<void> saveTag(TagModel tag) async{
+    await TagDao.saveTag(tag);
   }
 
-  static void addShortCutWord(String word) async {
-    TagDao.collectTag(new TagModel(null, word, null, null, null));
+
+  static Future<List<TagModel>> getAllCollectTag() async{
+    return await TagDao.getAllCollectTag();
   }
 
-  static void deleteShortCutWord(String word) async {
-    List<String> shortcutList =await TagService._getBlockList();
-    int index = shortcutList.indexOf(word);
-    shortcutList.removeAt(index);
-    TagService._setBlockList(shortcutList);
+  static Future<List<TagModel>> getAllBlockTag() async {
+    return await TagDao.getAllBlockTag();
   }
 
-  static void _setBlockList(List<String> blockList) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(BLOCK_TAG, blockList);
-  }
 
-  static Future<List<String>> _getBlockList() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getStringList(BLOCK_TAG);
-  }
 
+  static setCollectStatus(TagModel tag) async {
+    tag.collectStatus = TagCollectStatus.collected;
+    await TagService.saveTag(tag);
+  }
 
 }
 

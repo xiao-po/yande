@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:yande/model/all_model.dart';
 import 'package:yande/view/allView.dart';
-import 'package:yande/service/allServices.dart';
+import 'package:yande/store/store.dart';
 
 
 class LeftDrawer extends StatelessWidget{
@@ -50,7 +51,7 @@ class RightDrawer extends StatefulWidget {
 }
 
 class _RightDrawerState extends State<RightDrawer> {
-  List<String> shortcutList = new List();
+  List<TagModel> shortcutList = new List();
 
   @override
   void initState() {
@@ -78,10 +79,10 @@ class _RightDrawerState extends State<RightDrawer> {
   Widget _buildShortcutList() {
     Widget shortcutListView = new ListView(
       children: this.shortcutList.map(
-          (word) => new ListTile(
-              title: new Text(word),
+          (tag) => new ListTile(
+              title: new Text(tag.name),
               onTap: () {
-                this._goResultView(word);
+                this._goResultView(tag.name);
               }
           )
       ).toList(),
@@ -89,11 +90,8 @@ class _RightDrawerState extends State<RightDrawer> {
     return shortcutListView;
   }
 
-  Future<void> getShortcutList() async{
-    this.shortcutList = (await ShortCutService.getShortCutList())??new List();
-    setState(() {
-
-    });
+  void getShortcutList() {
+    this.shortcutList = TagStore.shortCutList;
   }
 
   _buildShortcutDrawerHeader({GestureTapCallback onPressed}) {

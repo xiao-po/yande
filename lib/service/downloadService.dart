@@ -8,7 +8,7 @@ import 'package:dio/dio.dart';
 
 
 class DownloadService {
-  static Future<void> downloadImage (ImageModel image, {OnDownloadProgress onProcess}) async {
+  static Future<void> downloadImage (ImageModel image, {ProgressCallback onProcess}) async {
     Dio dio = new Dio();
 
     image.downloadStatus = ImageDownloadStatus.pending;
@@ -18,10 +18,13 @@ class DownloadService {
       String yandeImageDirPath =
           (await SettingService.getSetting(SETTING_TYPE.IMAGE_DOWNLOAD_PATH)).value ;
       String filePath = '$yandeImageDirPath/${image.id}.${image.fileExt}';
+      dio.interceptors.add(new Interceptor(
+
+      ));
       await dio.download(
           image.fileUrl,
           filePath,
-          onProgress: onProcess,
+          onReceiveProgress: onProcess,
       );
 
       image.downloadStatus = ImageDownloadStatus.success;
