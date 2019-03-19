@@ -121,8 +121,9 @@ class _ImageStatusSliverAppBarState extends State<ImageStatusSliverAppBar> {
   void listenImageLoadOver() async{
     await CacheService.getFile(widget.image.sampleUrl);
     this.imageLoadOver = true;
-    print('over');
-    setState(() {});
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 }
 

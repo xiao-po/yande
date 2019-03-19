@@ -85,9 +85,11 @@ class _ImageStatusView extends State<ImageStatusView> {
 
     ImageModel image = await ImageService.collectImage(widget.image);
     widget.image.collectStatus = image.collectStatus;
-    setState(() {
-
-    });
+    if (this.mounted) {
+      if (this.mounted) {
+        setState(() {});
+      }
+    }
   }
 
   FloatingActionButton _buildAddCollectFloatingButton() {
@@ -157,13 +159,13 @@ class _ImageStatusView extends State<ImageStatusView> {
         && image.downloadStatus != ImageDownloadStatus.success
     ) {
       this._showMessageBySnackbar("开始下载");
-      setState(() {
-
-      });
+      if (this.mounted) {
+        setState(() {});
+      }
       await DownloadService.downloadImage(image);
-      setState(() {
-
-      });
+      if (this.mounted) {
+        setState(() {});
+      }
     }
   }
 

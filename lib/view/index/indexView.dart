@@ -139,8 +139,9 @@ class _IndexView extends State<IndexView> {
         this.isInitError = true;
       }
     }
-    setState(() {
-    });
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   /// @Param pages 页码
@@ -189,7 +190,9 @@ class _IndexView extends State<IndexView> {
   /// @Param imageList 新的图片
   void _updateImageList(List<ImageModel> imageList) {
     this.imageList.addAll(imageList);
-    setState(() {});
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   Widget _buildSearchButton() {
@@ -220,18 +223,24 @@ class _IndexView extends State<IndexView> {
   Future<void> collectAction(ImageModel image) async {
 
     image = await ImageService.collectImage(image);
-    setState(() {
-
-    });
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   void downloadAction(ImageModel image) async{
     if (image.downloadStatus != ImageDownloadStatus.pending
         && image.downloadStatus != ImageDownloadStatus.success) {
       this._showMessageBySnackbar("开始下载");
-      setState(() {});
+      if (this.mounted) {
+        setState(() {});
+      }
       await DownloadService.downloadImage(image);
-      setState(() {});
+      if (this.mounted) {
+        if (this.mounted) {
+          setState(() {});
+        }
+      }
     }
   }
 

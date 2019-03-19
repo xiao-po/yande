@@ -43,17 +43,20 @@ class _TagSearchState extends State<TagSearchView> {
   }
 
   void onSearch() async{
-    setState(() {
-      this.isLoading = true;
-    });
+    if (this.mounted) {
+      setState(() {});
+    }
+    this.isLoading = true;
     List<TagModel> result =await this.searchTag(this._searchQuery.text);
     this.lastSearchWord = this._searchQuery.text;
-    setState(() {
-      if (this.lastSearchWord == this._searchQuery.text) {
-        this.isLoading = false;
-      }
-      this.tagList = result;
-    });
+
+    if (this.lastSearchWord == this._searchQuery.text) {
+      this.isLoading = false;
+    }
+    this.tagList = result;
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
 

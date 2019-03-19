@@ -66,8 +66,9 @@ class _ResultViewState extends State<ResultView> {
         this.isInitError = true;
       }
     }
-    setState(() {
-    });
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> _loadPage(int pages, int limit) async {
@@ -180,7 +181,9 @@ class _ResultViewState extends State<ResultView> {
 
   Future<void> collectAction(ImageModel image) async {
     image = await ImageService.collectImage(image);
-    setState(() {});
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   _buildFloatingButton() {
@@ -220,13 +223,17 @@ class _ResultViewState extends State<ResultView> {
 
     TagStore.unCollectTag(new TagModel(null, tag, null, null, null));
     this.isShortcut = false;
-    setState(() {});
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   void _addShortcut(String tag) async {
     TagStore.collectTag(new TagModel(null, tag, null, null, null));
     this.isShortcut = true;
-    setState(() {});
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   void getShortcutStatus() {
@@ -237,9 +244,13 @@ class _ResultViewState extends State<ResultView> {
     if (image.downloadStatus != ImageDownloadStatus.pending
         && image.downloadStatus != ImageDownloadStatus.success) {
       this._showMessageBySnackbar("开始下载");
-      setState(() {});
+      if (this.mounted) {
+        setState(() {});
+      }
       await DownloadService.downloadImage(image);
-      setState(() {});
+      if (this.mounted) {
+        setState(() {});
+      }
     }
   }
 

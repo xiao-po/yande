@@ -72,9 +72,9 @@ class _DirectoryPickerView extends State<DirectoryPickerView>{
   Future<void> getDirList(String path) async{
 
     this.isLoading = true;
-    setState(() {
-
-    });
+    if (this.mounted) {
+      setState(() {});
+    }
 
     currentDir = new Directory(path);
     this.dirList =await FileUtils.getAllDirectoryChildren(
@@ -82,9 +82,9 @@ class _DirectoryPickerView extends State<DirectoryPickerView>{
     );
 
     this.isLoading = false;
-    setState(() {
-
-    });
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   List<Widget> _buildDirListTile(List<MyDirectoryStat> dirList) {

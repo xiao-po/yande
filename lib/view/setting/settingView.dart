@@ -60,9 +60,9 @@ class _SettingViewState extends State<SettingView> {
   Future<void> getAllSetting() async{
     settingList =await SettingService.getAllSetting();
     this.initSuccess = true;
-    setState(() {
-
-    });
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   Widget _buildSettingItem(SettingItem v) {
@@ -90,8 +90,9 @@ class _SettingViewState extends State<SettingView> {
             v.value = newValue;
             SettingService.saveSetting(v);
             this._showMessageBySnackbar("过滤等级更新成功，刷新之后生效");
-            setState(() {
-            });
+            if (this.mounted) {
+              setState(() {});
+            }
           },
           items: this.dropButtonDataList.map((_DropButtonData data) {
             return new DropdownMenuItem<String>(
@@ -116,9 +117,9 @@ class _SettingViewState extends State<SettingView> {
   FutureOr _handlePickedName(SettingItem item, String path) async{
     item.value = path;
     await SettingService.saveSetting(item);
-    setState(() {
-
-    });
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   _showMessageBySnackbar(String text) {

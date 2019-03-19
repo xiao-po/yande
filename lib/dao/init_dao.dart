@@ -21,7 +21,7 @@ class MyDateBase {
                 'nick_name TEXT,'
                 'count INTEGER,'
                 'type INTERGER,'
-                'ambigous BOOL,'
+                'ambiguous BOOL,'
                 'collect_status INTERGER'
                 ')'
         );
