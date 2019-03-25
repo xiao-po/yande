@@ -7,7 +7,7 @@ import 'dart:async';
 
 typedef ImageCardBuilder = Widget Function(ImageModel image);
 
-class MyImageLazyLoadGrid  extends StatefulWidget {
+class MyImageLazyLoadGrid extends StatefulWidget {
   final int crossAxisCount;
   final Widget footer;
   final String heroPrefix;
@@ -27,12 +27,10 @@ class MyImageLazyLoadGrid  extends StatefulWidget {
   });
 
   @override
-  _MyImageLazyLoadGridState createState()  => _MyImageLazyLoadGridState();
-
+  _MyImageLazyLoadGridState createState() => _MyImageLazyLoadGridState();
 }
 
 class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
-
   ScrollController controller = new ScrollController();
   List<ImageModel> imageList = new List();
   GridViewLoadingStatus loadingStatus = GridViewLoadingStatus.pending;
@@ -41,7 +39,6 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
   bool noImageLoad = false;
   int pages;
   int limit;
-
 
   @override
   void initState() {
@@ -77,11 +74,10 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
         child: new CircularProgressIndicator(),
       );
     }
-
   }
 
   Widget buildErrorContent() {
-     return new GestureDetector(
+    return new GestureDetector(
       child: new Container(
         height: double.infinity,
         width: double.infinity,
@@ -89,27 +85,28 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
           child: const Text(
             '加载失败了呢~\n点击重试',
             textAlign: TextAlign.center,
-            style: const TextStyle(
-                color: const Color(0xffcccccc)
-            ),
+            style: const TextStyle(color: const Color(0xffcccccc)),
           ),
         ),
       ),
+      behavior: HitTestBehavior.translucent,
       onTap: () => this.reloadGallery(),
     );
   }
 
   void scrollListener() {
-    if (this.controller.position.extentAfter < 50 && this.loadingStatus != GridViewLoadingStatus.pending ) {
+    if (this.controller.position.extentAfter < 50 &&
+        this.loadingStatus != GridViewLoadingStatus.pending) {
       this._loadPage(this.pages, this.limit);
     }
   }
 
-  Future<void> _loadPage(int pages,int limit) async {
-    try{
-      List<ImageModel> imageList = await _getImageListByPagesAndLimit(pages, limit);
+  Future<void> _loadPage(int pages, int limit) async {
+    try {
+      List<ImageModel> imageList =
+          await _getImageListByPagesAndLimit(pages, limit);
       this._updateImageList(imageList);
-    }catch(e) {
+    } catch (e) {
       print(e);
     }
   }
@@ -122,9 +119,10 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
     if (this.mounted) {
       setState(() {});
     }
-    try{
-      this.imageList = await _getImageListByPagesAndLimit(this.pages, this.limit);
-    }catch(e) {
+    try {
+      this.imageList =
+          await _getImageListByPagesAndLimit(this.pages, this.limit);
+    } catch (e) {
       if (this.loadingStatus == GridViewLoadingStatus.error) {
         this.isInitError = true;
       }
@@ -136,29 +134,29 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
 
   /// @Param pages 页码
   /// @Param limit 每页显示条数
-  Future<List<ImageModel>> _getImageListByPagesAndLimit
-      (int pages,int limit, [List<ImageModel> oldList]) async {
-
+  Future<List<ImageModel>> _getImageListByPagesAndLimit(int pages, int limit,
+      [List<ImageModel> oldList]) async {
     this.loadingStatus = GridViewLoadingStatus.pending;
 
-    try{
+    try {
       List<ImageModel> imageList;
       if (this.widget.searchTag != null) {
-        imageList =await ImageService.getIndexListByTags(this.widget.searchTag,pages, limit);
+        imageList = await ImageService.getIndexListByTags(
+            this.widget.searchTag, pages, limit);
       } else {
-        imageList =await ImageService.getIndexListByPage(pages, limit);
+        imageList = await ImageService.getIndexListByPage(pages, limit);
       }
 
       if (imageList.length == 0) {
         this.noImageLoad = true;
       }
 
-      imageList =await imageFilterByRank(imageList);
+      await getRankFilter();
+      imageList.removeWhere(_imageFilter);
       imageList.removeWhere((image) => TagStore.isBlockedByName(image.tags));
 
       this.loadingStatus = GridViewLoadingStatus.success;
       if (oldList != null && oldList.length > 0) {
-
         imageList.addAll(oldList);
       }
 
@@ -167,21 +165,20 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
       if (imageList.length > 10) {
         return imageList;
       } else {
-        return await this._getImageListByPagesAndLimit(this.pages, this.limit, imageList);
+        return await this
+            ._getImageListByPagesAndLimit(this.pages, this.limit, imageList);
       }
-    }catch(e){
+    } catch (e) {
       this.loadingStatus = GridViewLoadingStatus.error;
       throw e;
     }
-
   }
 
-  Future imageFilterByRank(List<ImageModel> imageList) async {
-    SettingItem filterRankItem =await SettingService.getSetting(SETTING_TYPE.FILTER_RANK);
+  Future<void> getRankFilter() async {
+    SettingItem filterRankItem =
+        await SettingService.getSetting(SETTING_TYPE.FILTER_RANK);
     this.filterRank = filterRankItem.value;
-    return imageList.removeWhere(_imageFilter);
   }
-
 
   /// @Param imageList 新的图片
   void _updateImageList(List<ImageModel> imageList) {
@@ -197,8 +194,10 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
     } else if (this.filterRank == FILTER_RANK.NOT_RESTRICTED) {
       return image.rating == FILTER_RANK.RESTRICTED ? true : false;
     } else {
-      return image.rating == FILTER_RANK.RESTRICTED
-          || image.rating == FILTER_RANK.NOT_RESTRICTED ? true : false;
+      return image.rating == FILTER_RANK.RESTRICTED ||
+              image.rating == FILTER_RANK.NOT_RESTRICTED
+          ? true
+          : false;
     }
   }
 
@@ -207,5 +206,4 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
     super.dispose();
     this.controller.dispose();
   }
-
 }

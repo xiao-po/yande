@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../allView.dart';
 import 'package:yande/model/all_model.dart';
 import 'components/status_dialog.dart';
+import 'package:yande/widget/allWidget.dart';
 import 'package:yande/service/allServices.dart';
 import 'components/imageStatusAppBar.dart';
 
@@ -114,14 +115,17 @@ class _ImageStatusView extends State<ImageStatusView> {
     );
   }
 
-  ActionChip _tagChip(TagModel tag) {
-    return ActionChip(
+  TagChip _tagChip(TagModel tag) {
+    return TagChip(
         backgroundColor: Color(0x44eeeeee),
         label: Text(tag.name),
-        onPressed: () => Navigator.push(
+        onTap: () => Navigator.push(
             context,
             new MaterialPageRoute(builder: (context) => new ResultView(tags: tag.name))
-        )
+        ),
+        onLongPress: () {
+          print('tag LongPress');
+        },
 
     );
   }

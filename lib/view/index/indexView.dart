@@ -4,7 +4,7 @@ import 'package:yande/value.dart';
 import 'package:yande/view/index/components/drawer.dart';
 import 'package:yande/service/allServices.dart';
 import 'package:yande/widget/allWidget.dart';
-import 'package:yande/widget/imageGrid/lazyloadGridview.dart';
+import 'package:yande/widget/imageGrid/lazyloadView.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/dao/init_dao.dart';
 
