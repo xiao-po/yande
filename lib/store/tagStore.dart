@@ -63,7 +63,7 @@ class TagStore {
 
   static bool isBlockedByName(String name){
     for(TagModel tag in TagStore.blockedTag) {
-      if (tag.name == name) {
+      if (name.contains(tag.name)) {
         return true;
       }
     }
@@ -71,13 +71,9 @@ class TagStore {
   }
 
   static bool isBlocked(TagModel tagModel){
-    for(TagModel tag in TagStore.blockedTag) {
-      if (tag.name == tagModel.name) {
-        return true;
-      }
-    }
-    return false;
+    return TagStore.isBlockedByName(tagModel.name);
   }
+
 
   static bool isCollectByName(String name){
     for(TagModel tag in TagStore.shortCutList) {

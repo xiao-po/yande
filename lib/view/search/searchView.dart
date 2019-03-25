@@ -71,16 +71,7 @@ class _TagSearchState extends State<TagSearchView> {
 
         backgroundColor: Colors.white,
         leading: buildLeading(context),
-        title: new TextField(
-          decoration: InputDecoration(
-            hintText: "请输入需要搜索的tag",
-            hintStyle: new TextStyle(
-              fontWeight: FontWeight.bold
-            ),
-            border: InputBorder.none,
-          ),
-          controller: _searchQuery,
-        ),
+        title: buildSearchInput(),
         actions: <Widget>[
           _showLoadingStatus(this.isLoading)
         ],
@@ -91,6 +82,19 @@ class _TagSearchState extends State<TagSearchView> {
         ).toList(),
       ),
     );
+  }
+
+  TextField buildSearchInput() {
+    return new TextField(
+        decoration: InputDecoration(
+          hintText: "请输入需要搜索的tag",
+          hintStyle: new TextStyle(
+            fontWeight: FontWeight.bold
+          ),
+          border: InputBorder.none,
+        ),
+        controller: _searchQuery,
+      );
   }
 
   Widget _buildTagListTile(TagModel tag) {

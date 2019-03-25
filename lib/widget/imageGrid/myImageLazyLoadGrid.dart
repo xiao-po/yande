@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yande/widget/allWidget.dart';
 import 'package:yande/model/all_model.dart';
 import 'package:yande/service/allServices.dart';
+import 'package:yande/store/tagStore.dart';
 import 'dart:async';
 
 typedef ImageCardBuilder = Widget Function(ImageModel image);
@@ -152,9 +153,8 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
         this.noImageLoad = true;
       }
 
-      SettingItem filterRankItem =await SettingService.getSetting(SETTING_TYPE.FILTER_RANK);
-      this.filterRank = filterRankItem.value;
-      imageList.removeWhere(_imageFilter);
+      imageList =await imageFilterByRank(imageList);
+      imageList.removeWhere((image) => TagStore.isBlockedByName(image.tags));
 
       this.loadingStatus = GridViewLoadingStatus.success;
       if (oldList != null && oldList.length > 0) {
@@ -174,6 +174,12 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
       throw e;
     }
 
+  }
+
+  Future imageFilterByRank(List<ImageModel> imageList) async {
+    SettingItem filterRankItem =await SettingService.getSetting(SETTING_TYPE.FILTER_RANK);
+    this.filterRank = filterRankItem.value;
+    return imageList.removeWhere(_imageFilter);
   }
 
 
