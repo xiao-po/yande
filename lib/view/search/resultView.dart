@@ -19,16 +19,10 @@ class ResultView extends StatefulWidget {
 
 class _ResultViewState extends State<ResultView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  ScrollController _controller;
-  List<ImageModel> imageList = new List();
   bool isShortcut;
 
   bool updateTagListLock = false;
-  GridViewLoadingStatus loadingStatus = GridViewLoadingStatus.pending;
-  bool isInitError = false;
   bool noImageLoad = false;
-  int pages = 1;
-  int limit = 20;
 
   String filterRank;
 
@@ -38,87 +32,6 @@ class _ResultViewState extends State<ResultView> {
   void initState() {
     super.initState();
     this.getShortcutStatus();
-    _controller = new ScrollController()..addListener(_scrollListener);
-    this._reloadGallery();
-  }
-
-  void _scrollListener() {
-    if (_controller.position.extentAfter < 50 && this.loadingStatus != GridViewLoadingStatus.pending) {
-      this.pages++;
-      this._loadPage(this.pages, this.limit);
-    }
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-    this._controller.dispose();
-  }
-
-  /// 事件方法，允许修改数据
-  Future<void> _reloadGallery() async {
-    this.pages = 1;
-    this.imageList = new List();
-    try{
-      this.imageList = await _getImageListByPagesAndLimit(pages, this.limit);
-    }catch(e) {
-      if (this.loadingStatus == GridViewLoadingStatus.error) {
-        this.isInitError = true;
-      }
-    }
-    if (this.mounted) {
-      setState(() {});
-    }
-  }
-
-  Future<void> _loadPage(int pages, int limit) async {
-    try{
-      this._updateImageList(await _getImageListByPagesAndLimit(pages, limit));
-    }catch(e) {
-      print(e);
-    }
-  }
-
-  /// @Param pages 页码
-  /// @Param limit 每页显示条数
-  Future<List<ImageModel>> _getImageListByPagesAndLimit(
-      int pages, int limit, [List<ImageModel> oldList]) async {
-    this.loadingStatus = GridViewLoadingStatus.pending;
-
-    try{
-
-      List<ImageModel> imageList =
-      await ImageService.getIndexListByTags(widget.tags, pages, limit);
-
-
-      SettingItem filterRankItem =await SettingService.getSetting(SETTING_TYPE.FILTER_RANK);
-      this.filterRank = filterRankItem.value;
-      imageList.removeWhere(_imageFilter);
-
-      this.loadingStatus = GridViewLoadingStatus.success;
-      if (oldList != null && oldList.length > 0) {
-
-        imageList.addAll(oldList);
-      }
-      if (imageList.length > 10) {
-        return imageList;
-      } else {
-        this.pages++;
-        return await this._getImageListByPagesAndLimit(this.pages, this.limit, imageList);
-      }
-    }catch(e) {
-      this.loadingStatus = GridViewLoadingStatus.success;
-      throw e;
-    }
-  }
-
-  /// @Param imageList 新的图片
-  void _updateImageList(List<ImageModel> imageList) {
-    if (imageList.length == 0) {
-      this.noImageLoad = true;
-    }
-    this.imageList.addAll(imageList);
-    setState(() {});
   }
 
   @override
@@ -130,36 +43,16 @@ class _ResultViewState extends State<ResultView> {
         title: new Text("搜索： ${widget.tags}", overflow: TextOverflow.ellipsis,),
       ),
       body: new Container(
-        child: _buildImageContent(this.imageList),
+        child: new MyImageLazyLoadGrid(
+          searchTag: this.widget.tags,
+          cardBuilder: (image) =>  _buildImageCard(image),
+        ),
       ),
       floatingActionButton: _buildFloatingButton(),
     );
   }
 
-  _buildImageContent(List<ImageModel> imageList) {
-    Widget footer = new FootProgress();
-    if (this.noImageLoad) {
-      footer = new Center(
-        child: const Text("没有更多图片了"),
-      );
-    }
-    if (imageList.length > 0) {
-      return new RefreshIndicator(
-        child: new LazyLoadGridView(
-          controller: _controller,
-          children: imageList
-              .map(_buildImageCard)
-              .toList(),
-          footer: footer,
-        ),
-        onRefresh: this._reloadGallery,
-      );
-    } else {
-      return new Center(
-        child: new CircularProgressIndicator(),
-      );
-    }
-  }
+
 
   MainImageCard _buildImageCard(ImageModel image) {
     return MainImageCard(
