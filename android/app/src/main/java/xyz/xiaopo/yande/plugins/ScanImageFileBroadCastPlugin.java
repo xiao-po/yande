@@ -1,4 +1,4 @@
-package xyz.example.yande.plugins;
+package xyz.xiaopo.yande.plugins;
 
 import android.app.Activity;
 import android.content.Intent;

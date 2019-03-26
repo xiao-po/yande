@@ -1,4 +1,4 @@
-package xyz.example.yande;
+package xyz.xiaopo.yande;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -9,8 +9,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
-import xyz.example.yande.plugins.ScanImageFileBroadCastPlugin;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import xyz.xiaopo.yande.plugins.ScanImageFileBroadCastPlugin;
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 
@@ -25,8 +30,18 @@ public class MainActivity extends FlutterActivity {
     super.onCreate(savedInstanceState);
     GeneratedPluginRegistrant.registerWith(this);
     ScanImageFileBroadCastPlugin.registerWith(this.registrarFor("ScanImageFileBroadCastPlugin"));
+    FirebaseInstanceId.getInstance().getInstanceId()
+            .addOnCompleteListener(task -> {
+              if (!task.isSuccessful()) {
+                Log.w("firebase", "getInstanceId failed", task.getException());
+                return;
+              }
 
+              // Get new Instance ID token
+              String token = task.getResult().getToken();
 
+              Log.d("firebase", token);
+            });
     // 版本判断。当手机系统大于 23 时，才有必要去判断权限是否获取
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
