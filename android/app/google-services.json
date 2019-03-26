@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "849752656055",
+    "firebase_url": "https://yande-235702.firebaseio.com",
+    "project_id": "yande-235702",
+    "storage_bucket": "yande-235702.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849752656055:android:2f7c48a7d1fdab32",
+        "android_client_info": {
+          "package_name": "xyz.xiaopo.yande"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849752656055-jb7o9l0t551i5godq9e75d3cfd7ocfrb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "xyz.xiaopo.yande",
+            "certificate_hash": "5c908b82043d062bf6f5d0c660e1d7019ee09a2d"
+          }
+        },
+        {
+          "client_id": "849752656055-lliv55jrje0kk7edi3ha225ijmueop2q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7GDaw0UCdtzVD1Ys89rIsfKPWn_R3U24"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849752656055-lliv55jrje0kk7edi3ha225ijmueop2q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

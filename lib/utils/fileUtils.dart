@@ -16,7 +16,7 @@ class FileUtils {
 
 
   static Future<Directory> getExternalDir() async {
-    String myPath = '/Android/data/com.example.yande';
+    String myPath = '/Android/data/xyz.xiaopo.yande';
     Directory dir = await getExternalStorageDirectory();
     return await getDirAndCreate('${dir.path}$myPath');
   }
