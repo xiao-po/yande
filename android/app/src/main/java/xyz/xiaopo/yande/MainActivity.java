@@ -30,18 +30,6 @@ public class MainActivity extends FlutterActivity {
     super.onCreate(savedInstanceState);
     GeneratedPluginRegistrant.registerWith(this);
     ScanImageFileBroadCastPlugin.registerWith(this.registrarFor("ScanImageFileBroadCastPlugin"));
-    FirebaseInstanceId.getInstance().getInstanceId()
-            .addOnCompleteListener(task -> {
-              if (!task.isSuccessful()) {
-                Log.w("firebase", "getInstanceId failed", task.getException());
-                return;
-              }
-
-              // Get new Instance ID token
-              String token = task.getResult().getToken();
-
-              Log.d("firebase", token);
-            });
     // 版本判断。当手机系统大于 23 时，才有必要去判断权限是否获取
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
