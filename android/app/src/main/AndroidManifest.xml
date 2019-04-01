@@ -17,7 +17,7 @@
         android:label="yande"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name="xyz.example.yande.MainActivity"
+            android:name="xyz.xiaopo.yande.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
