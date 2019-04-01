@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../allView.dart';
-import 'package:yande/model/all_model.dart';
+import 'package:yande/model/image_model.dart';
+import 'package:yande/model/tag_model.dart';
+import 'package:yande/view/imageGallery/imageGalleryView.dart';
+import 'package:yande/view/search/resultView.dart';
+import 'package:yande/widget/button.dart';
 import 'components/status_dialog.dart';
-import 'package:yande/widget/allWidget.dart';
 import 'package:yande/service/allServices.dart';
 import 'components/imageStatusAppBar.dart';
 
@@ -20,25 +22,25 @@ class ImageStatusView extends StatefulWidget {
 }
 
 class _ImageStatusView extends State<ImageStatusView> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  Key get fabKey => new ValueKey<String>('imageStatusFabkey');
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  Key get fabKey => ValueKey<String>('imageStatusFabkey');
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
       floatingActionButton: _buildMaterialButton(),
-      body: new Container(
-        child: new CustomScrollView(
+      body: Container(
+        child: CustomScrollView(
           slivers: <Widget>[
-            new ImageStatusSliverAppBar(
+            ImageStatusSliverAppBar(
               image: widget.image,
               heroPrefix: widget.heroPrefix,
               showDialog: () => this._showImageStatus(),
             ),
             SliverList(
                 delegate: SliverChildListDelegate(<Widget>[
-                  new ImageActionButtonFiled(
+                  ImageActionButtonFiled(
                     children: <Widget>[
                       _buildLargeButton(
                         "查看",
@@ -50,7 +52,7 @@ class _ImageStatusView extends State<ImageStatusView> {
                       )
                     ],
                   ),
-                  new TagChipFiled(
+                  TagChipFiled(
                     children: widget.image.tagTagModelList.map((tag) => _buildSearchChip(tag)).toList(),
                   )
                 ]
@@ -72,9 +74,9 @@ class _ImageStatusView extends State<ImageStatusView> {
   }
 
   FloatingActionButton _buildDeleteCollectFloatingButton() {
-    return new FloatingActionButton(
+    return FloatingActionButton(
       key: this.fabKey,
-      child: new Icon(
+      child: Icon(
         Icons.star_border,
         size: 30,
       ),
@@ -94,9 +96,9 @@ class _ImageStatusView extends State<ImageStatusView> {
   }
 
   FloatingActionButton _buildAddCollectFloatingButton() {
-    return new FloatingActionButton(
-      key: new ValueKey(this.fabKey),
-      child: new Icon(
+    return FloatingActionButton(
+      key: ValueKey(this.fabKey),
+      child: Icon(
         Icons.star,
         size: 30,
         color: Colors.amberAccent,
@@ -106,8 +108,8 @@ class _ImageStatusView extends State<ImageStatusView> {
   }
 
   Widget _buildSearchChip(TagModel tag) {
-    return new Container(
-      margin: new EdgeInsets.only(
+    return Container(
+      margin: EdgeInsets.only(
           left: 5,
           right: 5
       ),
@@ -121,7 +123,7 @@ class _ImageStatusView extends State<ImageStatusView> {
         label: Text(tag.name),
         onTap: () => Navigator.push(
             context,
-            new MaterialPageRoute(builder: (context) => new ResultView(tags: tag.name))
+            MaterialPageRoute(builder: (context) => ResultView(tags: tag.name))
         ),
         onLongPress: () {
           print('tag LongPress');
@@ -143,13 +145,13 @@ class _ImageStatusView extends State<ImageStatusView> {
   }
 
   Widget _buildLargeButton(String name, {Function onPressed}) {
-    return new Expanded(
-      child: new MaterialButton(
+    return Expanded(
+      child: MaterialButton(
         onPressed: onPressed,
-        child: new SizedBox(
+        child: SizedBox(
           height: 50,
-          child: new Center(
-            child: new Text(
+          child: Center(
+            child: Text(
               name,
             ),
           ),
@@ -191,7 +193,7 @@ class _ImageStatusView extends State<ImageStatusView> {
 
   _showMessageBySnackbar(String text) {
     _scaffoldKey.currentState.showSnackBar(
-      new SnackBar(content: Text(text)),
+      SnackBar(content: Text(text)),
     );
   }
 
@@ -211,14 +213,14 @@ class TagChipFiled extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new Container(
-      margin: new EdgeInsets.only(
+    return Container(
+      margin: EdgeInsets.only(
         left: 40,
         right: 40,
       ),
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        border: new Border(
+        border: Border(
           top: BorderSide(
             color: Color(0xffeaeaea),
             width: 1,
@@ -229,7 +231,7 @@ class TagChipFiled extends StatelessWidget {
           )
         )
       ),
-      child: new Wrap(
+      child: Wrap(
         children: this.children,
       ),
     );

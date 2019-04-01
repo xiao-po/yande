@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../allView.dart';
-import 'dart:async';
-import 'package:yande/widget/allWidget.dart';
-import 'package:yande/model/all_model.dart';
-import 'package:yande/widget/imageGrid/lazyloadView.dart';
+import 'package:yande/model/image_model.dart';
+import 'package:yande/view/imageStatus/imageStatusView.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
+import 'package:yande/widget/imageGrid/lazyloadView.dart';
+import 'package:yande/widget/progress.dart';
+import 'dart:async';
 import 'package:yande/service/allServices.dart';
 
 class CollectImageView extends StatefulWidget {
@@ -17,9 +17,9 @@ class CollectImageView extends StatefulWidget {
 }
 
 class _CollectImageViewState extends State<CollectImageView> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController _controller;
-  List<ImageModel> imageList = new List();
+  List<ImageModel> imageList = List();
 
   bool updateTagListLock = false;
   bool loadingStatus = false;
@@ -31,7 +31,7 @@ class _CollectImageViewState extends State<CollectImageView> {
   @override
   void initState() {
     super.initState();
-    _controller = new ScrollController()..addListener(_scrollListener);
+    _controller = ScrollController()..addListener(_scrollListener);
     this._loadPage(this.pages, this.limit);
   }
 
@@ -77,27 +77,27 @@ class _CollectImageViewState extends State<CollectImageView> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
-      appBar: new AppBar(
-        leading: new BackButton(),
+      appBar: AppBar(
+        leading: BackButton(),
         title: const Text("收藏"),
       ),
-      body: new Container(
+      body: Container(
         child: _buildImageContent(this.imageList),
       ),
     );
   }
 
   _buildImageContent(List<ImageModel> imageList) {
-    Widget footer = new FootProgress();
+    Widget footer = FootProgress();
     if (this.noImageLoad) {
-      footer = new Center(
+      footer = Center(
         child: const Text("没有更多图片了"),
       );
     }
     if (imageList.length > 0) {
-      return new LazyLoadGridView(
+      return LazyLoadGridView(
         controller: _controller,
         children: imageList.map((image) =>
             MainImageCard(
@@ -112,12 +112,12 @@ class _CollectImageViewState extends State<CollectImageView> {
       );
     } else {
       if (this.isInit) {
-        return new Center(
-          child: new CircularProgressIndicator(),
+        return Center(
+          child: CircularProgressIndicator(),
         );
       } else {
-        return new Container(
-          child: new Center(
+        return Container(
+          child: Center(
             child: const Text(
                 '你没有收藏任何图片',
                 style: TextStyle(
@@ -164,7 +164,7 @@ class _CollectImageViewState extends State<CollectImageView> {
 
   _showMessageBySnackbar(String text) {
     _scaffoldKey.currentState.showSnackBar(
-      new SnackBar(content: Text(text)),
+      SnackBar(content: Text(text)),
     );
   }
 }

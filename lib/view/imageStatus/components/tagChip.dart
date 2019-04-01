@@ -17,17 +17,17 @@ class TagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
+    return Container(
       height: 42,
-      child: new Center(
+      child: Center(
         widthFactor: 1.0,
         heightFactor: 1.0,
-        child: new Material(
+        child: Material(
           color: this.rippleColor,
-          child: new InkWell(
+          child: InkWell(
             onTap: this.onTap,
-            child: new Container(
-              decoration: new ShapeDecoration(
+            child: Container(
+              decoration: ShapeDecoration(
                 color: this.backgroundColor,
 
                 shape: ChipTheme.of(context).shape,
@@ -37,9 +37,9 @@ class TagChip extends StatelessWidget {
                   left: 20,
                   right: 20
               ),
-              child: new Center(
+              child: Center(
                 widthFactor: 1,
-                child: new Text(this.text),
+                child: Text(this.text),
               ),
             ),
           ),

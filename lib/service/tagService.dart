@@ -1,15 +1,14 @@
 import 'dart:async';
-import 'package:yande/model/all_model.dart';
-import 'API/all_api.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yande/dao/tag_dao.dart';
+import 'package:yande/http/all_api.dart';
 import 'package:dio/dio.dart';
-import 'package:yande/dao/all_dao.dart';
+import 'package:yande/model/tag_model.dart';
 
 class TagService {
 
 
   static Future<List<TagModel>> getTagByNameOrderAESC(String name) async{
-    Dio dio = new Dio();
+    Dio dio = Dio();
     String url = IndexAPI.tagList + '?limit=40&order=count&name=$name';
 
     Response<List<dynamic>> res = await dio.get(url);
@@ -43,4 +42,4 @@ class TagService {
 
 }
 
-final BLOCK_TAG = 'blockTag';
+const BLOCK_TAG = 'blockTag';

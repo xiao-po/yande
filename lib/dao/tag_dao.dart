@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:yande/model/tag_model.dart';
 import 'init_dao.dart';
 import 'dart:async';
-import 'package:yande/model/all_model.dart';
 
 class TagDao {
   static Future<bool> isTagExistByName(String name,  [Database database]) async {

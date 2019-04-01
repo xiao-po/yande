@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yande/model/all_model.dart';
+import 'package:yande/model/tag_model.dart';
 import 'package:yande/service/allServices.dart';
 import 'resultView.dart';
 import 'dart:async';
@@ -14,13 +14,13 @@ class TagSearchView extends StatefulWidget {
 
 class _TagSearchState extends State<TagSearchView> {
 
-  List<TagModel> tagList = new List();
-  final TextEditingController _searchQuery = new TextEditingController();
+  List<TagModel> tagList = List();
+  final TextEditingController _searchQuery = TextEditingController();
   bool isLoading = false;
   String lastSearchWord = "";
 
   Widget buildLeading(BuildContext context) {
-    return new IconButton(
+    return IconButton(
       tooltip: 'Back',
       icon: const Icon(Icons.arrow_back,color: Colors.black45,),
       onPressed: (){
@@ -66,8 +66,8 @@ class _TagSearchState extends State<TagSearchView> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
+    return Scaffold(
+      appBar: AppBar(
 
         backgroundColor: Colors.white,
         leading: buildLeading(context),
@@ -76,7 +76,7 @@ class _TagSearchState extends State<TagSearchView> {
           _showLoadingStatus(this.isLoading)
         ],
       ),
-      body: new ListView(
+      body: ListView(
         children: this.tagList.map(
                 (tag) => _buildTagListTile(tag)
         ).toList(),
@@ -85,10 +85,10 @@ class _TagSearchState extends State<TagSearchView> {
   }
 
   TextField buildSearchInput() {
-    return new TextField(
+    return TextField(
         decoration: InputDecoration(
           hintText: "请输入需要搜索的tag",
-          hintStyle: new TextStyle(
+          hintStyle: TextStyle(
             fontWeight: FontWeight.bold
           ),
           border: InputBorder.none,
@@ -98,18 +98,18 @@ class _TagSearchState extends State<TagSearchView> {
   }
 
   Widget _buildTagListTile(TagModel tag) {
-    List<String> chipNames = new List();
+    List<String> chipNames = List();
     if (tag.type >= 0 && tag.type <= 3) {
 
       chipNames.add(TagType[tag.type]);
     }
-    return new MySearchListTile(
+    return MySearchListTile(
         name: tag.name,
         chipNameList: chipNames,
         onTap: (){
           Navigator.push(
               context,
-              new MaterialPageRoute(
+              MaterialPageRoute(
                   builder: (context) {
                     return ResultView(
                       tags: tag.name,
@@ -124,12 +124,12 @@ class _TagSearchState extends State<TagSearchView> {
 
   Widget _showLoadingStatus(bool loadingStatus){
     if (loadingStatus) {
-      return new Container(
-        margin: new EdgeInsets.only(
+      return Container(
+        margin: EdgeInsets.only(
             right: 10
         ),
-        child: new Center(
-          child: new SizedBox(
+        child: Center(
+          child: SizedBox(
             width: 15,
             height: 15,
             child: CircularProgressIndicator(
@@ -139,36 +139,12 @@ class _TagSearchState extends State<TagSearchView> {
         ),
       );
     }
-    return new Container();
+    return Container();
   }
 
 
 }
 
-class _SuggestionList extends StatelessWidget {
-  const _SuggestionList({this.suggestions, this.query, this.onSelected});
-
-  final List<String> suggestions;
-  final String query;
-  final ValueChanged<String> onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return new ListView.builder(
-      itemCount: suggestions.length,
-      itemBuilder: (BuildContext context, int i) {
-        final String suggestion = suggestions[i];
-        return new ListTile(
-          title: new Text(suggestion) ,
-          onTap: () {
-            onSelected(suggestion);
-          },
-        );
-      },
-    );
-  }
-}
 
 class MySearchListTile extends StatelessWidget {
 
@@ -185,18 +161,18 @@ class MySearchListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = new List();
-    children.add(new Text(this.name, style: new TextStyle(fontSize: 18)));
+    List<Widget> children = List();
+    children.add(Text(this.name, style: TextStyle(fontSize: 18)));
     for (String chipName in this.chipNameList) {
       children.add(this._buildChip(chipName));
     }
 
-    return new Material(
-        child: new InkWell(
-          child: new Container(
+    return Material(
+        child: InkWell(
+          child: Container(
             height: 40,
-            margin: new EdgeInsets.only(top: 5, bottom: 5, left: 20),
-            child: new Row(
+            margin: EdgeInsets.only(top: 5, bottom: 5, left: 20),
+            child: Row(
               children: children,
             ),
           ),
@@ -206,19 +182,19 @@ class MySearchListTile extends StatelessWidget {
   }
 
   Widget _buildChip(String name) {
-    return new Container(
-      margin: new EdgeInsets.only(top: 5,left: 10),
-      padding: new EdgeInsets.only(top: 1, bottom: 1, left: 5, right: 5),
-      decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.all(Radius.circular(3)),
-          color: new Color(0xffeaeaea)
+    return Container(
+      margin: EdgeInsets.only(top: 5,left: 10),
+      padding: EdgeInsets.only(top: 1, bottom: 1, left: 5, right: 5),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(3)),
+          color: Color(0xffeaeaea)
       ),
-      child: new SizedBox(
+      child: SizedBox(
         height: 14,
-        child: new Text(
+        child: Text(
             name,
-            style: new TextStyle(
-              color: new Color(0xff333333),
+            style: TextStyle(
+              color: Color(0xff333333),
               fontSize: 10
             ),
         ),

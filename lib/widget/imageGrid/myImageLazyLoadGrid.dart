@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:yande/widget/allWidget.dart';
-import 'package:yande/model/all_model.dart';
+import 'package:yande/model/image_model.dart';
 import 'package:yande/service/allServices.dart';
 import 'package:yande/store/tagStore.dart';
+import 'package:yande/widget/imageGrid/lazyloadView.dart';
 import 'dart:async';
+
+import 'package:yande/widget/progress.dart';
 
 typedef ImageCardBuilder = Widget Function(ImageModel image);
 
@@ -31,8 +33,8 @@ class MyImageLazyLoadGrid extends StatefulWidget {
 }
 
 class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
-  ScrollController controller = new ScrollController();
-  List<ImageModel> imageList = new List();
+  ScrollController controller = ScrollController();
+  List<ImageModel> imageList = List();
   GridViewLoadingStatus loadingStatus = GridViewLoadingStatus.pending;
   bool isInitError = false;
   String filterRank;
@@ -51,15 +53,15 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
 
   @override
   Widget build(BuildContext context) {
-    Widget footer = new FootProgress();
+    Widget footer = FootProgress();
     if (this.noImageLoad) {
-      footer = new Center(
+      footer = Center(
         child: const Text("没有更多图片了"),
       );
     }
     if (imageList.length > 0) {
-      return new RefreshIndicator(
-        child: new LazyLoadGridView(
+      return RefreshIndicator(
+        child: LazyLoadGridView(
           controller: this.controller,
           heroPrefix: this.widget.heroPrefix,
           children: imageList.map(this.widget.cardBuilder).toList(),
@@ -70,18 +72,18 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
     } else if (this.isInitError == true) {
       return buildErrorContent();
     } else {
-      return new Center(
-        child: new CircularProgressIndicator(),
+      return Center(
+        child: CircularProgressIndicator(),
       );
     }
   }
 
   Widget buildErrorContent() {
-    return new GestureDetector(
-      child: new Container(
+    return GestureDetector(
+      child: Container(
         height: double.infinity,
         width: double.infinity,
-        child: new Center(
+        child: Center(
           child: const Text(
             '加载失败了呢~\n点击重试',
             textAlign: TextAlign.center,
@@ -115,7 +117,7 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
   Future<void> reloadGallery() async {
     this.pages = 1;
     this.isInitError = false;
-    this.imageList = new List();
+    this.imageList = List();
     if (this.mounted) {
       setState(() {});
     }
@@ -207,3 +209,12 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
     this.controller.dispose();
   }
 }
+
+enum GridViewLoadingStatus {
+  pending,
+  success,
+  error
+}
+
+
+

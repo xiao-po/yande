@@ -1,4 +1,4 @@
-import 'package:yande/model/all_model.dart';
+import 'package:yande/model/tag_model.dart';
 import 'package:yande/service/allServices.dart';
 import 'dart:async';
 

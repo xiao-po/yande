@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:yande/view/allView.dart';
-
-export 'package:yande/view/allView.dart';
+import 'package:yande/view/collectView/collectImageView.dart';
+import 'package:yande/view/index/indexView.dart';
+import 'package:yande/view/search/searchView.dart';
+import 'package:yande/view/setting/settingView.dart';
 
 class ViewRoute {
   const ViewRoute({

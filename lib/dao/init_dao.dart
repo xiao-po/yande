@@ -1,5 +1,4 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:yande/utils/utils.dart';
 import 'dart:async';
 
 class MyDateBase {

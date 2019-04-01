@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import '../allView.dart';
-import 'package:yande/value.dart';
+import 'package:yande/model/image_model.dart';
+import 'package:yande/view/imageStatus/imageStatusView.dart';
 import 'package:yande/view/index/components/drawer.dart';
 import 'package:yande/service/allServices.dart';
-import 'package:yande/widget/allWidget.dart';
-import 'package:yande/widget/imageGrid/lazyloadView.dart';
+import 'package:yande/view/search/searchView.dart';
+import 'package:yande/widget/dialog.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/dao/init_dao.dart';
 
 import 'dart:async';
+
+import 'package:yande/widget/imageGrid/myImageLazyLoadGrid.dart';
 
 class IndexView extends StatefulWidget {
   static final String route = "/";
@@ -23,7 +25,7 @@ class IndexView extends StatefulWidget {
 
 class _IndexView extends State<IndexView> {
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool updateTagListLock = false;
 
@@ -39,17 +41,17 @@ class _IndexView extends State<IndexView> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: new Text(IndexView.title),
+        title: Text(IndexView.title),
         actions: <Widget>[
           _buildSearchButton(),
         ],
       ),
-      drawer: new LeftDrawer(),
-      endDrawer: new RightDrawer(),
-      body: new Container(
+      drawer: LeftDrawer(),
+      endDrawer: RightDrawer(),
+      body: Container(
         child: _buildImageContent(),
       ),
     );
@@ -81,7 +83,7 @@ class _IndexView extends State<IndexView> {
   }
 
   Widget _buildSearchButton() {
-    return new IconButton(
+    return IconButton(
       tooltip: 'Search',
       icon: const Icon(Icons.search),
       onPressed: () async {
@@ -132,7 +134,7 @@ class _IndexView extends State<IndexView> {
 
   _showMessageBySnackbar(String text) {
     _scaffoldKey.currentState.showSnackBar(
-      new SnackBar(content: Text(text)),
+      SnackBar(content: Text(text)),
     );
   }
 

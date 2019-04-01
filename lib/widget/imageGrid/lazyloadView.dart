@@ -1,5 +1,5 @@
-import 'package:yande/widget/allWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:yande/widget/progress.dart';
 
 class LazyLoadGridView extends StatelessWidget {
   final ScrollController controller;
@@ -17,11 +17,11 @@ class LazyLoadGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new ListView(
+    return ListView(
       controller: this.controller,
       children: <Widget>[
-        new GridView.count(
-          physics: new NeverScrollableScrollPhysics(),
+        GridView.count(
+          physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           crossAxisCount: this.crossAxisCount,
           children: this.children

@@ -5,14 +5,14 @@ class TagDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return SimpleDialog(
       children: <Widget>[
-        new ListTile(
-          title: new Text('加入快捷搜索'),
+        ListTile(
+          title: Text('加入快捷搜索'),
           onTap: () {
             print('加入');
           },
         ),
-        new ListTile(
-          title: new Text('过滤'),
+        ListTile(
+          title: Text('过滤'),
           onTap: () {
             print('过滤');
           },

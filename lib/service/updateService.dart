@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:yande/model/github_model.dart';
+
 import 'settingService.dart';
-import 'package:yande/model/all_model.dart';
-import 'API/all_api.dart';
+import 'package:yande/http/all_api.dart';
 import 'package:package_info/package_info.dart';
 import 'package:dio/dio.dart';
 
@@ -10,7 +10,7 @@ typedef ShouldUpdateCallback = void Function(GithubReleaseModel);
 
 class UpdateService {
   static Future<void> getVersion({ShouldUpdateCallback shouldUpdate}) async {
-    Dio dio = new Dio();
+    Dio dio = Dio();
     Response<dynamic> res =await dio.get(GithubApi.latestApi);
     GithubReleaseModel githubReleaseModel
       = GithubReleaseModel.fromJson(Map.from(res.data));
@@ -26,7 +26,7 @@ class UpdateService {
   }
 
   static Future<void> ignoreUpdateVersion(String version) async{
-    await SettingService.saveSetting(new SettingItem(
+    await SettingService.saveSetting(SettingItem(
       name: UpdateValue.ignoreVersion,
       value: version,
     ));

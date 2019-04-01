@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yande/service/allServices.dart';
+import 'package:yande/widget/progress.dart';
 import 'dart:async';
-import 'package:yande/widget/allWidget.dart';
 
 import 'subview/dirPickerView.dart';
 
@@ -15,14 +15,14 @@ class SettingView extends StatefulWidget {
 
 class _SettingViewState extends State<SettingView> {
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool initSuccess = false;
   List<SettingItem> settingList;
 
   List<_DropButtonData> dropButtonDataList = [
-      new _DropButtonData(name: '正常向', value: 's'),
-      new _DropButtonData(name: '擦边', value: 'q'),
-      new _DropButtonData(name: '限制', value: 'e')
+      _DropButtonData(name: '正常向', value: 's'),
+      _DropButtonData(name: '擦边', value: 'q'),
+      _DropButtonData(name: '限制', value: 'e')
   ];
 
   @override
@@ -33,10 +33,10 @@ class _SettingViewState extends State<SettingView> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
-      appBar: new AppBar(
-        leading: new BackButton(),
+      appBar: AppBar(
+        leading: BackButton(),
         title: const Text('设置'),
       ),
       body: _buildSettingList(),
@@ -45,13 +45,13 @@ class _SettingViewState extends State<SettingView> {
 
   _buildSettingList() {
     if (this.initSuccess) {
-      return new ListView(
+      return ListView(
         children: this.settingList.map((v) => _buildSettingItem(v)).toList(),
       );
     } else {
-      return new Container(
-        child: new Center(
-          child:  new CenterProgress(),
+      return Container(
+        child: Center(
+          child:  CenterProgress(),
         ),
       );
     }
@@ -67,13 +67,13 @@ class _SettingViewState extends State<SettingView> {
 
   Widget _buildSettingItem(SettingItem v) {
     if (v.name == SETTING_TYPE.IMAGE_DOWNLOAD_PATH) {
-      return new ListTile(
-        title: new Text(v.name),
-        subtitle: new Text(v.value),
-        trailing: new Icon(Icons.arrow_forward_ios),
+      return ListTile(
+        title: Text(v.name),
+        subtitle: Text(v.value),
+        trailing: Icon(Icons.arrow_forward_ios),
         onTap: () async{
-          String path =await Navigator.push(context, new MaterialPageRoute(builder: (c) {
-            return new DirectoryPickerView(v.value);
+          String path =await Navigator.push(context, MaterialPageRoute(builder: (c) {
+            return DirectoryPickerView(v.value);
           }));
           if (path != null) {
             _handlePickedName(v, path);
@@ -81,10 +81,10 @@ class _SettingViewState extends State<SettingView> {
         },
       );
     } else if (v.name == SETTING_TYPE.FILTER_RANK) {
-      return new ListTile(
-        title: new Text(v.name),
-        subtitle: new Text(this.getRankNameByValue(v.value)),
-        trailing: new DropdownButton<String>(
+      return ListTile(
+        title: Text(v.name),
+        subtitle: Text(this.getRankNameByValue(v.value)),
+        trailing: DropdownButton<String>(
           value: v.value,
           onChanged: (String newValue) {
             v.value = newValue;
@@ -95,13 +95,15 @@ class _SettingViewState extends State<SettingView> {
             }
           },
           items: this.dropButtonDataList.map((_DropButtonData data) {
-            return new DropdownMenuItem<String>(
+            return DropdownMenuItem<String>(
               value: data.value,
-              child: new Text(data.name),
+              child: Text(data.name),
             );
           }).toList(),
         ),
       );
+    } else {
+      return Container();
     }
   }
 
@@ -124,9 +126,9 @@ class _SettingViewState extends State<SettingView> {
 
   _showMessageBySnackbar(String text) {
     _scaffoldKey.currentState.showSnackBar(
-      new SnackBar(
+      SnackBar(
           content: Text(text),
-          duration: new Duration(seconds: 1),
+          duration: Duration(seconds: 1),
       ),
     );
   }

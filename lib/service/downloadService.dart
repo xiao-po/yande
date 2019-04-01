@@ -1,15 +1,14 @@
 import 'dart:async';
-import 'package:yande/model/all_model.dart';
-import 'package:yande/dao/all_dao.dart';
+import 'package:yande/dao/image_dao.dart';
+import 'package:yande/model/image_model.dart';
 import 'settingService.dart';
-import 'dart:io';
 import 'package:yande/utils/utils.dart';
 import 'package:dio/dio.dart';
 
 
 class DownloadService {
   static Future<void> downloadImage (ImageModel image, {ProgressCallback onProcess}) async {
-    Dio dio = new Dio();
+    Dio dio = Dio();
 
     image.downloadStatus = ImageDownloadStatus.pending;
     await ImageDao.updateDownloadImageStatus(image);
@@ -18,7 +17,7 @@ class DownloadService {
       String yandeImageDirPath =
           (await SettingService.getSetting(SETTING_TYPE.IMAGE_DOWNLOAD_PATH)).value ;
       String filePath = '$yandeImageDirPath/${image.id}.${image.fileExt}';
-      dio.interceptors.add(new Interceptor(
+      dio.interceptors.add(Interceptor(
 
       ));
       await dio.download(
@@ -38,7 +37,5 @@ class DownloadService {
     }
   }
 
-  static Future<Directory> getImageDir() async {
-  }
 
 }

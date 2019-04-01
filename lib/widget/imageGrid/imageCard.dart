@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yande/model/all_model.dart';
-import 'package:yande/widget/allWidget.dart';
+import 'package:yande/model/image_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:yande/widget/progress.dart';
 
 typedef ImageTapCallBack = void Function(ImageModel);
 
@@ -35,26 +35,26 @@ class MainImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new SizedBox(
-      child: new Card(
-        child: new Column(
+    return SizedBox(
+      child: Card(
+        child: Column(
           children: <Widget>[
-            new Expanded(
-                child: new Stack(
+            Expanded(
+                child: Stack(
                   children: <Widget>[
                     _buildImageBlockWidget(this.imageModel),
                     _buildImageSizeText(this.imageModel),
                   ],
                 )
             ),
-            new Container(
+            Container(
               width: double.infinity,
               decoration: const BoxDecoration(
                 borderRadius: const BorderRadius.vertical(
                   bottom: const Radius.circular(5),
                 ),
               ),
-              child: new Row(
+              child: Row(
                 children: <Widget>[
                   _CollectButton(
                     status: this.imageModel.isCollect(),
@@ -75,18 +75,18 @@ class MainImageCard extends StatelessWidget {
 
 
   Widget _buildImageSizeText(ImageModel imageModel) {
-    return new Container(
+    return Container(
       height: 20,
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
         color: Color(0x1a000000),
-        borderRadius: new BorderRadius.vertical(
+        borderRadius: BorderRadius.vertical(
             top: Radius.circular(5)
         )
       ),
-      child: new Center(
-        child: new Text(
+      child: Center(
+        child: Text(
             '${imageModel.width} x ${imageModel.height}',
-            style: new TextStyle(
+            style: TextStyle(
               color: Color(0xffffffff)
             ),
         ),
@@ -95,17 +95,17 @@ class MainImageCard extends StatelessWidget {
   }
 
   Widget _buildImageBlockWidget(ImageModel imageModel) {
-    return new Center(
-      child: new Container(
+    return Center(
+      child: Container(
           decoration: cardTopBorderDecoration,
-          child: new GestureDetector(
+          child: GestureDetector(
             onTap: (){
               this.imageTap(imageModel);
             },
             child: Hero(
               tag: '$heroPrefix${imageModel.id}',
-              child: new CachedNetworkImage(
-                  placeholder: new ImageCardCircularProgressIndicator(),
+              child: CachedNetworkImage(
+                  placeholder: ImageCardCircularProgressIndicator(),
                   imageUrl: imageModel.previewUrl
               ),
             ),
@@ -185,10 +185,10 @@ class _CardMaterialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  new Expanded(
-      child: new Material(
-        child: new InkWell(
-          child: new Container(
+    return  Expanded(
+      child: Material(
+        child: InkWell(
+          child: Container(
             width: 85,
             height: 30,
             child: child,
@@ -217,31 +217,31 @@ class ImageGalleryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new SizedBox(
-      child: new Card(
+    return SizedBox(
+      child: Card(
         child: buildImageBlockWidget(this.image),
       ),
     );
   }
 
   buildImageBlockWidget(ImageModel image) {
-    return new SizedBox(
+    return SizedBox(
       height: 140,
       width: 200,
-      child: new Container(
-          decoration: new BoxDecoration(
-              borderRadius: new BorderRadius.vertical(
+      child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.vertical(
                   top: Radius.circular(5)
               )
           ),
-          child: new GestureDetector(
+          child: GestureDetector(
             onTap: (){
               this.imageTap(image);
             },
             child: Hero(
               tag: '$heroPrefix${image.id}',
-              child: new CachedNetworkImage(
-                  placeholder: new ImageCardCircularProgressIndicator(),
+              child: CachedNetworkImage(
+                  placeholder: ImageCardCircularProgressIndicator(),
                   imageUrl: image.previewUrl
               ),
             ),

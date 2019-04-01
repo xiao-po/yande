@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:yande/model/all_model.dart';
-import 'package:yande/widget/allWidget.dart';
+import 'package:yande/model/image_model.dart';
 import 'package:yande/service/allServices.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:yande/widget/progress.dart';
 import 'icons.dart';
 
 class ImageStatusSliverAppBar extends StatefulWidget {
@@ -38,8 +38,8 @@ class _ImageStatusSliverAppBarState extends State<ImageStatusSliverAppBar> {
       backgroundColor: Theme.of(context).accentColor,
       expandedHeight: 400.0,
       flexibleSpace: FlexibleSpaceBar(
-        background: new Container(
-          decoration: new BoxDecoration(color: Colors.white),
+        background: Container(
+          decoration: BoxDecoration(color: Colors.white),
           child: Hero(
             tag: '${widget.heroPrefix}${widget.image.id}',
             child: _buildCacheImage(),
@@ -53,11 +53,11 @@ class _ImageStatusSliverAppBarState extends State<ImageStatusSliverAppBar> {
   List<Widget> _buildAppBarActionButton() {
     if (this.imageLoadOver) {
       return <Widget>[
-        new ImageStatusButton(
+        ImageStatusButton(
           showStatus: widget.showDialog,
 
         ),
-        new ImageShareButton(
+        ImageShareButton(
           onTap: () {
             ShareService.shareImage(widget.image.sampleUrl);
           },
@@ -65,7 +65,7 @@ class _ImageStatusSliverAppBarState extends State<ImageStatusSliverAppBar> {
       ];
     } else {
       return <Widget>[
-        new ImageStatusButton(
+        ImageStatusButton(
           showStatus: widget.showDialog,
         )
       ];
@@ -75,33 +75,33 @@ class _ImageStatusSliverAppBarState extends State<ImageStatusSliverAppBar> {
 
   Widget _buildCacheImage() {
     if (!this.imageLoadOver) {
-      return new Stack(
+      return Stack(
         children: <Widget>[
-          new Container(
+          Container(
             height: double.infinity,
             width: double.infinity,
             child: CachedNetworkImage(
-              placeholder: new ImageCardCircularProgressIndicator(),
+              placeholder: ImageCardCircularProgressIndicator(),
               imageUrl: widget.image.previewUrl,
               fit: BoxFit.cover,
             ),
           ),
-          new Column(
+          Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              new Container(
+              Container(
                 height: 30,
                 width: double.infinity,
                 alignment: Alignment.bottomRight,
                 color: Color(0x5a000000),
-                child: new Container(
+                child: Container(
                   width: 20,
                   height: 30,
-                  margin: new EdgeInsets.all(5),
-                  child: new CircularProgressIndicator(
+                  margin: EdgeInsets.all(5),
+                  child: CircularProgressIndicator(
                     strokeWidth: 3,
-                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
                 ),
               )
@@ -110,8 +110,8 @@ class _ImageStatusSliverAppBarState extends State<ImageStatusSliverAppBar> {
         ],
       );
     } else {
-      return new CachedNetworkImage(
-        placeholder: new ImageCardCircularProgressIndicator(),
+      return CachedNetworkImage(
+        placeholder: ImageCardCircularProgressIndicator(),
         imageUrl: widget.image.sampleUrl,
         fit: BoxFit.cover,
       );
@@ -135,17 +135,17 @@ class ImageActionButtonFiled extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new Container(
-      decoration: new BoxDecoration(
+    return Container(
+      decoration: BoxDecoration(
         color: Colors.white
       ),
 
       alignment: Alignment.center,
-      child: new Container(
-        decoration: new BoxDecoration(
+      child: Container(
+        decoration: BoxDecoration(
             color: const Color(0xffffffff),
-            border: new Border.all(color: Color(0xffeaeaea)),
-            borderRadius: new BorderRadius.all(new Radius.circular(5)),
+            border: Border.all(color: Color(0xffeaeaea)),
+            borderRadius: BorderRadius.all(Radius.circular(5)),
             boxShadow: const <BoxShadow>[
               BoxShadow(
                 offset: Offset(0.0, 0.5),
@@ -164,13 +164,13 @@ class ImageActionButtonFiled extends StatelessWidget {
               ),
             ]
         ),
-        margin: new EdgeInsets.only(
+        margin: EdgeInsets.only(
           top: 10,
           bottom: 10,
         ),
         height: 50,
         width: 300,
-        child: new Row(
+        child: Row(
           mainAxisSize: MainAxisSize.max,
           children: this.children,
         ),

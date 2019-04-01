@@ -18,22 +18,22 @@ class UpdateDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('新版本已经发布'),
-      content: new Text(this.text),
+      content: Text(this.text),
       actions: <Widget>[
-        new FlatButton(
+        FlatButton(
             child: const Text('忽略此版本'),
             onPressed: () {
               UpdateService.ignoreUpdateVersion(version);
               Navigator.pop(context);
             }
         ),
-        new FlatButton(
+        FlatButton(
             child: const Text('暂时不'),
             onPressed: () {
               Navigator.pop(context);
             }
         ),
-        new FlatButton(
+        FlatButton(
             child: const Text('更新'),
             onPressed: () async{
               if (await canLaunch(this.url)) {
