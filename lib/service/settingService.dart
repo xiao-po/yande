@@ -81,9 +81,9 @@ class FILTER_RANK {
 
 }
 
-class SettingItem {
+class SettingItem<T> {
   String name;
-  String value;
+  T value;
 
   SettingItem({
     this.name,

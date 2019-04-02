@@ -16,7 +16,7 @@ class UpdateService {
       = GithubReleaseModel.fromJson(Map.from(res.data));
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-    SettingItem item =await SettingService.getSetting(UpdateValue.ignoreVersion);
+    SettingItem<String> item =await SettingService.getSetting(UpdateValue.ignoreVersion);
     print(item.value);
     if (githubReleaseModel.tagName != item.value &&
         packageInfo.version != githubReleaseModel.tagName) {

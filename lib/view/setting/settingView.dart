@@ -17,7 +17,7 @@ class _SettingViewState extends State<SettingView> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool initSuccess = false;
-  List<SettingItem> settingList;
+  List<SettingItem<String>> settingList;
 
   List<_DropButtonData> dropButtonDataList = [
       _DropButtonData(name: '正常向', value: 's'),
