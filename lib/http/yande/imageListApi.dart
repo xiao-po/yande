@@ -15,7 +15,7 @@ class YandeImageListApi {
     return null;
   }
 
-  Future<List<ImageModel>> fetchNextPage(int page, int limit) async{
+  Future<List<ImageModel>> fetchImageByPage(int page, int limit) async{
     String url = YandeApi.post + '?page=$page&limit=$limit';
     Response<List<dynamic>> res = await this.source.http.get(url);
 
@@ -27,13 +27,7 @@ class YandeImageListApi {
       }
       ImageModel dto =await ImageDao.isImageExistById(item.id);
       if(dto != null) {
-        item.collectStatus = dto.collectStatus;
-        item.downloadStatus = dto.downloadStatus;
-        if (dto.downloadStatus == ImageDownloadStatus.success) {
-          item.downloadPath = dto.downloadPath;
-        } else if (dto.downloadStatus != null){
-          item.downloadStatus = ImageDownloadStatus.error;
-        }
+        item.setStatusByImage(dto);
       }
       item.pages = page;
       trueList.add(item);
@@ -41,6 +35,29 @@ class YandeImageListApi {
     return trueList;
   }
 
+
+  Future<List<ImageModel>> getIndexListByTags
+      (String tags,int pages, int limit) async {
+    String url = YandeApi.post + '?tags=$tags&page=$pages&limit=$limit';
+
+    Response<List<dynamic>> res = await this.source.http.get(url);
+
+    List<ImageModel> list = convertMapToImageModel(res);
+    List<ImageModel> trueList = List();
+    for (ImageModel item in list) {
+      if (item.tags != null) {
+        item.tagTagModelList = convertTagStringToList(item.tags);
+
+      }
+      ImageModel dto =await ImageDao.isImageExistById(item.id);
+      if(dto != null) {
+        item.setStatusByImage(dto);
+      }
+      item.pages = pages;
+      trueList.add(item);
+    }
+    return trueList;
+  }
   List<ImageModel> convertMapToImageModel(Response<List> res) {
     List<ImageModel> list = res.data.map((item) =>
         ImageModel.fromJson(Map<String, dynamic>.from(item))).toList();

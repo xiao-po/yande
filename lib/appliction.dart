@@ -5,29 +5,36 @@ import 'dart:async';
 import 'package:yande/model/image_model.dart';
 import 'package:yande/model/tag_model.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:yande/service/allServices.dart';
 import 'package:yande/service/settingService.dart';
 
 
 class Application {
-    static Application instance = Application.init();
+    static Application _instance = Application.init();
 
-    Dio dio;
-    FILTER_RANK filterRank;
+    static Application getInstance() {
+      return Application._instance;
+    }
+    Dio _dio;
+    String filterRank;
     _AppDataSourcePool dataPool;
     Application.init(){
-      dio = Dio();
-      dataPool = _AppDataSourcePool(dio);
+      _dio = Dio();
+      dataPool = _AppDataSourcePool();
       dataPool.registryHttpSource(
-          YandeImageHttpDataSource(dio)
+          YandeImageHttpDataSource(_dio)
       );
 
     }
 
-    Future<void> updateFilterRank() async {
+    Future<void> getFilterRank() async {
       SettingItem filterRankItem = await SettingService.getSetting(SETTING_TYPE.FILTER_RANK);
       this.filterRank = filterRankItem.value;
     }
+    Future<void> setFilterRank(SettingItem item) async {
+      SettingService.saveSetting(item);
+      this.filterRank = item.value;
+    }
+
 }
 
 abstract class AppDataSource {
@@ -35,7 +42,7 @@ abstract class AppDataSource {
   @required
   String sourceName;
 
-  Future<List<ImageModel>> fetchNextPage(int page, int limit);
+  Future<List<ImageModel>> fetchImageByPage(int page, int limit);
   Future<ImageModel> fetchImageById(String id);
   Future<List<TagModel>> searchTag(String words);
 }
@@ -52,8 +59,7 @@ class _AppDataSourcePool {
   Map<String, AppDataSource> _pool = Map();
   AppDataSource _activeSource;
 
-  final Dio http;
-  _AppDataSourcePool(this.http);
+  _AppDataSourcePool();
 
   AppDataSource getHttpSource([String name]) {
     if (name == null) {
@@ -81,9 +87,6 @@ class _AppDataSourcePool {
     if (source == null) {
       throw "source can't be null";
     }
-
-    source.http = this.http;
-
 
     this._pool[source.sourceName] = source;
 

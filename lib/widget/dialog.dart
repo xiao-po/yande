@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:yande/service/allServices.dart';
+import 'package:yande/service/updateService.dart';
 
 class UpdateDialog extends StatelessWidget {
 

@@ -88,7 +88,8 @@ class TagDao {
           MyDateBaseValue.Tag
       );
       if (list != null && list.length > 0) {
-        return list.map((val) => TagModel.fromJson(Map.from(val)));
+        list = list.map((val) => TagModel.fromJson(Map.from(val))).toList();
+        return list;
       } else {
         return null;
       }

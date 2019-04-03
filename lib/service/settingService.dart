@@ -6,7 +6,7 @@ import 'dart:io';
 
 class SettingService {
 
-  static final List<SettingItem> settingList = [
+  static final List<SettingItem<String>> settingList = [
     SettingItem(
       name: SETTING_TYPE.IMAGE_DOWNLOAD_PATH,
       value: '',
@@ -52,7 +52,7 @@ class SettingService {
   static Future<SettingItem> getSetting(String name) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String value = prefs.getString(name);
-    return SettingItem(
+    return SettingItem<String>(
       name: name,
       value: value
     );

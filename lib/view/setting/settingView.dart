@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:yande/service/allServices.dart';
+import 'package:yande/appliction.dart';
+import 'package:yande/service/settingService.dart';
 import 'package:yande/widget/progress.dart';
 import 'dart:async';
 
@@ -88,7 +89,7 @@ class _SettingViewState extends State<SettingView> {
           value: v.value,
           onChanged: (String newValue) {
             v.value = newValue;
-            SettingService.saveSetting(v);
+            Application.getInstance().setFilterRank(v);
             this._showMessageBySnackbar("过滤等级更新成功，刷新之后生效");
             if (this.mounted) {
               setState(() {});

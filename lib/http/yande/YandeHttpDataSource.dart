@@ -29,8 +29,8 @@ class YandeImageHttpDataSource implements AppDataSource {
   }
 
   @override
-  Future<List<ImageModel>> fetchNextPage(int page, int limit) async{
-    return _imageListApi.fetchNextPage(page, limit);
+  Future<List<ImageModel>> fetchImageByPage(int page, int limit) async{
+    return _imageListApi.fetchImageByPage(page, limit);
   }
 
   @override

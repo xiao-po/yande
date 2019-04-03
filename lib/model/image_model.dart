@@ -169,6 +169,16 @@ class ImageModel extends Object {
     }
   }
 
+  setStatusByImage(ImageModel model) {
+    this.collectStatus = model.collectStatus;
+    this.downloadStatus = model.downloadStatus;
+    if (model.downloadStatus == ImageDownloadStatus.success) {
+      this.downloadPath = model.downloadPath;
+    } else if (model.downloadStatus != null){
+      this.downloadStatus = ImageDownloadStatus.error;
+    }
+  }
+
 
 }
 

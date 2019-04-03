@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:yande/model/image_model.dart';
 import 'package:yande/model/tag_model.dart';
+import 'package:yande/service/downloadService.dart';
+import 'package:yande/service/imageServive.dart';
 import 'package:yande/view/imageStatus/imageStatusView.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/widget/imageGrid/myImageLazyLoadGrid.dart';
-import 'package:yande/service/allServices.dart';
 import 'package:yande/store/store.dart';
 import 'dart:async';
 
@@ -153,14 +154,4 @@ class _ResultViewState extends State<ResultView> {
     );
   }
 
-  bool _imageFilter(ImageModel image) {
-    if (this.filterRank == FILTER_RANK.RESTRICTED) {
-      return false;
-    } else if (this.filterRank == FILTER_RANK.NOT_RESTRICTED) {
-      return image.rating == FILTER_RANK.RESTRICTED ? true : false;
-    } else {
-      return image.rating == FILTER_RANK.RESTRICTED
-          || image.rating == FILTER_RANK.NOT_RESTRICTED ? true : false;
-    }
-  }
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:yande/model/image_model.dart';
+import 'package:yande/service/downloadService.dart';
+import 'package:yande/service/imageServive.dart';
 import 'package:yande/view/imageStatus/imageStatusView.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/widget/imageGrid/lazyloadView.dart';
 import 'package:yande/widget/progress.dart';
 import 'dart:async';
-import 'package:yande/service/allServices.dart';
 
 class CollectImageView extends StatefulWidget {
   static const title = '收藏';

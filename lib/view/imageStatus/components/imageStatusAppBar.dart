@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:yande/model/image_model.dart';
-import 'package:yande/service/allServices.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:yande/service/cacheService.dart';
+import 'package:yande/service/shareService.dart';
 import 'package:yande/widget/progress.dart';
 import 'icons.dart';
 

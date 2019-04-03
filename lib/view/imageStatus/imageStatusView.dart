@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:yande/model/image_model.dart';
 import 'package:yande/model/tag_model.dart';
+import 'package:yande/service/downloadService.dart';
+import 'package:yande/service/imageServive.dart';
 import 'package:yande/view/imageGallery/imageGalleryView.dart';
 import 'package:yande/view/search/resultView.dart';
 import 'package:yande/widget/button.dart';
 import 'components/status_dialog.dart';
-import 'package:yande/service/allServices.dart';
 import 'components/imageStatusAppBar.dart';
 
 class ImageStatusView extends StatefulWidget {

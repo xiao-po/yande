@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yande/model/tag_model.dart';
-import 'package:yande/service/allServices.dart';
+import 'package:yande/service/tagService.dart';
 import 'resultView.dart';
 import 'dart:async';
 

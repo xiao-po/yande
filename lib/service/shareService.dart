@@ -1,8 +1,8 @@
 import 'package:share_extend/share_extend.dart';
+import 'package:yande/service/cacheService.dart';
 import 'dart:async';
 import 'dart:io';
 
-import 'allServices.dart';
 
 class ShareService {
   static Future<void> shareImage(url) async{
