@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:yande/model/tag_model.dart';
 import 'init_dao.dart';
 import 'dart:async';
-import 'package:yande/model/all_model.dart';
 
 class TagDao {
   static Future<bool> isTagExistByName(String name,  [Database database]) async {
@@ -88,7 +88,8 @@ class TagDao {
           MyDateBaseValue.Tag
       );
       if (list != null && list.length > 0) {
-        return list.map((val) => TagModel.fromJson(Map.from(val)));
+        list = list.map((val) => TagModel.fromJson(Map.from(val))).toList();
+        return list;
       } else {
         return null;
       }

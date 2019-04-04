@@ -17,21 +17,21 @@ class TagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
+    return Container(
 
-      margin: new EdgeInsets.only(
+      margin: EdgeInsets.only(
         left: 10,
         right: 10,
         top: 5,
         bottom: 5,
       ),
-      child: new Material(
+      child: Material(
         color: this.backgroundColor,
-        shape:  new StadiumBorder(),
-        child: new InkWell(
-          customBorder: new StadiumBorder(),
-          child: new Container(
-            padding: new EdgeInsets.only(
+        shape:  StadiumBorder(),
+        child: InkWell(
+          customBorder: StadiumBorder(),
+          child: Container(
+            padding: EdgeInsets.only(
               left: 10,
               right: 10,
               top: 5,

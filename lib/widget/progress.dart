@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class ImageCardCircularProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new Center(
-      child: new SizedBox(
+    return Center(
+      child: SizedBox(
         width: 20,
         height: 20,
-        child: new CircularProgressIndicator(
+        child: CircularProgressIndicator(
           strokeWidth: 3,
         ),
       ),
@@ -22,9 +22,9 @@ class FootProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
+    return Container(
       height: 30,
-      child: new Center(
+      child: Center(
         child: SizedBox(
           child: CircularProgressIndicator(
             strokeWidth: 2,
@@ -44,10 +44,10 @@ class CenterProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
+    return Container(
       width: 40,
       height: 40,
-      child: new Center(
+      child: Center(
         child: SizedBox(
           child: CircularProgressIndicator(
             strokeWidth: 3,

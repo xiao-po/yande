@@ -1,6 +1,7 @@
-import 'package:yande/model/all_model.dart';
-import 'package:yande/service/allServices.dart';
+import 'package:yande/model/tag_model.dart';
 import 'dart:async';
+
+import 'package:yande/service/tagService.dart';
 
 class TagStore {
   static List<TagModel> shortCutList;

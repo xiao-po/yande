@@ -52,5 +52,5 @@ enum TagCollectStatus {
   block,
 }
 
-final List<String> TagType = ["普通","画师","会社","角色",null,];
+const List<String> TagType = ["普通","画师","会社","角色",null,];
 

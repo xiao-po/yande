@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:yande/model/all_model.dart';
-import 'package:yande/view/allView.dart';
+import 'package:yande/model/tag_model.dart';
 import 'package:yande/store/store.dart';
+import 'package:yande/view/collectView/collectImageView.dart';
+import 'package:yande/view/search/resultView.dart';
+import 'package:yande/view/setting/settingView.dart';
 
 
 class LeftDrawer extends StatelessWidget{
@@ -17,17 +18,17 @@ class LeftDrawer extends StatelessWidget{
           ),
           MediaQuery.removePadding(
             context: context,
-            child: new Expanded(
-              child: new ListView(
+            child: Expanded(
+              child: ListView(
                 children: <Widget>[
-                  new ListTile(
+                  ListTile(
                     title: const Text('收藏'),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushNamed(context, CollectImageView.route);
                     },
                   ),
-                  new ListTile(
+                  ListTile(
                     title: const Text('设置'),
                     onTap: (){
                       Navigator.pop(context);
@@ -47,11 +48,11 @@ class LeftDrawer extends StatelessWidget{
 
 class RightDrawer extends StatefulWidget {
   @override
-  State<RightDrawer> createState() => new _RightDrawerState();
+  State<RightDrawer> createState() => _RightDrawerState();
 }
 
 class _RightDrawerState extends State<RightDrawer> {
-  List<TagModel> shortcutList = new List();
+  List<TagModel> shortcutList = List();
 
   @override
   void initState() {
@@ -62,12 +63,12 @@ class _RightDrawerState extends State<RightDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: new Container(
-        margin: new EdgeInsets.only(top: 15),
-        child: new Column(
+      child: Container(
+        margin: EdgeInsets.only(top: 15),
+        child: Column(
           children: <Widget>[
             _buildShortcutDrawerHeader(),
-            new Expanded(
+            Expanded(
                 child: _buildShortcutList()
             )
           ],
@@ -77,10 +78,10 @@ class _RightDrawerState extends State<RightDrawer> {
   }
 
   Widget _buildShortcutList() {
-    Widget shortcutListView = new ListView(
+    Widget shortcutListView = ListView(
       children: this.shortcutList.map(
-          (tag) => new ListTile(
-              title: new Text(tag.name),
+          (tag) => ListTile(
+              title: Text(tag.name),
               onTap: () {
                 this._goResultView(tag.name);
               }
@@ -95,12 +96,12 @@ class _RightDrawerState extends State<RightDrawer> {
   }
 
   _buildShortcutDrawerHeader({GestureTapCallback onPressed}) {
-    return new Container(
-      color: new Color(0xffeff0f1),
-      child: new ListTile(
+    return Container(
+      color: Color(0xffeff0f1),
+      child: ListTile(
         title: const Text('快速搜索'),
-        trailing: new MaterialButton(
-          child: new Icon(Icons.settings),
+        trailing: MaterialButton(
+          child: Icon(Icons.settings),
           onPressed: onPressed
         ),
       ),
@@ -111,7 +112,7 @@ class _RightDrawerState extends State<RightDrawer> {
     Navigator.pop(context);
     Navigator.push(
         context,
-        new MaterialPageRoute(
+        MaterialPageRoute(
             builder: (context) {
               return ResultView(
                 tags: word,

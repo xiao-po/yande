@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:yande/utils/utils.dart';
-import 'package:yande/widget/allWidget.dart';
+import 'package:yande/widget/progress.dart';
 
 class DirectoryPickerView extends StatefulWidget {
 
@@ -33,9 +33,9 @@ class _DirectoryPickerView extends State<DirectoryPickerView>{
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        leading: new BackButton(),
+    return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(),
         title: const Text('选择文件夹'),
       ),
       body: _buildDirList(),
@@ -45,22 +45,22 @@ class _DirectoryPickerView extends State<DirectoryPickerView>{
 
   Widget _buildDirList() {
     if (isLoading) {
-      return new Column(
+      return Column(
         children: <Widget>[
           _buildDirPathHeader(),
-          new Expanded(
-            child:  new Center(
-              child: new CenterProgress(),
+          Expanded(
+            child:  Center(
+              child: CenterProgress(),
             ),
           )
         ],
       );
     } else {
-      return new Column(
+      return Column(
         children: <Widget>[
           _buildDirPathHeader(),
-          new Expanded(
-            child: new ListView(
+          Expanded(
+            child: ListView(
               children: _buildDirListTile(this.dirList),
             ),
           )
@@ -76,9 +76,9 @@ class _DirectoryPickerView extends State<DirectoryPickerView>{
       setState(() {});
     }
 
-    currentDir = new Directory(path);
+    currentDir = Directory(path);
     this.dirList =await FileUtils.getAllDirectoryChildren(
-      new Directory(path)
+      Directory(path)
     );
 
     this.isLoading = false;
@@ -88,10 +88,10 @@ class _DirectoryPickerView extends State<DirectoryPickerView>{
   }
 
   List<Widget> _buildDirListTile(List<MyDirectoryStat> dirList) {
-    List<Widget> listTiles = new List();
+    List<Widget> listTiles = List();
     if (this.currentDir.path != this.rootPath) {
-      listTiles.add(new ListTile(
-        leading: new Icon(Icons.folder_open),
+      listTiles.add(ListTile(
+        leading: Icon(Icons.folder_open),
         title: const Text('...'),
         onTap: () {
           this.getDirList(currentDir.parent.path);
@@ -100,12 +100,12 @@ class _DirectoryPickerView extends State<DirectoryPickerView>{
     }
     listTiles.addAll(
       this.dirList.map(
-        (d) => new ListTile(
-          leading: new Icon(
+        (d) => ListTile(
+          leading: Icon(
               Icons.folder,
               color: Colors.amberAccent,
           ),
-          title: new Text(basename(d.path)),
+          title: Text(basename(d.path)),
           onTap: () {
             this.getDirList(d.path);
           },
@@ -120,38 +120,38 @@ class _DirectoryPickerView extends State<DirectoryPickerView>{
   }
 
   Widget _buildDirPathHeader() {
-    return new Container(
+    return Container(
       height: 40,
       width: double.infinity,
-      padding: new EdgeInsets.only(
+      padding: EdgeInsets.only(
         left: 10,
       ),
       alignment: Alignment.centerLeft,
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
         color: const Color(0xffeff0f1),
-        border: new Border(
-          bottom: new BorderSide(
+        border: Border(
+          bottom: BorderSide(
             color: const Color(0xffcccccc)
           )
         )
       ),
-      child: new Text(this.currentDir.path),
+      child: Text(this.currentDir.path),
     );
   }
 
   _buildConfirmBottomButton(BuildContext context) {
-      return new Container(
+      return Container(
         height: 60,
-        decoration: new BoxDecoration(
-          border: new Border(
-            top: new BorderSide(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
               color: const Color(0xffcccccc)
             )
           )
         ),
         alignment: Alignment.bottomCenter,
         width: double.infinity,
-        child: new Row(
+        child: Row(
           children: <Widget>[
             NormalButton(
                 '选择',
@@ -182,15 +182,15 @@ class NormalButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return new Expanded(
-      child: new Material(
-        child: new InkWell(
+    return Expanded(
+      child: Material(
+        child: InkWell(
           onTap: this.onTap,
-          child: new Container(
+          child: Container(
             width: double.infinity,
             height: double.infinity,
             alignment: Alignment.center,
-            child: new Text(text),
+            child: Text(text),
           ),
         ),
       ),

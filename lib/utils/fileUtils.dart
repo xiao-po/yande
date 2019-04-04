@@ -6,7 +6,7 @@ import 'package:path/path.dart';
 class FileUtils {
 
   static Future<Directory> getDirAndCreate(String path) async {
-    Directory dir = new Directory(path);
+    Directory dir = Directory(path);
     bool isDirExist = await dir.exists();
     if (!isDirExist) {
       await dir.create();
@@ -26,13 +26,13 @@ class FileUtils {
   }
 
   static Future<List<MyDirectoryStat>> getAllDirectoryChildren(Directory dir) async{
-    List<MyDirectoryStat> list = new List();
+    List<MyDirectoryStat> list = List();
     List dirChildren =await dir.list().toList();
     for (FileSystemEntity entity in dirChildren) {
       FileStat stat =await entity.stat();
       if (stat.type == FileSystemEntityType.directory) {
-        list.add(new MyDirectoryStat(
-            directory: new Directory(entity.path),
+        list.add(MyDirectoryStat(
+            directory: Directory(entity.path),
             name: basename(entity.path),
             path: (entity.path),
           )

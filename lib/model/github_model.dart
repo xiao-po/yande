@@ -50,14 +50,14 @@ class GithubReleaseModel {
     name = json['name'];
     draft = json['draft'];
     author =
-    json['author'] != null ? new GithubAuthor.fromJson(json['author']) : null;
+    json['author'] != null ? GithubAuthor.fromJson(json['author']) : null;
     prerelease = json['prerelease'];
     createdAt = json['created_at'];
     publishedAt = json['published_at'];
     if (json['assets'] != null) {
-      assets = new List<GithubAssets>();
+      assets = List<GithubAssets>();
       json['assets'].forEach((v) {
-        assets.add(new GithubAssets.fromJson(v));
+        assets.add(GithubAssets.fromJson(v));
       });
     }
     tarballUrl = json['tarball_url'];
@@ -66,7 +66,7 @@ class GithubReleaseModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['url'] = this.url;
     data['assets_url'] = this.assetsUrl;
     data['upload_url'] = this.uploadUrl;
@@ -155,7 +155,7 @@ class GithubAuthor {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['login'] = this.login;
     data['id'] = this.id;
     data['node_id'] = this.nodeId;
@@ -215,7 +215,7 @@ class GithubAssets {
     name = json['name'];
     label = json['label'];
     uploader = json['uploader'] != null
-        ? new Uploader.fromJson(json['uploader'])
+        ? Uploader.fromJson(json['uploader'])
         : null;
     contentType = json['content_type'];
     state = json['state'];
@@ -227,7 +227,7 @@ class GithubAssets {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['url'] = this.url;
     data['id'] = this.id;
     data['node_id'] = this.nodeId;
@@ -309,7 +309,7 @@ class Uploader {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['login'] = this.login;
     data['id'] = this.id;
     data['node_id'] = this.nodeId;

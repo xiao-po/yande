@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import '../allView.dart';
-import 'package:yande/widget/allWidget.dart';
-import 'package:yande/model/all_model.dart';
-import 'package:yande/service/allServices.dart';
+import 'package:yande/model/image_model.dart';
+import 'package:yande/model/tag_model.dart';
+import 'package:yande/service/downloadService.dart';
+import 'package:yande/service/imageServive.dart';
+import 'package:yande/view/imageStatus/imageStatusView.dart';
+import 'package:yande/widget/imageGrid/imageCard.dart';
+import 'package:yande/widget/imageGrid/myImageLazyLoadGrid.dart';
 import 'package:yande/store/store.dart';
 import 'dart:async';
 
@@ -16,7 +19,7 @@ class ResultView extends StatefulWidget {
 }
 
 class _ResultViewState extends State<ResultView> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool isShortcut;
 
   bool updateTagListLock = false;
@@ -24,7 +27,7 @@ class _ResultViewState extends State<ResultView> {
 
   String filterRank;
 
-  Key get fabKey => new ValueKey<String>('resultViewFabkey');
+  Key get fabKey => ValueKey<String>('resultViewFabkey');
 
   @override
   void initState() {
@@ -34,14 +37,14 @@ class _ResultViewState extends State<ResultView> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
-      appBar: new AppBar(
-        leading: new BackButton(),
-        title: new Text("搜索： ${widget.tags}", overflow: TextOverflow.ellipsis,),
+      appBar: AppBar(
+        leading: BackButton(),
+        title: Text("搜索： ${widget.tags}", overflow: TextOverflow.ellipsis,),
       ),
-      body: new Container(
-        child: new MyImageLazyLoadGrid(
+      body: Container(
+        child: MyImageLazyLoadGrid(
           searchTag: this.widget.tags,
           cardBuilder: (image) =>  _buildImageCard(image),
         ),
@@ -83,14 +86,14 @@ class _ResultViewState extends State<ResultView> {
     } else if (this.isShortcut == true) {
       return _buildDeleteShortcutFloatingButton();
     } else {
-      return new Container();
+      return Container();
     }
   }
 
   FloatingActionButton _buildDeleteShortcutFloatingButton() {
-      return new FloatingActionButton(
-        key: new ValueKey(this.fabKey),
-        child: new Icon(
+      return FloatingActionButton(
+        key: ValueKey(this.fabKey),
+        child: Icon(
           Icons.delete,
         ),
         backgroundColor: Colors.red,
@@ -100,9 +103,9 @@ class _ResultViewState extends State<ResultView> {
   }
 
   FloatingActionButton _buildAddShortcutFloatingButton() {
-    return new FloatingActionButton(
+    return FloatingActionButton(
         key: this.fabKey,
-        child: new Icon(
+        child: Icon(
           Icons.add,
         ),
         onPressed: () {
@@ -112,7 +115,7 @@ class _ResultViewState extends State<ResultView> {
 
   void _deleteShortcut(String tag) async{
 
-    TagStore.unCollectTag(new TagModel(null, tag, null, null, null));
+    TagStore.unCollectTag(TagModel(null, tag, null, null, null));
     this.isShortcut = false;
     if (this.mounted) {
       setState(() {});
@@ -120,7 +123,7 @@ class _ResultViewState extends State<ResultView> {
   }
 
   void _addShortcut(String tag) async {
-    TagStore.collectTag(new TagModel(null, tag, null, null, null));
+    TagStore.collectTag(TagModel(null, tag, null, null, null));
     this.isShortcut = true;
     if (this.mounted) {
       setState(() {});
@@ -147,18 +150,8 @@ class _ResultViewState extends State<ResultView> {
 
   _showMessageBySnackbar(String text) {
     _scaffoldKey.currentState.showSnackBar(
-      new SnackBar(content: Text(text)),
+      SnackBar(content: Text(text)),
     );
   }
 
-  bool _imageFilter(ImageModel image) {
-    if (this.filterRank == FILTER_RANK.RESTRICTED) {
-      return false;
-    } else if (this.filterRank == FILTER_RANK.NOT_RESTRICTED) {
-      return image.rating == FILTER_RANK.RESTRICTED ? true : false;
-    } else {
-      return image.rating == FILTER_RANK.RESTRICTED
-          || image.rating == FILTER_RANK.NOT_RESTRICTED ? true : false;
-    }
-  }
 }

@@ -6,12 +6,12 @@ import 'dart:io';
 
 class SettingService {
 
-  static final List<SettingItem> settingList = [
-    new SettingItem(
+  static final List<SettingItem<String>> settingList = [
+    SettingItem(
       name: SETTING_TYPE.IMAGE_DOWNLOAD_PATH,
       value: '',
     ),
-    new SettingItem(
+    SettingItem(
       name: SETTING_TYPE.FILTER_RANK,
       value: FILTER_RANK.NORMAL,
     )
@@ -25,7 +25,7 @@ class SettingService {
         if (item.name == SETTING_TYPE.IMAGE_DOWNLOAD_PATH) {
 
           Directory appDocDir = await getExternalStorageDirectory();
-          Directory yandeImageDir = new Directory("${appDocDir.path}/DCIM/yandeImage");
+          Directory yandeImageDir = Directory("${appDocDir.path}/DCIM/yandeImage");
           bool isExist = await yandeImageDir.exists();
           if (!isExist) {
             await yandeImageDir.create();
@@ -52,7 +52,7 @@ class SettingService {
   static Future<SettingItem> getSetting(String name) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String value = prefs.getString(name);
-    return new SettingItem(
+    return SettingItem<String>(
       name: name,
       value: value
     );
@@ -67,11 +67,13 @@ class SettingService {
   }
 }
 
+// ignore: camel_case_types
 class SETTING_TYPE {
   static const String IMAGE_DOWNLOAD_PATH = '图片下载路径';
   static const String FILTER_RANK = "过滤等级";
 }
 
+// ignore: camel_case_types
 class FILTER_RANK {
   static const String NORMAL = 's';
   static const String NOT_RESTRICTED = 'q';
@@ -79,9 +81,9 @@ class FILTER_RANK {
 
 }
 
-class SettingItem {
+class SettingItem<T> {
   String name;
-  String value;
+  T value;
 
   SettingItem({
     this.name,
