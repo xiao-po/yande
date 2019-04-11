@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yande/appliction.dart';
 import 'package:yande/model/image_model.dart';
 import 'package:yande/service/downloadService.dart';
 import 'package:yande/service/imageServive.dart';
@@ -38,6 +39,7 @@ class _IndexView extends State<IndexView> {
     MyDateBase.initDateBase();
     SettingService.initSetting();
 
+    Application.getInstance().getFilterRank();
     UpdateService.ignoreUpdateVersion('');
     this.checkUpdate();
   }
@@ -55,8 +57,8 @@ class _IndexView extends State<IndexView> {
       drawer: LeftDrawer(),
       endDrawer: RightDrawer(),
       body: Container(
-        child: _buildImageContent(),
-      ),
+      child: _buildImageContent(),
+    ),
     );
   }
 
