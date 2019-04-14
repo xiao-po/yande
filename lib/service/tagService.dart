@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:yande/appliction.dart';
+import 'package:yande/dao/init_dao.dart';
 import 'package:yande/dao/tag_dao.dart';
 import 'package:yande/http/all_api.dart';
 import 'package:dio/dio.dart';
@@ -7,30 +9,27 @@ import 'package:yande/model/tag_model.dart';
 class TagService {
 
 
-  static Future<List<TagModel>> getTagByNameOrderAESC(String name) async{
-    Dio dio = Dio();
-    String url = IndexAPI.tagList + '?limit=40&order=count&name=$name';
+  static Future<List<TagModel>> getTagByNameOrderAESC(String name, {String sourceName}) async{
 
-    Response<List<dynamic>> res = await dio.get(url);
-
-    List<TagModel> tagList = res.data.map((item) =>
-        TagModel.fromJson(Map<String, dynamic>.from(item))).toList();
-
-    return tagList;
+    AppHttpDataSource _source = TagService._getAppDataSource(sourceName);
+    return _source.searchTag(name);
   }
 
 
   static Future<void> saveTag(TagModel tag) async{
-    await TagDao.saveTag(tag);
+    DaoDataSource _source = TagService._getAppDataSource(DaoDataSource.name);
+    await _source.saveTag(tag);
   }
 
 
   static Future<List<TagModel>> getAllCollectTag() async{
-    return await TagDao.getAllCollectTag();
+    DaoDataSource _source = TagService._getAppDataSource(DaoDataSource.name);
+    return await _source.getAllCollectTag();
   }
 
   static Future<List<TagModel>> getAllBlockTag() async {
-    return await TagDao.getAllBlockTag();
+    DaoDataSource _source = TagService._getAppDataSource(DaoDataSource.name);
+    return await _source.getAllBlockTag();
   }
 
 
@@ -40,6 +39,11 @@ class TagService {
     await TagService.saveTag(tag);
   }
 
+
+  static AppDataSource _getAppDataSource(String sourceName) {
+    AppDataSource source = Application.getInstance().dataPool.getSource(sourceName);
+    return source;
+  }
 }
 
 const BLOCK_TAG = 'blockTag';

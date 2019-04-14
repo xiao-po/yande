@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:yande/appliction.dart';
 import 'package:yande/dao/image_dao.dart';
+import 'package:yande/dao/init_dao.dart';
 import 'package:yande/model/image_model.dart';
 import 'package:yande/model/tag_model.dart';
 import 'package:yande/service/settingService.dart';
@@ -10,17 +11,18 @@ class ImageService {
 
   static Future<List<ImageModel>> getIndexListByPage
       (int pages, int limit, {String sourceName}) async {
-    AppDataSource source =  Application.getInstance().dataPool.getHttpSource(sourceName);
+    AppDataSource source = _getAppDataSource(sourceName);
     List<ImageModel> list =await  source.fetchImageByPage(pages, limit);
     list.removeWhere(_imageFilter);
     list.removeWhere((image) => TagStore.isBlockedByName(image.tags));
     return list;
   }
 
-  static Future<List<ImageModel>> getIndexListByTags
+
+  static Future<List<ImageModel>> getImageByTag
       (String tags,int pages, int limit, {String sourceName}) async {
-    AppDataSource source =  Application.getInstance().dataPool.getHttpSource(sourceName);
-    List<ImageModel> list =await source.fetchImageByPage(pages, limit);
+    AppDataSource source = _getAppDataSource(sourceName);
+    List<ImageModel> list =await source.fetchImageByTag(tags ,pages, limit);
     list.removeWhere(_imageFilter);
     list.removeWhere((image) => TagStore.isBlockedByName(image.tags));
     return list;
@@ -28,15 +30,17 @@ class ImageService {
 
 
   static Future<ImageModel> collectImage(ImageModel image) async{
+    AppDaoDataSource source = _getAppDataSource(DaoDataSource.name);
     image.collectStatus =
       (image.collectStatus == ImageCollectStatus.unStar || image.collectStatus == null)
           ? ImageCollectStatus.star : ImageCollectStatus.unStar;
-    await ImageDao.collectImage(image);
+    await source.collectImage(image);
     return image;
   }
 
   static Future<List<ImageModel>> getAllCollectedImage(int page, int limit) async {
-    List imageList = await ImageDao.getAllCollectedImage();
+    AppDaoDataSource source = _getAppDataSource(DaoDataSource.name);
+    List imageList = await source.getAllCollectedImage();
     if (imageList != null && imageList.length > 0) {
       for (ImageModel imageModel in imageList) {
         imageModel.pages = page;
@@ -58,6 +62,12 @@ class ImageService {
       return image.rating == FILTER_RANK.RESTRICTED
           || image.rating == FILTER_RANK.NOT_RESTRICTED ? true : false;
     }
+  }
+
+
+  static AppDataSource _getAppDataSource(String sourceName) {
+    AppDataSource source = Application.getInstance().dataPool.getSource(sourceName);
+    return source;
   }
 
 }

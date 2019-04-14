@@ -4,11 +4,13 @@ import 'init_dao.dart';
 import 'dart:async';
 
 class ImageDao {
-  static Future<ImageModel> isImageCollectExistById(int id, [Database database]) async {
+  DaoDataSource source;
+  ImageDao(this.source);
+  Future<ImageModel> isImageCollectExistById(int id, [Database database]) async {
     bool isHasDatabase = true;
     if (database == null) {
       isHasDatabase = false;
-      database =await MyDateBase.getDataBase();
+      database =await this.source.getDatabase();
     }
     try {
       List list = await database.rawQuery(
@@ -29,15 +31,17 @@ class ImageDao {
     }
   }
 
-  static Future<ImageModel> isImageExistById(int id, [Database database]) async {
+  Future<ImageModel> getImageById(String id, [Database database]) async {
     bool isHasDatabase = true;
     if (database == null) {
       isHasDatabase = false;
-      database =await MyDateBase.getDataBase();
+      database =await this.source.getDatabase();
     }
     try {
-      List list = await database.rawQuery(
-          _ImageCollectDaoUtils.generateSearchImageByIdRawSql(id)
+      List list = await database.query(
+          MyDateBaseValue.Image,
+          where: 'id = ?',
+          whereArgs: [id]
       );
       if (list != null && list.length > 0) {
         return ImageModel.fromJson(Map.from(list[0]));
@@ -53,13 +57,37 @@ class ImageDao {
       }
     }
   }
-
-
-  static Future<bool> isImageDetailExistById(int id, [Database database]) async {
+  Future<bool> isImageExistById(int id, [Database database]) async {
     bool isHasDatabase = true;
     if (database == null) {
       isHasDatabase = false;
-      database =await MyDateBase.getDataBase();
+      database =await this.source.getDatabase();
+    }
+    try {
+      List list = await database.rawQuery(
+          _ImageCollectDaoUtils.generateSearchImageByIdRawSql(id)
+      );
+      if (list != null && list.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch(e) {
+      print(e);
+      return null;
+    } finally {
+      if (!isHasDatabase) {
+        await database.close();
+      }
+    }
+  }
+
+
+  Future<bool> isImageDetailExistById(int id, [Database database]) async {
+    bool isHasDatabase = true;
+    if (database == null) {
+      isHasDatabase = false;
+      database =await this.source.getDatabase();
     }
     try {
       String rawSql = _ImageDaoUtils.generateSearchImageByIdRawSql(id);
@@ -81,17 +109,17 @@ class ImageDao {
     }
   }
 
-  static Future<bool> collectImage(ImageModel image) async {
-    Database database =await MyDateBase.getDataBase();
+  Future<bool> collectImage(ImageModel image) async {
+    Database database =await this.source.getDatabase();
     try {
       String insertImageSql = _ImageDaoUtils.generateImageInsertRawSql(image);
       bool isImageDetailExist =
-        await ImageDao.isImageDetailExistById(image.id, database);
+        await this.isImageDetailExistById(image.id, database);
 
       if (!isImageDetailExist) {
         await database.rawInsert(insertImageSql);
       } else {
-        await ImageDao.updateCollectStatus(image, database);
+        await this.updateCollectStatus(image, database);
       }
       return true;
     } catch(e) {
@@ -102,14 +130,14 @@ class ImageDao {
     }
   }
 
-  static Future<bool> updateDownloadImagePath(
+  Future<bool> updateDownloadImagePath(
       ImageModel image,
       [Database database]
       ) async {
     bool isHasDatabase = true;
     if (database == null) {
       isHasDatabase = false;
-      database =await MyDateBase.getDataBase();
+      database =await this.source.getDatabase();
     }
     try {
       String rawSql = _ImageDownloadDaoUtils
@@ -128,14 +156,14 @@ class ImageDao {
     }
   }
 
-  static Future<bool> updateDownloadImageStatus(ImageModel image) async {
-    Database database =await MyDateBase.getDataBase();
+  Future<bool> updateDownloadImageStatus(ImageModel image) async {
+    Database database =await this.source.getDatabase();
     try {
       String insertImageSql = _ImageDaoUtils.generateImageInsertRawSql(image);
       String collectImageSql =
       _ImageDownloadDaoUtils.generateImageDownloadStatusUpdateRawSql(image);
       bool isImageDetailExist =
-      await ImageDao.isImageDetailExistById(image.id, database);
+      await this.isImageDetailExistById(image.id, database);
       if (!isImageDetailExist) {
         await database.rawInsert(insertImageSql);
       } else {
@@ -143,7 +171,7 @@ class ImageDao {
       }
 
       if (image.downloadStatus == ImageDownloadStatus.success) {
-        await ImageDao.updateDownloadImagePath(image, database);
+        await this.updateDownloadImagePath(image, database);
       }
 
       return true;
@@ -155,14 +183,16 @@ class ImageDao {
     }
   }
 
+  Future<List<ImageModel>> getAllCollectedImage(int page, int limit) async {
 
-
-  static Future<List<ImageModel>> getAllCollectedImage() async {
-
-    Database database =await MyDateBase.getDataBase();
+    Database database =await this.source.getDatabase();
     try {
-      List list =await database.rawQuery(
-        _ImageCollectDaoUtils.generateGetAllCollectedImageRawSql()
+      List list =await database.query(
+        MyDateBaseValue.Image,
+        where: 'collect_status = ${ImageCollectStatus.star?.index}',
+        offset: page * limit,
+        limit: limit,
+
       );
 
       List<ImageModel> imageList = List();
@@ -179,11 +209,11 @@ class ImageDao {
     }
   }
 
-  static Future<void> updateCollectStatus(ImageModel image,  [Database database]) async {
+  Future<void> updateCollectStatus(ImageModel image,  [Database database]) async {
     bool isHasDatabase = true;
     if (database == null) {
       isHasDatabase = false;
-      database =await MyDateBase.getDataBase();
+      database =await this.source.getDatabase();
     }
     try {
       await database.rawUpdate(

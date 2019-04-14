@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:yande/appliction.dart';
 import 'package:yande/dao/image_dao.dart';
+import 'package:yande/dao/init_dao.dart';
 import 'package:yande/http/yande/YandeHttpDataSource.dart';
 import 'package:yande/http/yande/constant/api.dart';
 import 'package:yande/model/image_model.dart';
@@ -9,7 +11,13 @@ import 'dart:async';
 class YandeImageListApi {
   YandeImageHttpDataSource source;
 
+
   YandeImageListApi(this.source);
+
+  get _daoDataSource {
+
+    return Application.getInstance().dataPool.getSource(DaoDataSource.name);
+  }
 
   Future<ImageModel> fetchImageById(String id) {
     return null;
@@ -25,10 +33,11 @@ class YandeImageListApi {
       if (item.tags != null) {
         item.tagTagModelList = convertTagStringToList(item.tags);
       }
-      ImageModel dto =await ImageDao.isImageExistById(item.id);
+      ImageModel dto =await this._daoDataSource.fetchImageById(item.id);
       if(dto != null) {
         item.setStatusByImage(dto);
       }
+      item.dataSourceName = this.source.sourceName;
       item.pages = page;
       trueList.add(item);
     }
@@ -49,10 +58,11 @@ class YandeImageListApi {
         item.tagTagModelList = convertTagStringToList(item.tags);
 
       }
-      ImageModel dto =await ImageDao.isImageExistById(item.id);
+      ImageModel dto =await this._daoDataSource.fetchImageById(item.id);
       if(dto != null) {
         item.setStatusByImage(dto);
       }
+      item.dataSourceName = this.source.sourceName;
       item.pages = pages;
       trueList.add(item);
     }

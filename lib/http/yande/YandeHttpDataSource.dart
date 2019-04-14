@@ -1,7 +1,9 @@
 import 'package:yande/appliction.dart';
 import 'package:dio/dio.dart';
+import 'package:yande/dao/init_dao.dart';
 import 'package:yande/http/yande/constant/api.dart';
 import 'package:yande/http/yande/imageListApi.dart';
+import 'package:yande/http/yande/tagApi.dart';
 import 'dart:async';
 
 import 'package:yande/model/image_model.dart';
@@ -15,16 +17,18 @@ class YandeImageHttpDataSource implements AppDataSource {
   Dio http;
   YandeImageListApi _imageListApi;
 
+  TagApi _tagApi;
+
   YandeImageHttpDataSource(Dio http) {
     this.http = http;
-
+    this._tagApi = TagApi(this);
     this._imageListApi = YandeImageListApi(this);
   }
 
 
 
   @override
-  Future<ImageModel> fetchImageById(String id) {
+  Future<ImageModel> fetchImageById(int id) {
     return null;
   }
 
@@ -35,7 +39,12 @@ class YandeImageHttpDataSource implements AppDataSource {
 
   @override
   Future<List<TagModel>> searchTag(String words) {
-    return null;
+    return _tagApi.getTagByNameOrderAESC(words);
+  }
+
+  @override
+  Future<List<ImageModel>> fetchImageByTag(String tag, int page, int limit) {
+    return _imageListApi.getIndexListByTags(tag, page, limit);
   }
 
 

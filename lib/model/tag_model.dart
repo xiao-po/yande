@@ -30,6 +30,8 @@ class TagModel extends Object {
   @JsonKey(name: 'collect_status')
   TagCollectStatus collectStatus;
 
+  String dataSourceName;
+
   TagModel(this.id,this.name,this.count,this.type,this.ambiguous,);
 
   factory TagModel.fromJson(Map<String, dynamic> srcJson) => _$TagModelFromJson(srcJson);

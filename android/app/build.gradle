@@ -31,7 +31,7 @@ android {
         release {
             keyAlias 'yande'
             keyPassword 'Jgm8AzCd0mJsb7e7zqZq'
-            storeFile file('C:/Users/user/OneDrive/yande.jks')
+            storeFile file('C:/Users/wly19/OneDrive/yande.jks')
             storePassword 'Jgm8AzCd0mJsb7e7zqZq'
         }
     }

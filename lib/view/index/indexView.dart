@@ -36,11 +36,7 @@ class _IndexView extends State<IndexView> {
   @override
   void initState() {
     super.initState();
-    MyDateBase.initDateBase();
-    SettingService.initSetting();
 
-    Application.getInstance().getFilterRank();
-    UpdateService.ignoreUpdateVersion('');
     this.checkUpdate();
   }
 

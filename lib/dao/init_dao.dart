@@ -1,57 +1,11 @@
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 
-class MyDateBase {
-
-  static void initDateBase() async{
-    Database database = await MyDateBase.getDataBase();
-    await database.close();
-  }
-
-  static Future<Database> getDataBase() async{
-    String databasesPath =await getDatabasesPath();
-    String path = databasesPath + '/yande.db';
-    return await openDatabase(path, version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute(
-            'CREATE TABLE ${MyDateBaseValue.Tag} ('
-                'id INTEGER,'
-                'name TEXT,'
-                'nick_name TEXT,'
-                'count INTEGER,'
-                'type INTERGER,'
-                'ambiguous BOOL,'
-                'collect_status INTERGER'
-                ')'
-        );
-        await db.execute(
-            'CREATE TABLE ${MyDateBaseValue.Image} ('
-                'id INTEGER primary KEY,'
-                'tags TEXT,'
-                'author TEXT,'
-                'file_url TEXT,'
-                'source TEXT,'
-                'file_size INTEGER,'
-                'file_ext TEXT,'
-                'preview_url TEXT,'
-                'preview_width INTEGER,'
-                'preview_height INTEGER,'
-                'rating TEXT,'
-                'width INTEGER,'
-                'height INTEGER,'
-                'sample_url TEXT,'
-                'jpeg_url TEXT,'
-                'jpeg_width INTEGER,'
-                'jpeg_height INTEGER,'
-                'jpeg_file_size INTEGER,'
-                'collect_status INTEGER,'
-                'download_status String,'
-                'download_path INTEGER'
-                ')');
-
-      });
-  }
-}
+import 'package:yande/appliction.dart';
+import 'package:yande/dao/image_dao.dart';
+import 'package:yande/dao/tag_dao.dart';
+import 'package:yande/model/image_model.dart';
+import 'package:yande/model/tag_model.dart';
 
 class MyDateBaseValue {
   static const Tag = "tag";
@@ -91,4 +45,124 @@ class TagTableColumn {
   static const type = 'type';
   static const ambiguous = 'ambiguous';
   static const collectStatus = 'collect_status';
+}
+
+class DaoDataSource implements AppDaoDataSource{
+  static get name => "dao";
+
+  @override
+  get sourceName => DaoDataSource.name;
+
+  ImageDao _imageDao;
+  TagDao _tagDao;
+
+  DaoDataSource() {
+    this._imageDao = ImageDao(this);
+    this._tagDao = TagDao(this);
+  }
+
+  @override
+  Future<Database> getDatabase() async {
+    String databasesPath =await getDatabasesPath();
+    String path = databasesPath + '/yande.db';
+    return await openDatabase(path, version: 2, onCreate: onCreate);
+  }
+
+  FutureOr<void> onCreate(Database db, int version) async {
+    await db.execute(
+        'CREATE TABLE ${MyDateBaseValue.Tag} ('
+            'id INTEGER,'
+            'name TEXT,'
+            'nick_name TEXT,'
+            'count INTEGER,'
+            'type INTERGER,'
+            'ambiguous BOOL,'
+            'dataSourceName String,'
+            'collect_status INTERGER'
+            ')'
+    );
+    await db.execute(
+        'CREATE TABLE ${MyDateBaseValue.Image} ('
+            'id INTEGER primary KEY,'
+            'tags TEXT,'
+            'author TEXT,'
+            'file_url TEXT,'
+            'source TEXT,'
+            'file_size INTEGER,'
+            'file_ext TEXT,'
+            'preview_url TEXT,'
+            'preview_width INTEGER,'
+            'preview_height INTEGER,'
+            'rating TEXT,'
+            'width INTEGER,'
+            'height INTEGER,'
+            'sample_url TEXT,'
+            'jpeg_url TEXT,'
+            'jpeg_width INTEGER,'
+            'jpeg_height INTEGER,'
+            'jpeg_file_size INTEGER,'
+            'dataSourceName String,'
+            'collect_status INTEGER,'
+            'download_status String,'
+            'download_path INTEGER'
+            ')');
+
+  }
+
+
+
+  @override
+  Future<ImageModel> fetchImageById(int id) {
+    return _imageDao.getImageById('$id');
+  }
+
+  @override
+  Future<List<ImageModel>> fetchImageByPage(int page, int limit) {
+    return _imageDao.getAllCollectedImage(page, limit);
+  }
+
+  @override
+  Future<List<ImageModel>> fetchImageByTag(String tag, int page, int limit) {
+    throw "数据库暂时不支持搜索 tag";
+  }
+
+  @override
+  Future<bool> isImageExistById(int id) {
+    return _imageDao.isImageExistById(id);
+  }
+
+  @override
+  Future<void> updateDownloadImageStatus(ImageModel image) {
+    return _imageDao.updateDownloadImageStatus(image);
+  }
+
+  @override
+  Future<void> collectImage(ImageModel image) {
+    return _imageDao.collectImage(image);
+  }
+
+  @override
+  Future<List<TagModel>> getAllBlockTag() {
+    // TODO: implement getAllBlockTag
+    return null;
+  }
+
+  @override
+  Future<List<TagModel>> getAllCollectTag() {
+    return _tagDao.getAllCollectTag();
+  }
+
+  @override
+  Future<List<ImageModel>> getAllCollectedImage() {
+    return _imageDao.getAllCollectedImage(0, 200);
+  }
+
+  @override
+  Future<void> saveTag(TagModel tag) {
+    return _tagDao.saveTag(tag);
+  }
+
+
+
+
 }

@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
+import 'package:yande/dao/init_dao.dart';
 import 'package:yande/http/yande/YandeHttpDataSource.dart';
 import 'dart:async';
 import 'package:yande/model/image_model.dart';
 import 'package:yande/model/tag_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:yande/service/settingService.dart';
+import 'package:yande/service/updateService.dart';
 
 
 class Application {
@@ -17,13 +19,19 @@ class Application {
     Dio _dio;
     String filterRank;
     _AppDataSourcePool dataPool;
+
     Application.init(){
       _dio = Dio();
+      SettingService.initSetting();
+      UpdateService.ignoreUpdateVersion('');
+      this.getFilterRank();
       dataPool = _AppDataSourcePool();
-      dataPool.registryHttpSource(
+      dataPool.registryDataSource(
           YandeImageHttpDataSource(_dio)
       );
-
+      dataPool.registryDataSource(
+        DaoDataSource()
+      );
     }
 
     Future<void> getFilterRank() async {
@@ -40,19 +48,29 @@ class Application {
 abstract class AppDataSource {
 
   @required
-  String sourceName;
+  get sourceName;
 
   Future<List<ImageModel>> fetchImageByPage(int page, int limit);
-  Future<ImageModel> fetchImageById(String id);
-  Future<List<TagModel>> searchTag(String words);
+  Future<ImageModel> fetchImageById(int id);
+  Future<List<ImageModel>> fetchImageByTag(String tag, int page, int limit);
+
+
 }
 abstract class AppHttpDataSource extends AppDataSource {
-
   Dio http;
+  Future<List<TagModel>> searchTag(String words);
 }
 
 abstract class AppDaoDataSource extends AppDataSource {
-  Database database;
+  Future<Database> getDatabase();
+  Future<bool> isImageExistById(int id);
+  Future<void> updateDownloadImageStatus(ImageModel image);
+  Future<void> collectImage(ImageModel image);
+  Future<List<ImageModel>> getAllCollectedImage();
+  Future<void> saveTag(TagModel tag);
+  Future<List<TagModel>> getAllCollectTag();
+
+  Future<List<TagModel>> getAllBlockTag();
 }
 
 class _AppDataSourcePool {
@@ -61,12 +79,18 @@ class _AppDataSourcePool {
 
   _AppDataSourcePool();
 
-  AppDataSource getHttpSource([String name]) {
+  AppDataSource getSource([String name]) {
     if (name == null) {
       return this._activeSource;
     } else {
       return this._pool[name];
     }
+  }
+
+  List<String> getAllHttpSourceNameList(){
+    List keys = _pool.keys.toList();
+    keys.removeWhere((value) =>  value == DaoDataSource.name);
+    return keys;
   }
 
   void switchHttpSource(String name) {
@@ -83,7 +107,10 @@ class _AppDataSourcePool {
     }
   }
 
-  void registryHttpSource(AppDataSource source){
+  String getActiveSourceName() {
+    return this._activeSource.sourceName;
+  }
+  void registryDataSource(AppDataSource source){
     if (source == null) {
       throw "source can't be null";
     }

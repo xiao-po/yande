@@ -112,7 +112,6 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
     }
   }
 
-  /// 事件方法，允许修改数据
   Future<void> reloadGallery() async {
     this.pages = 1;
     this.isInitError = false;
@@ -141,7 +140,7 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
       var loadedPages = 0;
       while (imageList.length < 10 && loadedPages < 5) {
         if (this.widget.searchTag != null) {
-          imageList.addAll(await ImageService.getIndexListByTags(
+          imageList.addAll(await ImageService.getImageByTag(
               this.widget.searchTag, pages, limit));
         } else {
           imageList.addAll(await ImageService.getIndexListByPage(pages, limit));

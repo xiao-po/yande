@@ -4,11 +4,15 @@ import 'init_dao.dart';
 import 'dart:async';
 
 class TagDao {
-  static Future<bool> isTagExistByName(String name,  [Database database]) async {
+  DaoDataSource source;
+  
+  TagDao(this.source);
+  
+  Future<bool> isTagExistByName(String name,  [Database database]) async {
     bool isHasDatabase = true;
     if (database == null) {
       isHasDatabase = false;
-      database =await MyDateBase.getDataBase();
+      database =await this.source.getDatabase();
     }
     try {
       List list = await database.query(
@@ -33,11 +37,11 @@ class TagDao {
     }
   }
 
-  static Future<bool> saveTag(TagModel tag) async {
-    Database database =await MyDateBase.getDataBase();
+  Future<bool> saveTag(TagModel tag) async {
+    Database database =await this.source.getDatabase();
     try {
       bool isTagExist =
-        await TagDao.isTagExistByName(tag.name, database);
+        await this.isTagExistByName(tag.name, database);
 
       if (!isTagExist) {
         await database.insert(
@@ -45,7 +49,7 @@ class TagDao {
           tag.toJson(),
         );
       } else {
-        await TagDao.updateCollectStatus(tag, database);
+        await this.updateCollectStatus(tag, database);
       }
       return true;
     } catch(e) {
@@ -55,11 +59,11 @@ class TagDao {
       await database.close();
     }
   }
-  static Future<bool> updateCollectStatus(TagModel tag,  [Database database]) async {
+  Future<bool> updateCollectStatus(TagModel tag,  [Database database]) async {
     bool isHasDatabase = true;
     if (database == null) {
       isHasDatabase = false;
-      database =await MyDateBase.getDataBase();
+      database =await this.source.getDatabase();
     }
     try {
       await database.update(
@@ -81,8 +85,8 @@ class TagDao {
     }
   }
 
-  static Future<List<TagModel>> getAllCollectTag() async{
-    Database database =await MyDateBase.getDataBase();
+  Future<List<TagModel>> getAllCollectTag() async{
+    Database database =await this.source.getDatabase();
     try {
       List list = await database.query(
           MyDateBaseValue.Tag
@@ -101,13 +105,13 @@ class TagDao {
     }
   }
 
-  static Future<List<TagModel>> getAllBlockTag() async {
-    Database database =await MyDateBase.getDataBase();
+  Future<List<TagModel>> getAllBlockTag() async {
+    Database database =await this.source.getDatabase();
     try {
       List list = await database.query(
           MyDateBaseValue.Tag,
           where: '${TagTableColumn.collectStatus} = ?',
-          whereArgs: [TagCollectStatus.block]
+          whereArgs: [TagCollectStatus.block.index]
       );
       if (list != null && list.length > 0) {
         return list.map((val) => TagModel.fromJson(Map.from(val)));
