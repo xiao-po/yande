@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:yande/dao/init_dao.dart';
 import 'package:yande/model/image_model.dart';
 import 'package:yande/service/downloadService.dart';
 import 'package:yande/service/imageServive.dart';
 import 'package:yande/view/imageStatus/imageStatusView.dart';
 import 'package:yande/widget/imageGrid/imageCard.dart';
 import 'package:yande/widget/imageGrid/lazyloadView.dart';
+import 'package:yande/widget/imageGrid/myImageLazyLoadGrid.dart';
 import 'package:yande/widget/progress.dart';
 import 'dart:async';
 
@@ -19,62 +21,23 @@ class CollectImageView extends StatefulWidget {
 
 class _CollectImageViewState extends State<CollectImageView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  ScrollController _controller;
   List<ImageModel> imageList = List();
 
   bool updateTagListLock = false;
-  bool loadingStatus = false;
-  bool noImageLoad = false;
   bool isInit = true;
-  int pages = 1;
-  int limit = 20;
 
   @override
   void initState() {
     super.initState();
-    _controller = ScrollController()..addListener(_scrollListener);
-    this._loadPage(this.pages, this.limit);
   }
 
-
-  void _scrollListener() {
-    if (_controller.position.extentAfter < 50 && !loadingStatus ) {
-      this.pages++;
-      this._loadPage(this.pages, this.limit);
-    }
-  }
 
 
   @override
   dispose(){
     super.dispose();
-    this._controller.dispose();
   }
 
-  Future<void> _loadPage(int pages,int limit) async {
-    this._updateImageList(await _getImageListByPagesAndLimit(pages, limit));
-  }
-
-  /// @Param pages 页码
-  /// @Param limit 每页显示条数
-  Future<List<ImageModel>> _getImageListByPagesAndLimit(int pages,int limit) async {
-    this.loadingStatus = true;
-    List<ImageModel> imageList =await ImageService.getAllCollectedImage(pages, limit);
-    this.loadingStatus = false;
-    this.isInit = false;
-    return imageList;
-  }
-
-  /// @Param imageList 新的图片
-  void _updateImageList(List<ImageModel> imageList) {
-    if (imageList.length == 0 ) {
-      this.noImageLoad = true;
-    }
-    this.imageList.addAll(imageList);
-    if (this.mounted) {
-      setState(() {});
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,51 +47,17 @@ class _CollectImageViewState extends State<CollectImageView> {
         leading: BackButton(),
         title: const Text("收藏"),
       ),
-      body: Container(
-        child: _buildImageContent(this.imageList),
+      body: MyImageLazyLoadGrid(
+        sourceName: DaoDataSource.name,
+        cardBuilder: (image) => MainImageCard(
+          image,
+          imageTap: (ImageModel image) => this._goImageStatus(image),
+          collectEvent: () => this.collectAction(image),
+          downloadEvent: () => this.downloadAction(image),
+          heroPrefix: '${image.pages}collect',
+        ),
       ),
     );
-  }
-
-  _buildImageContent(List<ImageModel> imageList) {
-    Widget footer = FootProgress();
-    if (this.noImageLoad) {
-      footer = Center(
-        child: const Text("没有更多图片了"),
-      );
-    }
-    if (imageList.length > 0) {
-      return LazyLoadGridView(
-        controller: _controller,
-        children: imageList.map((image) =>
-            MainImageCard(
-              image,
-              imageTap: (ImageModel image) => this._goImageStatus(image),
-              collectEvent: () => this.collectAction(image),
-              downloadEvent: () => this.downloadAction(image),
-              heroPrefix: '${image.pages}collect',
-            )
-        ).toList(),
-        footer: footer,
-      );
-    } else {
-      if (this.isInit) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      } else {
-        return Container(
-          child: Center(
-            child: const Text(
-                '你没有收藏任何图片',
-                style: TextStyle(
-                    color: Color(0xffcccccc)
-                ),
-            ),
-          ),
-        );
-      }
-    }
   }
 
   _goImageStatus(ImageModel image){

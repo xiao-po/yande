@@ -13,6 +13,9 @@ class ImageService {
       (int pages, int limit, {String sourceName}) async {
     AppDataSource source = _getAppDataSource(sourceName);
     List<ImageModel> list =await  source.fetchImageByPage(pages, limit);
+    if (list.length == 0) {
+      throw NoImageError();
+    }
     list.removeWhere(_imageFilter);
     list.removeWhere((image) => TagStore.isBlockedByName(image.tags));
     return list;
@@ -23,6 +26,9 @@ class ImageService {
       (String tags,int pages, int limit, {String sourceName}) async {
     AppDataSource source = _getAppDataSource(sourceName);
     List<ImageModel> list =await source.fetchImageByTag(tags ,pages, limit);
+    if (list.length == 0) {
+      throw NoImageError();
+    }
     list.removeWhere(_imageFilter);
     list.removeWhere((image) => TagStore.isBlockedByName(image.tags));
     return list;
@@ -71,3 +77,6 @@ class ImageService {
   }
 
 }
+
+
+class NoImageError extends Error{}

@@ -18,6 +18,8 @@ class MyImageLazyLoadGrid extends StatefulWidget {
   final int pages;
   final int limit;
 
+  final String sourceName;
+
   MyImageLazyLoadGrid({
     this.crossAxisCount = 2,
     this.cardBuilder,
@@ -25,6 +27,7 @@ class MyImageLazyLoadGrid extends StatefulWidget {
     this.pages = 1,
     this.searchTag,
     this.limit = 20,
+    this.sourceName = null,
     this.footer = const FootProgress(),
   });
 
@@ -139,18 +142,29 @@ class _MyImageLazyLoadGridState extends State<MyImageLazyLoadGrid> {
       List<ImageModel> imageList = [];
       var loadedPages = 0;
       while (imageList.length < 10 && loadedPages < 5) {
-        if (this.widget.searchTag != null) {
-          imageList.addAll(await ImageService.getImageByTag(
-              this.widget.searchTag, pages, limit));
-        } else {
-          imageList.addAll(await ImageService.getIndexListByPage(pages, limit));
+        try {
+          if (this.widget.searchTag != null) {
+            imageList.addAll(await ImageService.getImageByTag(
+                this.widget.searchTag, pages, limit, sourceName: this.widget.sourceName));
+          } else {
+            imageList.addAll(await ImageService.getIndexListByPage(
+              pages,
+              limit,
+              sourceName: this.widget.sourceName,
+            )
+            );
+          }
+          pages++;
+          loadedPages++;
+        } catch(e) {
+          if (e is NoImageError) {
+            this.noImageLoad = true;
+            break;
+          } else {
+            throw e;
+          }
         }
-        pages++;
-        loadedPages++;
-      }
 
-      if (imageList.length == 0) {
-        this.noImageLoad = true;
       }
 
       this.loadingStatus = GridViewLoadingStatus.success;

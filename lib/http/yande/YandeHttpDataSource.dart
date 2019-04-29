@@ -10,7 +10,7 @@ import 'package:yande/model/image_model.dart';
 import 'package:yande/model/tag_model.dart';
 
 
-class YandeImageHttpDataSource implements AppDataSource {
+class YandeImageHttpDataSource implements AppHttpDataSource {
 
   String sourceName = YandeApi.sourceName;
 

@@ -190,7 +190,7 @@ class ImageDao {
       List list =await database.query(
         MyDateBaseValue.Image,
         where: 'collect_status = ${ImageCollectStatus.star?.index}',
-        offset: page * limit,
+        offset: (page - 1) * limit,
         limit: limit,
 
       );

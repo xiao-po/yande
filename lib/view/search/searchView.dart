@@ -162,7 +162,7 @@ class MySearchListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> children = List();
-    children.add(Text(this.name, style: TextStyle(fontSize: 18)));
+    children.add(Text(this.name, style: TextStyle(fontSize: 18),overflow: TextOverflow.fade,));
     for (String chipName in this.chipNameList) {
       children.add(this._buildChip(chipName));
     }
